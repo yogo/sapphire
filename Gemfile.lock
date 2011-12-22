@@ -109,6 +109,8 @@ GEM
       dm-transactions (~> 1.2.0)
       dm-types (~> 1.2.0)
       dm-validations (~> 1.2.0)
+    data_objects (0.10.7)
+      addressable (~> 2.1)
     dataflow (0.3.1)
     dm-adjust (1.2.0)
       dm-core (~> 1.2.0)
@@ -118,6 +120,9 @@ GEM
       dm-core (~> 1.2.0)
     dm-core (1.2.0)
       addressable (~> 2.2.6)
+    dm-do-adapter (1.2.0)
+      data_objects (~> 0.10.6)
+      dm-core (~> 1.2.0)
     dm-is-list (1.2.0)
       dm-adjust (~> 1.2.0)
     dm-is-remixable (1.2.0)
@@ -134,6 +139,9 @@ GEM
       json (~> 1.6.1)
       json_pure (~> 1.6.1)
       multi_json (~> 1.0.3)
+    dm-sqlite-adapter (1.2.0)
+      dm-do-adapter (~> 1.2.0)
+      do_sqlite3 (~> 0.10.6)
     dm-timestamps (1.2.0)
       dm-core (~> 1.2.0)
     dm-transactions (1.2.0)
@@ -148,6 +156,8 @@ GEM
       uuidtools (~> 2.1.2)
     dm-validations (1.2.0)
       dm-core (~> 1.2.0)
+    do_sqlite3 (0.10.7)
+      data_objects (= 0.10.7)
     erubis (2.7.0)
     execjs (1.2.13)
       multi_json (~> 1.0)
@@ -226,6 +236,7 @@ PLATFORMS
 
 DEPENDENCIES
   coffee-rails
+  dm-sqlite-adapter
   jquery-rails
   rails
   sass-rails (~> 3.1.4)

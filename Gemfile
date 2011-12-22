@@ -16,7 +16,7 @@ group :assets do
   gem 'coffee-rails'
   gem 'uglifier', '>= 1.0.3'
 end
-
+gem 'dm-sqlite-adapter'
 gem 'jquery-rails'
 
 # To use ActiveModel has_secure_password
