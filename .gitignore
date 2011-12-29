@@ -3,3 +3,8 @@ db/*.sqlite3
 log/*.log
 tmp/
 .sass-cache/
+config/database.yml
+db/migrate/20111229211658_create_sap_files.rb
+db/schema.rb
+sap-test
+sap_dev
