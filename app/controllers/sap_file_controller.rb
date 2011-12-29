@@ -1,0 +1,2 @@
+class SapFileController < ApplicationController
+end
