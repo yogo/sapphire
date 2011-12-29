@@ -2,6 +2,7 @@ source 'http://rubygems.org'
 
 gem 'rails'
 gem 'sqlite3'
+gem 'dm-rails'
 #includes yogo-support, yogo-operation, yogo-datamapper
 gem 'yogo-support',     :git => "git://github.com/yogo/yogo-support.git" 
 gem 'yogo-operation',   :git => "git://github.com/yogo/yogo-operation.git"
@@ -30,8 +31,12 @@ gem 'jquery-rails'
 
 # To use debugger
 # gem 'ruby-debug19', :require => 'ruby-debug'
+group :development do
+  gem 'rspec-rails'
+end
 
 group :test do
   # Pretty printed test output
   gem 'turn', :require => false
+  gem 'rspec-rails'
 end
