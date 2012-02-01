@@ -1,0 +1,9 @@
+%h1 Projects
+
+%a{:href => new_project_path} Create a Project
+
+%ul
+  - @projects.each do |p|
+    %li
+      %a{:href => project_path(p)}= p.name
+
