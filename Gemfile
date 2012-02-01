@@ -1,7 +1,8 @@
 source 'http://rubygems.org'
 
-gem 'rails'
+gem 'rails', "3.0.5"
 gem 'sqlite3'
+gem 'data_mapper', '1.1.0'
 gem 'dm-sqlite-adapter'
 gem 'dm-postgres-adapter'
 
@@ -16,9 +17,9 @@ gem 'yogo-framework',   :git => "git://github.com/yogo/yogo-framework.git"
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
-  gem 'sass-rails',   '~> 3.1.4'
-  gem 'coffee-rails'
-  gem 'uglifier', '>= 1.0.3'
+  # gem 'sass-rails'
+  # gem 'coffee-rails'
+  gem 'uglifier'
 end
 
 gem 'jquery-rails'
