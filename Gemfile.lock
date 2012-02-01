@@ -134,6 +134,9 @@ GEM
       dm-core (~> 1.2.0)
     dm-migrations (1.2.0)
       dm-core (~> 1.2.0)
+    dm-postgres-adapter (1.2.0)
+      dm-do-adapter (~> 1.2.0)
+      do_postgres (~> 0.10.6)
     dm-rails (1.2.0)
       actionpack (~> 3.1.0)
       dm-active_model (~> 1.2.0)
@@ -164,6 +167,8 @@ GEM
       uuidtools (~> 2.1.2)
     dm-validations (1.2.0)
       dm-core (~> 1.2.0)
+    do_postgres (0.10.7)
+      data_objects (= 0.10.7)
     do_sqlite3 (0.10.7)
       data_objects (= 0.10.7)
     erubis (2.7.0)
@@ -171,6 +176,7 @@ GEM
       multi_json (~> 1.0)
     facets (2.9.2)
     fastercsv (1.5.4)
+    haml (3.1.4)
     hike (1.2.1)
     i18n (0.6.0)
     jquery-rails (1.0.19)
@@ -244,8 +250,10 @@ PLATFORMS
 
 DEPENDENCIES
   coffee-rails
+  dm-postgres-adapter
   dm-rails
   dm-sqlite-adapter
+  haml
   jquery-rails
   rails
   sass-rails (~> 3.1.4)
