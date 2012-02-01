@@ -1,16 +1,16 @@
 GIT
   remote: git://github.com/yogo/yogo-datamapper.git
-  revision: 5366c548f211b9a78a75ad57e9a888e170faf1c5
+  revision: 830c52ca25bfda8802d570c9dd25c92cdfcdd6a3
   specs:
     yogo-datamapper (0.5.1)
-      data_mapper
+      data_mapper (= 1.1.0)
       dm-is-remixable
       yogo-operation
       yogo-support
 
 GIT
   remote: git://github.com/yogo/yogo-framework.git
-  revision: de5d6e79dcd754fd18be0799e26c22c7d0085ef8
+  revision: 95b9c99e68e2816335b0fd3b122a48e5f8dfa4ef
   specs:
     yogo-framework (0.5.3)
       data_mapper
@@ -31,7 +31,7 @@ GIT
 
 GIT
   remote: git://github.com/yogo/yogo-project.git
-  revision: 8e73b6b2dffe20a9c00922ea0d55b5e57fcf7610
+  revision: 9c6b3d343a89768ad3640e6565fb53303a7745c1
   specs:
     yogo-project (0.5.3)
       carrierwave
@@ -39,6 +39,8 @@ GIT
       configatron
       data_mapper
       dm-is-remixable
+      dm-postgres-adapter
+      dm-sqlite-adapter
       facets
       rake
       yogo-operation
@@ -219,9 +221,7 @@ PLATFORMS
 
 DEPENDENCIES
   data_mapper (= 1.1.0)
-  dm-postgres-adapter
   dm-rails
-  dm-sqlite-adapter
   haml
   jquery-rails
   rails (= 3.0.5)
