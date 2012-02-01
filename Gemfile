@@ -3,6 +3,7 @@ source 'http://rubygems.org'
 gem 'rails'
 gem 'sqlite3'
 gem 'dm-sqlite-adapter'
+gem 'dm-postgres-adapter'
 
 #includes yogo-support, yogo-operation, yogo-datamapper
 gem 'yogo-support',     :git => "git://github.com/yogo/yogo-support.git"
@@ -22,6 +23,7 @@ end
 gem 'dm-sqlite-adapter'
 gem 'jquery-rails'
 gem 'dm-rails'
+gem 'haml'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
