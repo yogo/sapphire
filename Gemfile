@@ -10,8 +10,8 @@ gem 'yogo-support',     :git => "git://github.com/yogo/yogo-support.git"
 gem 'yogo-operation',   :git => "git://github.com/yogo/yogo-operation.git"
 gem 'yogo-datamapper',  :git => "git://github.com/yogo/yogo-datamapper.git"
 gem 'yogo-framework',   :git => "git://github.com/yogo/yogo-framework.git"
-gem 'yogo-project',     :git => "git://github.com/yogo/yogo-project.git"
-                        # :require => 'yogo/project'
+gem 'yogo-project',     :git => "git://github.com/yogo/yogo-project.git",
+                        :require => 'yogo/project'
 
 # Gems used only for assets and not required
 # in production environments by default.
