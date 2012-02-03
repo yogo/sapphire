@@ -1,0 +1,12 @@
+%h1 Project: #{@collection.project.name}
+
+%h2 Data Collection: #{@collection.name}
+%h3 Schema: #{@collection.schema.map{|k| k.name}.to_s}
+%br
+%br
+%ul
+-#  -# @collection.items.each do |i|
+-#    %li
+-#      %a{:href => item_path(i)}= i.name
+ 
+%a{:href => projects_path} Project List

@@ -6,6 +6,7 @@ class ProjectsController < ApplicationController
 
     def show
       @project = Yogo::Project.get(params[:id])
+      @collections = @project.data_collections
     end
 
     def edit
