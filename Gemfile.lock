@@ -31,7 +31,7 @@ GIT
 
 GIT
   remote: git://github.com/yogo/yogo-project.git
-  revision: 9c6b3d343a89768ad3640e6565fb53303a7745c1
+  revision: 69b6eced757284a48c7bd9b80cc5163f7712eee9
   specs:
     yogo-project (0.5.3)
       carrierwave
@@ -180,6 +180,7 @@ GEM
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     mime-types (1.17.2)
+    minitest (2.11.1)
     multi_json (1.0.4)
     polyglot (0.3.3)
     rack (1.2.5)
@@ -207,8 +208,9 @@ GEM
     treetop (1.4.10)
       polyglot
       polyglot (>= 0.3.1)
-    turn (0.8.3)
+    turn (0.9.1)
       ansi
+      minitest
     tzinfo (0.3.31)
     uglifier (1.2.3)
       execjs (>= 0.3.0)
