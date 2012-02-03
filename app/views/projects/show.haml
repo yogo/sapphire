@@ -2,12 +2,12 @@
 
 %h2 Data Collections
 
-%a{:href => new_project_collection_path} Create a Data Collection
+%a{:href => new_project_collection_path(@project)} Create a Data Collection
 
 %ul
   - @project.data_collections.each do |c|
     %li
-      %a{:href => collection_path(c)}= c.name
+      %a{:href => project_collection_path(@project, c)}= c.name
       = c.schema.map{|k| k.name}.to_s
  
-%a{:href => projects_path} Project List
+%a{:href => projects_path} All Projects
