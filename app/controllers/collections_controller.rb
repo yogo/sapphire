@@ -1,7 +1,8 @@
 class CollectionsController < ApplicationController
+    before_filter :get_project
 
     def index
-      @collections = Yogo::Collection::Data.all
+      @collections = @project.data_collections
     end
 
     def show
@@ -18,16 +19,23 @@ class CollectionsController < ApplicationController
     end
     
     def new
-      @collection = Yogo::Collection::Data.new
+      @collection = Yogo::Collection::Asset.new
     end
     
     def create
-      @collection = Yogo::Collection::Data.new(params[:yogo_collection])
+      @collection = Yogo::Collection::Asset.new(params[:yogo_collection_asset])
+      @collection.project = @project
       if @collection.save
-        redirect_to collections_path
+        redirect_to project_collections_path(@project)
       else
-        flash[:error] = "CollectionData failed to save!"
+        flash[:error] = "Collection failed to save!"
         render :new
       end
+    end
+    
+    private
+    
+    def get_project
+      @project = Yogo::Project.get(params[:project_id])
     end
 end
