@@ -7,7 +7,7 @@
 %ul
   - @collections.each do |c|
     %li
-      %a{:href => collection_path(c)}= c.name
+      %a{:href => project_collection_path(@project, c)}= c.name
       = c.schema.map{|k| k.name}.to_s
  
 %a{:href => projects_path} Project List
