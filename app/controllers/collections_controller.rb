@@ -23,10 +23,11 @@ class CollectionsController < ApplicationController
     end
     
     def create
-      @collection = @project.data_collections.new(params[:yogo_collection_asset])
+      @collection = @project.data_collections.new(params[:collection])
       @collection.project = @project
       @collection.type = Yogo::Collection::Asset
       if @collection.save
+        flash[:notice] = "Collection created!"
         redirect_to project_collections_path(@project)
       else
         flash[:error] = "Collection failed to save!"
