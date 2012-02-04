@@ -1,12 +1,13 @@
-%h1 Create New {@collection.name} Item
+%h1 Create New #{@collection.name} Item
 
 
-= form_for(@item, :url => project_collection_items_path) do |f|
-  -@collection.schemas.each do |field|
+= form_for("item", :url => project_collection_items_path, :html => {:multipart => true}) do |f|
+  -@collection.schema.each do |field|
     %p
       = f.label(field.name)
-      = f.text_field(field.name)
-    
+      = f.text_field(field.to_s)
+  %p
+    = f.file_field :file
 
   = f.submit
 

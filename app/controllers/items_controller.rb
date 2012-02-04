@@ -1,7 +1,7 @@
 class ItemsController < ApplicationController
 
     def index
-      @collections = Yogo::Collection::Data.all
+      @collections = Yogo::Collection::Asset.all
     end
 
     def show
@@ -20,16 +20,25 @@ class ItemsController < ApplicationController
     
     def new
       @project = Yogo::Project.get(params[:project_id])
-      @collection = Yogo::Collection::Data.get(params[:collection_id])
-      @items =@collection.items.new
+      @collection =@project.data_collections.get(params[:collection_id])
+      @item = @collection.items.new
     end
     
     def create
-      @collection = Yogo::Collection::Data.new(params[:yogo_collection])
-      if @collection.save
-        redirect_to collections_path
+      collection = Yogo::Collection::Asset.get(params[:collection_id])
+      if params[:item][:file]
+        attrs = params[:item]
+        file = attrs.delete(:file)
+        @item = collection.items.new(attrs)
+        @item.file.store!(file)
       else
-        flash[:error] = "CollectionData failed to save!"
+        @item = collection.items.new(params[:item])
+      end
+      if @item.save
+        flash[:notice] = "Item Saved!"
+        redirect_to new_project_collection_items_path
+      else
+        flash[:error] = "Item failed to save!"
         render :new
       end
     end
