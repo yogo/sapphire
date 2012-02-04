@@ -1,16 +1,16 @@
 %h1 Create Project
 
-
-= form_for(@project, :url => projects_path) do |f|
-  %p
-    = f.label(:name)
-    = f.text_field(:name)
+%div{:class=>"form"}
+  = form_for(@project, :url => projects_path) do |f|
+    %p
+      = f.label(:name)
+      = f.text_field(:name)
     
-  %p
-    = f.label(:description)
-    = f.text_area(:description)
+    %p
+      = f.label(:description)
+      = f.text_area(:description)
 
-  = f.submit
+    = f.submit
 
-%a{:href => projects_path} Back
+  %a{:href => projects_path} Back
 
