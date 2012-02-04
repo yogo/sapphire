@@ -2,22 +2,17 @@
 %html
   %head
     %title Sapphire
-    -#= stylesheet_link_tag("application")
-    = stylesheet_link_tag('http://ajax.googleapis.com/ajax/libs/dojo/1.7.1/dijit/themes/claro/claro.css')
+    = stylesheet_link_tag("application")
     = javascript_include_tag("application")
-    = javascript_include_tag("http://ajax.googleapis.com/ajax/libs/dojo/1.7.1/dojo/dojo.js")
+    :plain
+      <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.css" />
+ 
+    -#= javascript_include_tag("http://ajax.googleapis.com/ajax/libs/dojo/1.7.1/dojo/dojo.js")
 
   %body
-    :javascript
-      dojo.require("dojo.parser");
-      dojo.require("dijit.form.Button")
-      dojo.require("dojox.form.Uploader")
-      dojo.addOnLoad(function(){
-        dojo.parser.parse();
-      });
-      //dojo.require("dojox.form.uploader.plugins.HTML5");
     #flash
       - unless flash.empty?
         - flash.each do |k,v|
           %p{:class => k}= v
-    = yield
+    #content
+      = yield
