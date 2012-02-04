@@ -1,12 +1,16 @@
-%h1 Project: #{@collection.project.name}
+%h1 #{@project.name} > #{@collection.name}
 
-%h2 Data Collection: #{@collection.name}
-%h3 Schema: #{@collection.schema.map{|k| k.name}.to_s}
-%br
-%br
+%a{:href => edit_project_collection_path(@project,@collection)} Edit Collection
+
+%h3 Schema: 
+%a{:href => project_collection_schemas_path(@project,@collection)} Edit Schema
 %ul
--#  -# @collection.items.each do |i|
--#    %li
--#      %a{:href => item_path(i)}= i.name
+  - @collection.schema.each do |s|
+    %li= s.name + " : " + s.type
+
+%h3 Items (top 5): 
+%ul
+  - @collection.items(:limit => 5).each do |i|
+    %li= i.inspect
  
-%a{:href => projects_path} Project List
+%a{:href => project_collections_path(@project)} All Collections

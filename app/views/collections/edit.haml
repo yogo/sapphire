@@ -1,0 +1,9 @@
+%h1 #{@project.name} > #{@collection.name} > Edit
+
+= form_for(@collection, {:url => project_collection_path(@project, @collection)}) do |f|
+  = render :partial => 'form', :locals => {:f => f}
+  
+  %p
+    = f.submit "Submit"
+    %a{:href => project_collection_path(@project, @collection)} Cancel
+     

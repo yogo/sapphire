@@ -6,25 +6,26 @@ class CollectionsController < ApplicationController
     end
 
     def show
-      @collection = Yogo::Collection::Data.get(params[:id])
+      @collection = @project.data_collections.get(params[:id])
     end
 
     def edit
-      @collection = Yogo::Collection::Data.get(params[:id])
+      @collection = @project.data_collections.get(params[:id])
     end
 
     def update
-      @collection = Yogo::Collection::Data.get(params[:id])
+      @collection = @project.data_collections.get(params[:id])
       @collection.merge(params[:collection])
     end
     
     def new
-      @collection = Yogo::Collection::Asset.new
+      @collection = @project.data_collections.new
     end
     
     def create
-      @collection = Yogo::Collection::Asset.new(params[:yogo_collection_asset])
+      @collection = @project.data_collections.new(params[:yogo_collection_asset])
       @collection.project = @project
+      @collection.type = Yogo::Collection::Asset
       if @collection.save
         redirect_to project_collections_path(@project)
       else
