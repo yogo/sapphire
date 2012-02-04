@@ -1,4 +1,4 @@
-class CollectionsController < ApplicationController
+class SchemasController < ApplicationController
     before_filter :get_dependencies
 
     def index
@@ -41,6 +41,6 @@ class CollectionsController < ApplicationController
     
     def get_dependencies
       @project = Yogo::Project.get(params[:project_id])
-      @collection = @project.get(params[:collection_id])      
+      @collection = @project.data_collections.get(params[:collection_id])      
     end
 end
