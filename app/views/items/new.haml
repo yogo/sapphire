@@ -1,15 +1,16 @@
 %h1 Create New #{@collection.name} Item
 
-
-= form_for("item", :url => project_collection_items_path, :html => {:multipart => true}) do |f|
-  -@collection.schema.each do |field|
+%div{:class=>"form"}
+  = form_for("item", :url => project_collection_items_path, :html => {:multipart => true}) do |f|
+    -@collection.schema.each do |field|
+      %p
+        = f.label(field.name)
+        = f.text_field(field.to_s)
     %p
-      = f.label(field.name)
-      = f.text_field(field.to_s)
-  %p
-    = f.file_field :file
+      = f.file_field :file
 
-  = f.submit
 
-%a{:href => projects_path} Back
+    = f.submit
+
+  %a{:href => projects_path} Back
 
