@@ -5,3 +5,10 @@
  *= require_self
  *= require_tree . 
 */
+
+#content{
+  padding: 10px 10px 10px 10px;
+}
+.form{
+  width: 300px;
+}
