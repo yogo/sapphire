@@ -2,7 +2,7 @@ class SchemasController < ApplicationController
     before_filter :get_dependencies
 
     def index
-      @schemas = @collection.schema
+      @schema = @collection.schema
     end
 
     def show
@@ -18,8 +18,10 @@ class SchemasController < ApplicationController
       @schema.update(params[:schema])
       if @schema.save
         # success
+        redirect_to project_collection_schemas_path(@project,@collection)
       else
         # fail
+        render :edit
       end
     end
     
