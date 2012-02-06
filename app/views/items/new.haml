@@ -1,7 +1,7 @@
 %h1 Create New #{@collection.name} Item
 
 %div{:class=>"form"}
-  = form_for("item", :url => project_collection_items_path, :html => {:multipart => true}) do |f|
+  = form_for("item", :url => project_collection_items_path, :html => {"multipart" => true, "data-ajax"=> false}) do |f| 
     -@collection.schema.each do |field|
       %p
         = f.label(field.name)
@@ -10,7 +10,7 @@
       = f.file_field :file
 
 
-    = f.submit
+    = f.submit("data-theme"=>"b")
 
   %a{:href => projects_path} Back
 
