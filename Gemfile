@@ -29,6 +29,11 @@ group :development do
   # gem 'capistrano'
   # To use debugger
   gem 'ruby-debug19', :require => 'ruby-debug'
+
+  #required for theme file generation
+  gem 'web-app-theme'
+  gem 'hpricot'
+  gem 'ruby_parser'
 end
 
 group :test do
