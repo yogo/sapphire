@@ -1,0 +1,7 @@
+%p
+  = f.label(:name)
+  = f.text_field(:name)
+  
+%p
+  = f.label(:type)
+  = f.select(:type, property_types_opts)

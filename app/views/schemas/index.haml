@@ -6,6 +6,7 @@
 %ul
   - @schema.each do |s|
     %li
-      %a{:href => project_collection_schema_path(@project, @collection, s)}= s.name
+      %a{:href => project_collection_schema_path(@project, @collection, s)}
+        #{s.name} (#{s.type.to_s.split('::').last})
  
-%a{:href => project_collection_path(@project, @collection)}
+%a{:href => project_collection_path(@project, @collection)} Back to Collection
