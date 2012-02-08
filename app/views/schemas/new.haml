@@ -1,0 +1,7 @@
+%h1 #{@project.name} > #{@collection.name} > New Schema
+
+%div{:class=>"form"}
+  = form_for("schema", :url => project_collection_schemas_path(@project, @collection)) do |f|
+    = render :partial => 'form', :locals => {:f => f}
+  
+    %p= f.submit "Create"

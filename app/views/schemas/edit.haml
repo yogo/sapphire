@@ -1,0 +1,9 @@
+%h1 #{@project.name} > #{@collection.name} > Edit Schema
+
+%div{:class=>"form"}
+  = form_for("schema", :url => project_collection_schema_path(@project, @collection, @schema)) do |f|
+    = render :partial => 'form', :locals => {:f => f}
+ 
+    %p= f.submit "Submit"
+    %a{:href => project_collection_schemas_path(@project, @collection)} Cancel
+     

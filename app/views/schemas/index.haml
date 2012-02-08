@@ -1,0 +1,12 @@
+%h1 #{@project.name} > #{@collection.name} > Schema
+
+%a{:href => new_project_collection_schema_path} Add Another Column
+
+%h3 Columns
+%ul
+  - @schema.each do |s|
+    %li
+      %a{:href => project_collection_schema_path(@project, @collection, s)}
+        #{s.name} (#{s.type.to_s.split('::').last})
+ 
+%a{:href => project_collection_path(@project, @collection)} Back to Collection

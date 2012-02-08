@@ -1,0 +1,19 @@
+%h1 #{@project.name} > #{@collection.name} > Data
+
+%a{:href => project_collection_path(@project, @collection)} Collection
+
+= form_for("item", :url => project_collection_items_path, :html => {"multipart" => true, "data-ajax"=> false}) do |f| 
+  = render :partial => 'form', :locals => {:f => f, :collection => @collection}
+  = f.submit("data-theme"=>"b")
+
+%table
+  %tr
+    - @collection.schema.each do |s|
+      %th= s.name
+    %th File
+  - @collection.items.each do |i|
+    %tr
+      - @collection.schema.each do |s|
+        %td= i[s.name]
+      %td
+        %a{:href => i.file.to_s}= i.original_filename

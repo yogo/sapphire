@@ -1,45 +1,47 @@
 class ItemsController < ApplicationController
+  before_filter :get_dependencies
 
-    def index
-      @collections = Yogo::Collection::Asset.all
-    end
+  def index
+  end
 
-    def show
-      @project = Yogo::Project.get(params[:project_id])
-      @collection = @project.data_collections.get(params[:id])
-    end
+  def show
+    @item = @collection.items.get(params[:id])
+  end
 
-    def edit
-      @collection = Yogo::Collection::Asset.get(params[:id])
-    end
+  def edit
+    @item = @collection.items.get(params[:id])
+  end
 
-    def update
-      @collection = Yogo::Collection::Asset.get(params[:id])
-      @collection.merge(params[:collection])
+  def update
+    @item = @collection.items.get(params[:id])
+    @item.update(params[:item])
+    if @item.save
+      flash[:notice] = "Item Updated!"
+      redirect_to project_collection_items_path(@project, @collection)
+    else
+      flash[:error] = "Item failed to update!"
+      render :edit
     end
-    
-    def new
-      @project = Yogo::Project.get(params[:project_id])
-      @collection =@project.data_collections.get(params[:collection_id])
-      @item = @collection.items.new
+  end
+  
+  def new
+  end
+  
+  def create
+    @item = @collection.items.new(params[:item])
+    if @item.save
+      flash[:notice] = "Item Saved!"
+      redirect_to project_collection_items_path(@project, @collection)
+    else
+      flash[:error] = "Item failed to save!"
+      render :index
     end
-    
-    def create
-      collection = Yogo::Collection::Asset.get(params[:collection_id])
-      if params[:item][:file]
-        attrs = params[:item]
-        file = attrs.delete(:file)
-        @item = collection.items.new(attrs)
-        @item.file.store!(file)
-      else
-        @item = collection.items.new(params[:item])
-      end
-      if @item.save
-        flash[:notice] = "Item Saved!"
-        redirect_to new_project_collection_items_path
-      else
-        flash[:error] = "Item failed to save!"
-        render :new
-      end
-    end
+  end
+  
+  private
+  
+  def get_dependencies
+    @project = Yogo::Project.get(params[:project_id])
+    @collection = @project.data_collections.get(params[:collection_id])      
+  end
 end
