@@ -2,14 +2,7 @@
 
 %div{:class=>"form"}
   = form_for("item", :url => project_collection_items_path, :html => {"multipart" => true, "data-ajax"=> false}) do |f| 
-    -@collection.schema.each do |field|
-      %p
-        = f.label(field.name)
-        = f.text_field(field.to_s)
-    %p
-      = f.file_field :file
-
-
+    = render :partial => 'form', :locals => {:f => f, :collection => @collection}
     = f.submit("data-theme"=>"b")
 
   %a{:href => projects_path} Back
