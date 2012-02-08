@@ -31,4 +31,22 @@ class ProjectsController < ApplicationController
         render :new
       end
     end
+    
+    def upload
+      @project = Yogo::Project.get(params[:project_id])
+      #specify create or load into existing
+    end
+    
+    def process_upload
+      # if new data collectin
+      if params[:upload][:collection].nil?
+         # create/update data_collection schema
+      else# if existing data collectin
+        #update schema
+      end
+      
+      # insert items into data_collection
+      
+      # redirect to data collection index
+    end
 end
