@@ -2,7 +2,7 @@ Sapphire::Application.routes.draw do
 
   resources :projects do 
     resources :collections do
-      resource :items
+      resources :items
       resources :schemas
     end
   end
