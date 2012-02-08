@@ -1,0 +1,9 @@
+%h1 #{@project.name} > #{@collection.name} > #{@schema.name}
+
+%h3 Type
+
+%p #{@schema.type}
+
+%a{:href => edit_project_collection_schema_path(@project, @collection, @schema)} Edit
+
+%a{:href => project_collection_path(@project, @collection)} Back to Collection
