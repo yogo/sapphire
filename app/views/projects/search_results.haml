@@ -5,27 +5,31 @@
   #{@search_results.map{|k,v| v.length}.inject(:+)}  record match your query.
 
 %br
-
-%p
-  -@search_results.keys.each do |coll|
-    -if @search_results[coll].length > 0
-      %h3
-        -cur_collection=@data_collections.get(coll)
-        =link_to(cur_collection.name, project_collection_path(@project,cur_collection))
-      %table.table
-        %tr
-          %th Go To
-          %th Created At
-          %th Updated At
-          - cur_collection.schema.each do |s|
-            %th= s.name
-          %th File
-        - @search_results[coll].each do |i|
-          %tr{:class => cycle('odd','even')}
-            %td=link_to("Go To",project_collection_item_path(@project,cur_collection,i.id))
-            %td= i.created_at
-            %td= i.updated_at
-            -cur_collection.schema.each do |s|
-              %td= i[s.name]
-            %td
-
+.content
+  .inner
+    %p
+      -@search_results.keys.each do |coll|
+        -if @search_results[coll].length > 0
+          .block
+            .secondary-navigation.button-navigation
+              .wat-cf
+                -cur_collection=@data_collections.get(coll)
+                = nav_button(cur_collection.name,"web-app-theme/icons/x-office-spreadsheet.png" ,project_collection_path(@project,cur_collection))
+            %table.table
+              %tr
+                %th Go To
+                %th Created At
+                %th Updated At
+                - cur_collection.schema.each do |s|
+                  %th= s.name
+                %th File
+              - @search_results[coll].each do |i|
+                %tr{:class => cycle('odd','even')}
+                  %td=link_to("Go To",project_collection_item_path(@project,cur_collection,i.id))
+                  %td= i.created_at
+                  %td= i.updated_at
+                  -cur_collection.schema.each do |s|
+                    %td= i[s.name]
+                  %td
+        %hr
+      =link_to("Back", project_search_path(@project))
