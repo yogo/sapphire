@@ -1,0 +1,30 @@
+%h2
+  Search Results:
+
+%p
+  #{@search_results.map{|k,v| v.length}.inject(:+)}  record match your query.
+
+%br
+
+%p
+  -@search_results.keys.each do |coll|
+    -if @search_results[coll].length > 0
+      %h3
+        -cur_collection=@data_collections.get(coll)
+        =link_to(cur_collection.name, project_collection_path(@project,cur_collection))
+      %table.table
+        %tr
+          %th Created At
+          %th Updated At
+          - cur_collection.schema.each do |s|
+            %th= s.name
+          %th File
+        - @search_results[coll].each do |i|
+          %tr{:class => cycle('odd','even')}
+            %td=link_to("Go To",project_collection_item_path(@project,cur_collection,i.id))
+            %td= i.created_at
+            %td= i.updated_at
+            -cur_collection.schema.each do |s|
+              %td= i[s.name]
+            %td
+

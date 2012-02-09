@@ -13,6 +13,9 @@
           %a{:href => "/"} Yogo Sapphire
         #user-navigation
           %ul.wat-cf
+            -if @project
+              %li
+                %a{:href => "#{project_search_path(@project)}"}= t("web-app-theme.profile", :default => "Search")
             %li
               %a{:href => "#"}= t("web-app-theme.profile", :default => "Profile")
             %li
