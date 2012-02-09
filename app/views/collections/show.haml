@@ -1,26 +1,34 @@
 %h1 #{@project.name} > #{@collection.name}
 
-%a{:href => edit_project_collection_path(@project,@collection)} Edit Collection
-
-%h3 Schema: 
-%a{:href => project_collection_schemas_path(@project,@collection)} Edit Schema
-%ul
-  - @collection.schema.each do |s|
-    %li #{s.name} (#{s.type.to_s.split('::').last})
-
-%a{:href => project_collection_items_path(@project, @collection)} All Items
-%a{:href => new_project_collection_item_path(@project, @collection)} Add Item
-%h3 Items (top 5): 
-%table
-  %tr
-    - @collection.schema.each do |s|
-      %th= s.name
-    %th File
-  - @collection.items(:limit => 5).each do |i|
-    %tr
-      - @collection.schema.each do |s|
-        %td= i[s.name]
-      %td
-        %a{:href => i.file.to_s}= i.original_filename
- 
-%a{:href => project_collections_path(@project)} All Collections
+.block
+  .secondary-navigation.button-navigation
+    .wat-cf
+      = nav_button("Back to Project", "web-app-theme/icons/edit-undo.png", project_path(@project))
+      = nav_button("Edit Schema", "web-app-theme/icons/application_edit.png", project_collection_schemas_path(@project, @collection))
+      = nav_button("Edit Collection", "web-app-theme/icons/application_edit.png", edit_project_collection_path(@project,@collection))
+  .content
+    .inner
+      %h3 Schema
+      %ul.list.schema-list
+        - @collection.schema.each do |s|
+          %li 
+            .item #{s.name} (#{s.type.to_s.split('::').last})
+.block
+  .secondary-navigation.button-navigation
+    .wat-cf
+      = nav_button("All Items", "web-app-theme/icons/x-office-spreadsheet.png", project_collection_items_path(@project, @collection))
+      = nav_button("Add Item", "web-app-theme/icons/list-add.png", new_project_collection_item_path(@project, @collection))
+  .content
+    .inner
+      %h3 Items (top 5)
+      %table.table
+        %tr
+          - @collection.schema.each do |s|
+            %th= s.name
+          %th File
+        - @collection.items(:limit => 5).each do |i|
+          %tr{:class => cycle('even','odd')}
+            - @collection.schema.each do |s|
+              %td= i[s.name]
+            %td
+              %a{:href => i.file.to_s}= i.original_filename
