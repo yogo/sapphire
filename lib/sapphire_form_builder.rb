@@ -6,6 +6,12 @@ class SapphireFormBuilder < ActionView::Helpers::FormBuilder
     label(lab) + super
   end
 
+  def select(attribute, opts_for_select, options={})
+    options[:class] = (options[:class].to_a << "select").join(' ')
+    lab = options.delete(:label) || attribute
+    label(lab) + super(attribute, opts_for_select, options)
+  end
+  
   def label(attribute, options={})
     options[:class] = (options[:class].to_a << "label").join(' ')
     super
@@ -20,7 +26,7 @@ class SapphireFormBuilder < ActionView::Helpers::FormBuilder
 
   def submit(attribute, options={})
     options[:class] = (options[:class].to_a << "button").join(' ')
-    attribute = options.delete(:submit_image) + attribute
+    attribute = options.delete(:submit_image).to_s + attribute
     cancel = options.delete(:cancel_link)
     @template.content_tag(:button, attribute, options) + 
       (cancel ? "<span class='text_button_padding'> or </span>#{cancel}".html_safe : "")
