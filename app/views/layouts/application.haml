@@ -29,11 +29,12 @@
           - flash.each do |type, message|
             %div{:class => "message #{type}"}
               %p= message
-        #main
-          = yield
-          #footer
-            .block
-              %p
-                Copyright &copy; #{Time.now.year} Yogo Sapphire.
+        #wrap
+          #main
+            = yield
+        #footer
+          .block
+            %p
+              Copyright &copy; #{Time.now.year} Yogo Sapphire.
         #sidebar
           = yield :sidebar
