@@ -4,4 +4,4 @@
   = form_for("schema", :url => project_collection_schemas_path(@project, @collection)) do |f|
     = render :partial => 'form', :locals => {:f => f}
   
-    %p= f.submit "Create"
+    %p= f.submit("Create", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"), :cancel_link => link_to("Cancel", projects_path, :class => "text_button_padding link_button"))
