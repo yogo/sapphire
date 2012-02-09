@@ -1,0 +1,1 @@
+require 'yogo/project_ext'
