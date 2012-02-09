@@ -1,0 +1,15 @@
+%table.table
+  %tr
+    %th Created At
+    %th Updated At
+    - collection.schema.each do |s|
+      %th= s.name
+    %th File
+  - items.each do |i|
+    %tr{:class => cycle('odd','even')}
+      %td= i.created_at
+      %td= i.updated_at
+      - collection.schema.each do |s|
+        %td= i[s.name]
+      %td
+        %a{:href => i.file.to_s}= i.original_filename
