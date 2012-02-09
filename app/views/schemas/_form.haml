@@ -1,6 +1,3 @@
-%p
-  = f.text_field(:name)
+.group= f.text_field(:name)
   
-%p
-  = f.label(:type)
-  = f.select(:type, property_types_opts)
+.group= f.select(:type, property_types_opts)

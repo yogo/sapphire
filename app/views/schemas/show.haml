@@ -1,9 +1,11 @@
 %h1 #{@project.name} > #{@collection.name} > #{@schema.name}
 
-%h3 Type
-
-%p #{@schema.type}
-
-%a{:href => edit_project_collection_schema_path(@project, @collection, @schema)} Edit
-
-%a{:href => project_collection_path(@project, @collection)} Back to Collection
+.block
+  .secondary-navigation.button-navigation
+    .wat-cf
+      = nav_button("Back to Collection", "web-app-theme/icons/edit-undo.png", project_collection_path(@project, @collection))
+      = nav_button("Edit Schema", "web-app-theme/icons/application_edit.png", edit_project_collection_schema_path(@project, @collection, @schema))
+  .content
+    .inner
+      %h3 Schema
+      Type: #{@schema.type}
