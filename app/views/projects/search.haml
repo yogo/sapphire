@@ -1,5 +1,5 @@
 %h1
-  Search Project:
+  Search #{@project.name}:
 
 %div{:class=>"form"}
   = form_for("search", :url => project_search_path, :html => {:class => 'form'}, 

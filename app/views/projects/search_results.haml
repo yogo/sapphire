@@ -14,6 +14,7 @@
         =link_to(cur_collection.name, project_collection_path(@project,cur_collection))
       %table.table
         %tr
+          %th Go To
           %th Created At
           %th Updated At
           - cur_collection.schema.each do |s|
