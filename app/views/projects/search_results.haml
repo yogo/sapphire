@@ -31,5 +31,6 @@
                   -cur_collection.schema.each do |s|
                     %td= i[s.name]
                   %td
+                    %a{:href => i.file.to_s}= i.original_filename
         %hr
       =link_to("Back", project_search_path(@project))
