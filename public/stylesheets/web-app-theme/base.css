@@ -27,8 +27,9 @@ a img { border: none; }
 body {
   font-size: 12px;
   font-family: sans-serif;  
+  height: 100%;
 }
-
+html {height: 100%;}
 #container {
   min-width: 960px;
 }
@@ -55,7 +56,10 @@ body {
 #main {  
   width: 70%;
   float: left;    
+  //overflow-y:auto;
+  padding-bottom: 80px;
 }
+#wrap {min-height: 100%;}
 
 .actions-bar {
   padding: 10px 1px;
@@ -170,7 +174,11 @@ body {
 }
 
 #footer {
-  padding-bottom: 20px;
+  //padding-bottom: 20px;
+  position: relative;
+	margin-top: -80px; /* negative value of footer height */
+	height: 80px;
+	clear:both;
 }
 
 /* pagination */
