@@ -21,6 +21,7 @@
       - @collection.schema.each do |s|
         %td= i[s.name]
       %td
-        %a{:href => i.file.to_s}= i.original_filename
+        -unless i.file
+          %a{:href => i.file.to_s}= i.original_filename
  
 %a{:href => project_collections_path(@project)} All Collections

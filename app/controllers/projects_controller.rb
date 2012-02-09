@@ -38,15 +38,30 @@ class ProjectsController < ApplicationController
     end
     
     def process_upload
-      # if new data collectin
-      if params[:upload][:collection].nil?
+      @project = Yogo::Project.get(params[:project_id])
+      name = Time.now.to_s + params[:upload][:file].original_filename 
+       @new_file = File.join("temp_data",name)
+       File.open(@new_file, "wb"){ |f| f.write(params[:upload][:file].read)}
+      # if new data collection
+      if params[:upload][:collection].empty?
          # create/update data_collection schema
+         @data_collection= @project.collection_from_file(params[:upload][:file].original_filename, @new_file)
       else# if existing data collectin
-        #update schema
+        #TODO update schema?
+        #fetch schema
+        @data_collection =  @project.data_collections.get(params[:upload][:collection])
       end
-      
       # insert items into data_collection
-      
+      #read header row
+      csv = CSV.read(@new_file)
+      header_row = csv[0]
+      (1..csv.length-1).each do |j|
+        item = @data_collection.items.new
+        i=0
+        header_row.map{|h| item[h]=csv[j][i]; i+=1}
+        item.save 
+      end
       # redirect to data collection index
+      redirect_to project_collection_path(@project.id, @data_collection.id)
     end
 end
