@@ -12,3 +12,20 @@
 .form{
   width: 300px;
 }
+
+.counts {
+  float: right;
+  text-align: right;
+}
+
+.form {
+  width: 100%;
+}
+
+.secondary-navigation.button-navigation {
+ padding: 5px;
+}
+
+.secondary-navigation.button-navigation a{
+  text-decoration: none;
+}
