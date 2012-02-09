@@ -2,7 +2,7 @@ class SapphireFormBuilder < ActionView::Helpers::FormBuilder
     
   def text_field(attribute, options={})
     options[:class] = (options[:class].to_a << "text_field").join(' ')
-    super
+    label(attribute) + super
   end
 
   def label(attribute, options={})
@@ -13,7 +13,7 @@ class SapphireFormBuilder < ActionView::Helpers::FormBuilder
   def text_area(attribute, options={})
     options[:class] = (options[:class].to_a << "text_area").join(' ')
     options[:rows] = 4
-    super
+    label(attribute) + super
   end
 
   def submit(attribute, options={})

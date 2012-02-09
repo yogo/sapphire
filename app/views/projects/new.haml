@@ -7,17 +7,12 @@
   
   .content
     .inner
-      = form_for(@project, :url => projects_path, 
-                           :html => {:class => 'form'}, 
-                           :builder => SapphireFormBuilder) do |f|
+      = form_for(@project, :url => projects_path, :html => {:class => 'form'}) do |f|
         .group
-          = f.label(:name)
           = f.text_field(:name)
-
         .group
-          = f.label(:description)
           = f.text_area(:description)
         .group.navform.wat-cf
-          =h f.submit("Save", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"), :cancel_link => link_to("Cancel", projects_path, :class => "text_button_padding link_button"))
+          = f.submit("Save", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"), :cancel_link => link_to("Cancel", projects_path, :class => "text_button_padding link_button"))
           
           
