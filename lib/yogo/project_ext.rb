@@ -17,18 +17,20 @@ module Yogo
     
     def full_text_search(search_str)
       results = {}
-      data_collections.each do |dc|
-        #we will search on all schema properties that are strings
-        search_schemas = dc.schema.select{ |s| 
-          s.type == Yogo::Collection::Property::String ||
-          s.type == Yogo::Collection::Property::Text
-        }
-        conds = search_schemas.map do |schema| 
-            "field_#{schema.id.to_s.gsub('-','_')} @@ plainto_tsquery(?)" 
-          end
-        conds_array = [conds.join(" OR ")]
-        search_schemas.count.times{ conds_array << escape_string(search_str) }
-        results[dc.id.to_s] = dc.items.all(:conditions => conds_array)
+      unless search_str.blank?
+        data_collections.each do |dc|
+          #we will search on all schema properties that are strings
+          search_schemas = dc.schema.select{ |s| 
+            s.type == Yogo::Collection::Property::String ||
+            s.type == Yogo::Collection::Property::Text
+          }
+          conds = search_schemas.map do |schema| 
+              "field_#{schema.id.to_s.gsub('-','_')} @@ plainto_tsquery(?)" 
+            end
+          conds_array = [conds.join(" OR ")]
+          search_schemas.count.times{ conds_array << escape_string(search_str) }
+          results[dc.id.to_s] = dc.items.all(:conditions => conds_array)
+        end
       end
       results
     end

@@ -71,6 +71,6 @@ class ProjectsController < ApplicationController
     def search_results
       @project = Yogo::Project.get(params[:project_id])
       @data_collections = @project.data_collections
-      @search_results = @project.full_text_search(params[:search][:search_term])
+      @search_results = @project.full_text_search(params[:search][:terms])
     end
 end
