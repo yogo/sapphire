@@ -34,7 +34,6 @@ class ProjectsController < ApplicationController
     
     def upload
       @project = Yogo::Project.get(params[:project_id])
-      #specify create or load into existing
     end
     
     def process_upload

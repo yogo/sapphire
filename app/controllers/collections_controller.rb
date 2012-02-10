@@ -35,6 +35,10 @@ class CollectionsController < ApplicationController
       end
     end
     
+    def upload
+      render 'projects/upload'
+    end
+    
     private
     
     def get_project

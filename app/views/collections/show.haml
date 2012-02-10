@@ -18,7 +18,7 @@
     .wat-cf
       = nav_button("All Items", "web-app-theme/icons/x-office-spreadsheet.png", project_collection_items_path(@project, @collection))
       = nav_button("Add Item", "web-app-theme/icons/list-add.png", new_project_collection_item_path(@project, @collection))
-      = nav_button("Upload Items", "web-app-theme/icons/list-add.png", project_upload_path(@project, :collection=>@collection.id))
+      = nav_button("Upload Data", "web-app-theme/icons/list-add.png", project_collection_upload_path(@project, @collection))
   .content
     .inner
       %h3 Data (top 5)
