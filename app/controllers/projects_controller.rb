@@ -68,21 +68,31 @@ class ProjectsController < ApplicationController
       @project = Yogo::Project.get(params[:project_id])
     end
     
-    def process_search
+    def search_results
       @project = Yogo::Project.get(params[:project_id])
-      @search_terms = params[:search][:q]
-      @search_results = {}
+      @data_collections = @project.data_collections
+      @search_results = Hash.new
       @project.data_collections.each do |dc|
-        @search_results[dc] = []
-        dc.schema.each do |s|
-          r = dc.items.all(s.field_name => @search_terms)
-          @search_results[dc] = r unless r.empty?
-        end
-      end
-      @search_results.each do |m|
-        @search_results.delete(dc) if m.empty?
-      end
-      
+        #we will search on all schema properties
+        conds = dc.schema.map{|schema| "field_#{schema.id.to_s.gsub('-','_')} @@ plainto_tsquery(?)" }
+        conds_array = [conds.join(" OR ")]
+        dc.schema.count.times{ conds_array << escape_string(params[:search][:search_term]) }
+        @search_results[dc.id.to_s] = dc.items.all(:conditions => conds_array)
+      end# @projects     
     end
     
+    private
+    
+    def escape_string(str)
+      str.gsub(/([\0\n\r\032\'\"\\])/) do
+        case $1
+        when "\0" then "\\0"
+        when "\n" then "\\n"
+        when "\r" then "\\r"
+        when "\032" then "\\Z"
+        when "'"  then "''"
+        else "\\"+$1
+        end
+      end
+    end
 end
