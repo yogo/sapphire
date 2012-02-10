@@ -71,28 +71,6 @@ class ProjectsController < ApplicationController
     def search_results
       @project = Yogo::Project.get(params[:project_id])
       @data_collections = @project.data_collections
-      @search_results = Hash.new
-      @project.data_collections.each do |dc|
-        #we will search on all schema properties
-        conds = dc.schema.map{|schema| "field_#{schema.id.to_s.gsub('-','_')} @@ plainto_tsquery(?)" }
-        conds_array = [conds.join(" OR ")]
-        dc.schema.count.times{ conds_array << escape_string(params[:search][:search_term]) }
-        @search_results[dc.id.to_s] = dc.items.all(:conditions => conds_array)
-      end# @projects     
-    end
-    
-    private
-    
-    def escape_string(str)
-      str.gsub(/([\0\n\r\032\'\"\\])/) do
-        case $1
-        when "\0" then "\\0"
-        when "\n" then "\\n"
-        when "\r" then "\\r"
-        when "\032" then "\\Z"
-        when "'"  then "''"
-        else "\\"+$1
-        end
-      end
+      @search_results = @project.full_text_search(params[:search][:search_term])
     end
 end
