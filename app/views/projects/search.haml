@@ -7,5 +7,5 @@
        :builder => SapphireFormBuilder) do |f| 
         %p
           = f.text_field(:search_term)
-        = f.submit("Perform Search",:submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"), :cancel_link => link_to("Cancel", projects_path, :class => "text_button_padding link_button"))
+        = f.submit("Perform Search",:submit_image => image_tag("web-app-theme/icons/search.png", :alt => "Save"), :cancel_link => link_to("Cancel", projects_path, :class => "text_button_padding link_button"))
 %br

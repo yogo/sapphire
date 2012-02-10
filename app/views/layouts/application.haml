@@ -15,6 +15,7 @@
           %ul.wat-cf
             -if @project && request.url != root_url+"projects/new"
               %li
+                <img src="/images/web-app-theme/icons/search.png" height=12px/>
                 %a{:href => "#{project_search_path(@project)}"}= t("web-app-theme.profile", :default => "Search")
             %li
               %a{:href => "#"}= t("web-app-theme.profile", :default => "Profile")
