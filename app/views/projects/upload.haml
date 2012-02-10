@@ -1,17 +1,19 @@
-%h1
-  Upload New Data:
+%h1 Upload Data
 
-%div{:class=>"form"}
-  = form_for("upload", :url => project_upload_path, :html => {"multipart" => true, "data-ajax"=> false,:class => 'form'}, 
-   :builder => SapphireFormBuilder) do |f| 
-    %p
-      = f.label("Upload To")
-      = select("upload","collection", @project.data_collections.all.collect{|d| [d.name, d.id]}, {:prompt => "Select Action", :required=>true,:include_blank => 'A New Collection',:selected_key=>params[:collection]})
-    %p
-      = f.file_field :file
-    
-    = f.submit("Upload Data",:submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"), :cancel_link => link_to("Cancel", :back, :class => "text_button_padding link_button"))
+.block
+  .secondary-navigation.button-navigation
+    .wat-cf
+      = nav_button("Back to Collections", "web-app-theme/icons/edit-undo.png", project_path(@project))
 
+  .content
+    .inner
+      = form_for('upload', :url => project_upload_path, :html => {"multipart" => true, "data-ajax"=> false,:class => 'form'}) do |f|
+        .group
+          %label Upload Into:
+          = select("upload","collection", @project.data_collections.all.collect{|d| [d.name, d.id]}, {:prompt => "Select Action", :required=>true,:include_blank => 'A New Collection',:selected_key=>params[:collection]})
+        .group= f.file_field :file
+        .group.navform.wat-cf
+          = f.submit("Upload Data", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"), :cancel_link => link_to("Cancel", projects_path, :class => "text_button_padding link_button"))
 
 :javascript
   $("#upload_collection").val("#{params[:collection]}")
