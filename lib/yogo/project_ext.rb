@@ -19,7 +19,10 @@ module Yogo
       results = {}
       data_collections.each do |dc|
         #we will search on all schema properties that are strings
-        search_schemas = dc.schema.select{ |s| s.type == Yogo::Collection::Property::String }
+        search_schemas = dc.schema.select{ |s| 
+          s.type == Yogo::Collection::Property::String ||
+          s.type == Yogo::Collection::Property::Text
+        }
         conds = search_schemas.map do |schema| 
             "field_#{schema.id.to_s.gsub('-','_')} @@ plainto_tsquery(?)" 
           end
