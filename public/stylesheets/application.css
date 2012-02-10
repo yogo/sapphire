@@ -29,3 +29,28 @@
 .secondary-navigation.button-navigation a{
   text-decoration: none;
 }
+
+body{
+  height: 100%;
+}
+
+html {
+  height: 100%;
+}
+
+main{
+  //overflow-y:auto;
+  padding-bottom: 80px;
+}
+
+#wrap {
+  min-height: 100%;
+}
+
+#footer {
+  //padding-bottom: 20px;
+  position: relative;
+  margin-top: -80px; /* negative value of footer height */
+  height: 80px;
+  clear:both;
+}
