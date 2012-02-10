@@ -81,6 +81,8 @@ class ProjectsController < ApplicationController
       end# @projects     
     end
     
+    private
+    
     def escape_string(str)
       str.gsub(/([\0\n\r\032\'\"\\])/) do
         case $1
