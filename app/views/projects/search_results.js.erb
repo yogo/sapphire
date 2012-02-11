@@ -1,0 +1,5 @@
+$("#search_results").html( '<%= escape_javascript(render(:partial => "show_search_results",
+                                      :locals => {
+                                        :search_results => @search_results}))%>' )
+
+$('loading_dialog').toggle();
