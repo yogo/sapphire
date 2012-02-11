@@ -17,6 +17,7 @@ module Yogo
     
     def full_text_search(search_str)
       results = {}
+      search_str = search_str.gsub(/\b\s+\b/,' | ') 
       unless search_str.blank?
         data_collections.each do |dc|
           #we will search on all schema properties that are strings
@@ -25,7 +26,7 @@ module Yogo
             s.type == Yogo::Collection::Property::Text
           }
           conds = search_schemas.map do |schema| 
-              "field_#{schema.id.to_s.gsub('-','_')} @@ plainto_tsquery(?)" 
+              "field_#{schema.id.to_s.gsub('-','_')} @@ tsquery(?)" 
             end
           conds_array = [conds.join(" OR ")]
           search_schemas.count.times{ conds_array << escape_string(search_str) }
