@@ -8,4 +8,4 @@
       = form_for(:search, :url => project_s_path, :html => {:class => 'form', :method => :get}) do |f|
         .group= f.text_field(:terms, :label => 'Search Terms')
         .group.navform.wat-cf
-        = f.submit("Perform Search",:submit_image => image_tag("web-app-theme/icons/search.png", :alt => "Save"), :cancel_link => link_to("Cancel", projects_path, :class => "text_button_padding link_button"))
+          = f.submit("Perform Search",:submit_image => image_tag("web-app-theme/icons/search.png", :alt => "Save"), :cancel_link => link_to("Cancel", projects_path, :class => "text_button_padding link_button"))
