@@ -21,3 +21,9 @@
     %td File
     %td
       %a{:href => @item.file.to_s}= @item.original_filename
+      
+.block
+  .content
+    .inner
+      %h3 Previous Versions
+      = render :partial => 'table', :locals => {:items => @item.versions, :collection => @collection}
