@@ -8,7 +8,9 @@ Sapphire::Application.routes.draw do
     resources :collections do
       get :upload
       post :upload, :controller => :projects, :action=>:process_upload
-      resources :items
+      resources :items do
+        put :restore
+      end
       resources :schemas
     end
   end

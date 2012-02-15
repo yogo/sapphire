@@ -4,6 +4,23 @@ class ItemsController < ApplicationController
   def index
   end
   
+  #expects the delete_at datetime in params[:deleted_at]
+  def restore
+     @item = @collection.items.get(params[:item_id])
+     old_item = @item.versions.first(:deleted_at => params[:deleted_at])
+     att = old_item.attributes
+     att.delete(:deleted_at)
+     att.delete(:original_uid)
+     att.delete(:id)
+     if @item.update(att)
+       flash[:notice] = "Item Restored Succesfully!"
+       redirect_to project_collection_item_path(@project, @collection, @item)
+     else
+       flash[:error] = "Item failed to restore!"
+       render :show
+     end
+  end
+  
   def update
     @item = @collection.items.get(params[:id])
     if @item.update(params[:item])
