@@ -13,7 +13,7 @@ class ItemsController < ApplicationController
      att.delete(:original_uid)
      att.delete(:id)
      if @item.update(att)
-       flash[:notice] = "Item Restored Succesfully!"
+       flash[:notice] = "Item Restored Successfully!"
        redirect_to project_collection_item_path(@project, @collection, @item)
      else
        flash[:error] = "Item failed to restore!"
@@ -24,7 +24,7 @@ class ItemsController < ApplicationController
   def update
     @item = @collection.items.get(params[:id])
     if @item.update(params[:item])
-      flash[:notice] = "Item Updated Succesfully!"
+      flash[:notice] = "Item Updated Successfully!"
       redirect_to project_collection_item_path(@project, @collection, @item)
     else
       flash[:error] = "Item failed to save!"
