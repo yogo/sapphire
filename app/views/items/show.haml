@@ -26,4 +26,4 @@
   .content
     .inner
       %h3 Previous Versions
-      = render :partial => 'version_table', :locals => {:items => @item.versions, :collection => @collection}
+      = render :partial => 'version_table', :locals => {:items => @item.versions, :collection => @collection, :item => @item, :project=> @project}
