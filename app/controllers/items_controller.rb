@@ -3,7 +3,17 @@ class ItemsController < ApplicationController
 
   def index
   end
-
+  
+  def update
+    @item = @collection.items.get(params[:id])
+    if @item.update(params[:item])
+      flash[:notice] = "Item Updated Succesfully!"
+      redirect_to project_collection_item_path(@project, @collection, @item)
+    else
+      flash[:error] = "Item failed to save!"
+      render :edit
+    end
+  end
   def show
     @item = @collection.items.get(params[:id])
   end
@@ -12,17 +22,6 @@ class ItemsController < ApplicationController
     @item = @collection.items.get(params[:id])
   end
 
-  def update
-    @item = @collection.items.get(params[:id])
-    @item.update(params[:item])
-    if @item.save
-      flash[:notice] = "Item Updated!"
-      redirect_to project_collection_items_path(@project, @collection)
-    else
-      flash[:error] = "Item failed to update!"
-      render :edit
-    end
-  end
   
   def new
   end
