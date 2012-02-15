@@ -51,45 +51,4 @@ module Yogo
       end
     end
   end #end project
-  
-  module Collection
-      class Asset
-        module ModelProperties
-          def self.extended(model)
-            model.class_eval do
-              property :deleted_at,           ::DataMapper::Property::ParanoidDateTime
-              property :updated_comment,      ::DataMapper::Property::Text,    :lazy=>false
-              property :provenance_comment,   ::DataMapper::Property::Text, :required=>false, :required =>false
-              property :updated_by,           ::DataMapper::Property::Integer, :lazy=>false, :required=>false
-              property :original_uid,          ::DataMapper::Property::UUID, :required =>false
-             
-              before :save, :make_version
-
-              #copies the pre-saved item to a version and then deletes the version
-              #this will make a version for a newly created record 
-              def make_version
-                # check to see if this is a version record because it is we do nothing                
-                if self.original_uid.nil?
-                  #this is a new or updated record so make a new version
-                  dirty_props = (self.dirty_attributes.keys.map{|k| k.name.to_s }-['id','updated_at','provenance_comment','deleted_at']).join(', ')
-                  self.updated_comment = "UPDATED_FIELDS: #{dirty_props}"
-                  att = self.attributes
-                  att.delete(:id)
-                  att = att.merge({:original_uid => self.id})
-                  version = self.model.collection.items.create(att)
-                  version.destroy
-                end
-              end
-              
-              #pulls all the versions of the current item
-              #NOTE that a record that has just been created WILL have a version which is
-              #an exact copy
-              def versions
-                self.model.collection.items.with_deleted.all(:original_uid=>self.id.to_s, :order=>[:deleted_at])
-              end
-            end
-          end
-        end #modelProperties
-      end #asset
-  end #collection
 end# end yogo
