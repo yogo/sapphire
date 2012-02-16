@@ -2,15 +2,15 @@ require 'yogo/project'
 
 module Yogo
   class Project
-
-
     def collection_from_file(name, new_file)
       csv = CSV.read(new_file)
-      new_data_collection = self.data_collections.create(:name=>name,:type => Yogo::Collection::Asset)
+      new_data_collection = Yogo::Collection::Asset.first_or_create(:project=>self)
+      new_data_collection = self.data_collections.first_or_create(:name=>name,:type => Yogo::Collection::Asset)
       header_row = csv[0]
       header_row.each do |field|
-        schema = new_data_collection.schema.new(:name=>field, :type=>Yogo::Collection::Property::String)
-        schema.save
+        unless field=="file" || field == "File"
+          schema = new_data_collection.schema.first_or_create(:name=>field, :type=>Yogo::Collection::Property::String)
+        end
       end
       new_data_collection
     end
@@ -36,6 +36,29 @@ module Yogo
       results
     end
     
+    def process_zip_file_to_new_collection(filename)
+      folder_name ="temp_data/#{Time.now.to_i.to_s}"
+      sys_str="unzip #{filename} -d #{folder_name}"
+      system(sys_str)
+      data_collection = self.collection_from_file(filename, folder_name+"/index.csv")
+      puts data_collection.name + "(#{data_collection.new?})"
+      self.process_zip_file_to_existing_collection(folder_name, "index.csv", data_collection.id)
+      data_collection
+    end
+    
+    def process_zip_file_to_existing_collection(path, file, collection_id)
+      collection = Yogo::Collection::Asset.get(collection_id)
+      csv = CSV.read(path+'/'+file)
+      puts header_row = csv[0]
+      puts collection.schema.map{|k| k.name}.to_s
+      (1..csv.length-1).each do |j|
+        item = collection.items.new
+        i=0
+        header_row.each{|h| h.capitalize == "File" ? item.file =File.new("#{path}/#{csv[j][i].strip}") : item[h]=csv[j][i]; i+=1}
+        item.save
+      end
+    end
+    
     private 
     
     def escape_string(str)
@@ -50,5 +73,6 @@ module Yogo
         end
       end
     end
+    
   end #end project
 end# end yogo
