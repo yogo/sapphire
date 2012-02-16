@@ -1,11 +1,6 @@
 %h1 Edit #{@collection.name} Item
 
 .block
-  .content
-    .inner
-      %h3 Previous Versions
-      = render :partial => 'version_table', :locals => {:items => @item.versions, :collection => @collection}
-.block
   .secondary-navigation.button-navigation
     .wat-cf
       = nav_button("Back to Collection", "web-app-theme/icons/edit-undo.png", project_collection_path(@project, @collection))
@@ -13,6 +8,10 @@
     .inner
       %h3 Edit #{@item.id}
       = form_for("item", :url => project_collection_item_path(@project, @collection, @item), :html=>{:method=>"put"}) do |f| 
+        - @collection.schema.each do |field|
+          .group
+            = field.name
+            = text_field_tag("item[#{field.to_s}]", field.to_s, :label => field.name, :value=>@item[field.name])
         -#= render :partial => 'edit_form', :locals => {:f => f, :collection => @collection, :item=>@item}
         .group.navform.wat-cf
           = f.submit("Save", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"), :cancel_link => link_to("Cancel", project_collection_path(@project, @collection), :class => "text_button_padding link_button"))
