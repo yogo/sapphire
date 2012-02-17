@@ -31,7 +31,7 @@ GIT
 
 GIT
   remote: git://github.com/yogo/yogo-project.git
-  revision: 27fecbfc774c4fdaca58cfec74050e495d1757ad
+  revision: 8eed3b21532499a418d4f2088847a32c47ae4c19
   specs:
     yogo-project (0.5.3)
       carrierwave
@@ -81,7 +81,7 @@ GEM
       activemodel (= 3.0.5)
       activesupport (= 3.0.5)
     activesupport (3.0.5)
-    addressable (2.2.6)
+    addressable (2.2.7)
     ansi (1.4.2)
     archive-tar-minitar (0.5.2)
     arel (2.0.10)
@@ -227,7 +227,7 @@ GEM
     treetop (1.4.10)
       polyglot
       polyglot (>= 0.3.1)
-    turn (0.9.2)
+    turn (0.9.3)
       ansi
     tzinfo (0.3.31)
     uglifier (1.2.3)
