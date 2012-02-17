@@ -124,6 +124,8 @@ GEM
       dm-core (~> 1.1.0)
     dm-is-list (1.1.0)
       dm-adjust (~> 1.1.0)
+    dm-is-nested_set (1.1.0)
+      dm-adjust (~> 1.1.0)
     dm-is-remixable (1.1.0)
       dm-core (~> 1.1.0)
     dm-is-versioned (1.1.0)
@@ -240,6 +242,7 @@ PLATFORMS
 
 DEPENDENCIES
   data_mapper (= 1.1.0)
+  dm-is-nested_set
   dm-rails
   haml
   hpricot
