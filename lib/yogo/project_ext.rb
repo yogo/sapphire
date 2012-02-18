@@ -2,6 +2,8 @@ require 'yogo/project'
 
 module Yogo
   class Project
+    
+    #make a new collection with schema from CSV file
     def collection_from_file(name, new_file)
       csv = CSV.read(new_file)
       new_data_collection = Yogo::Collection::Asset.first_or_create(:project=>self)
@@ -15,6 +17,7 @@ module Yogo
       new_data_collection
     end
     
+    #perform full-text search using the postgres tsvector fields
     def full_text_search(search_str)
       results = {}
       search_str = search_str.gsub(/\b\s+\b/,' | ') 
