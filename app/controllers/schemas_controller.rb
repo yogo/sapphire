@@ -15,8 +15,10 @@ class SchemasController < ApplicationController
 
     def update
       @schema = @collection.schema.get(params[:id])
-      @schema.update(params[:schema])
-      if @schema.save
+      if params[:schema][:controlled_vocabulary_id].blank?
+        params[:schema][:controlled_vocabulary_id] = nil
+      end
+      if @schema.update(params[:schema])
         # success
         redirect_to project_collection_schemas_path(@project,@collection)
       else
@@ -30,6 +32,9 @@ class SchemasController < ApplicationController
     end
     
     def create
+      if params[:schema][:controlled_vocabulary_id].blank?
+        params[:schema].delete(:controlled_vocabulary_id)
+      end
       @schema = @collection.schema.new(params[:schema])
       if @schema.save
         #lets have the table create

@@ -3,6 +3,7 @@ source 'http://rubygems.org'
 gem 'rails', "3.0.5"
 gem 'sqlite3'
 gem 'data_mapper', '1.1.0'
+gem 'dm-is-nested_set'
 
 #includes yogo-support, yogo-operation, yogo-datamapper
 gem 'yogo-support',     :git => "git://github.com/yogo/yogo-support.git"
