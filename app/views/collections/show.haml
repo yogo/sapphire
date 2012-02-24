@@ -4,20 +4,29 @@
   .secondary-navigation.button-navigation
     .wat-cf
       = nav_button("Back to Project", "web-app-theme/icons/edit-undo.png", project_path(@project))
-      = nav_button("Edit Schema", "web-app-theme/icons/application_edit.png", project_collection_schemas_path(@project, @collection))
       = nav_button("Edit Collection", "web-app-theme/icons/application_edit.png", edit_project_collection_path(@project,@collection))
   .content
     .inner
-      %h3 Schema
+      %h3 Add New Schema
+      = form_for("schema", :url => project_collection_schemas_path(@project, @collection), :html => {:class => 'form'}) do |f|
+        = render :partial => 'schemas/form', :locals => {:f => f}
+        .group.navform.wat-cf
+          = f.submit("Save", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"))
+.block
+  .content
+    .inner
+      %h3 Current Schema
       %ul.list.schema-list
         - @collection.schema.each do |s|
           %li 
-            .item #{s.name} (#{s.type.to_s.split('::').last})
+            .item 
+              =link_to(image_tag("web-app-theme/icons/edit.png", :border=>"0", :height=>"16px"), edit_project_collection_schema_path(@project,@collection,s)) 
+              #{s.name} (#{s.type.to_s.split('::').last})
 .block
   .secondary-navigation.button-navigation
     .wat-cf
       = nav_button("All Items", "web-app-theme/icons/x-office-spreadsheet.png", project_collection_items_path(@project, @collection))
-      = nav_button("Add Item", "web-app-theme/icons/list-add.png", new_project_collection_item_path(@project, @collection))
+      = nav_button("Add Item", "web-app-theme/icons/list-add.png", project_collection_items_path(@project, @collection))
       = nav_button("Upload Data", "web-app-theme/icons/list-add.png", project_collection_upload_path(@project, @collection))
   .content
     .inner

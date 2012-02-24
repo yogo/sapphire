@@ -25,7 +25,7 @@ class ItemsController < ApplicationController
     @item = @collection.items.get(params[:id])
     if @item.update(params[:item])
       flash[:notice] = "Item Updated Successfully!"
-      redirect_to project_collection_item_path(@project, @collection, @item)
+      redirect_to project_collection_items_path(@project, @collection)
     else
       flash[:error] = "Item failed to save!"
       render :edit
