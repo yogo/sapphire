@@ -15,7 +15,13 @@ class CollectionsController < ApplicationController
 
     def update
       @collection = @project.data_collections.get(params[:id])
-      @collection.merge(params[:collection])
+      if @collection.update(params[:collection])
+        flash[:notice] = "Collection updated!"
+        redirect_to project_collection_path(@project,@collection)
+      else
+        flash[:error] = "Collection failed to update!"
+        render edit
+      end
     end
     
     def new
