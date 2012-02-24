@@ -13,8 +13,7 @@ class SapphireFormBuilder < ActionView::Helpers::FormBuilder
   end
   
   def label(attribute, options={})
-    options[:class] = (options[:class].to_a << "label").join(' ')
-    super
+    "<label class='label'>#{attribute}</label>".html_safe
   end
 
   def text_area(attribute, options={})
