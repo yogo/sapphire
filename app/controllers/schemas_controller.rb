@@ -37,14 +37,16 @@ class SchemasController < ApplicationController
       end
       @schema = @collection.schema.new(params[:schema])
       if @schema.save
-        #lets have the table create
-        @collection.items.new
-        sql="ALTER TABLE #{'"'+@collection.id.to_s.gsub('-','_')+'s"'} ADD COLUMN field_#{@schema.id.to_s.gsub('-','_')}_search_index tsvector;"
-        repository.adapter.execute(sql)
-        sql = "UPDATE #{'"'+@collection.id.to_s.gsub('-','_')+'s"'} SET field_#{@schema.id.to_s.gsub('-','_')}_search_index = to_tsvector('english', coalesce(field_#{@schema.id.to_s.gsub('-','_')},''));"
-        repository.adapter.execute(sql)
-        sql = "CREATE TRIGGER field_#{@schema.id.to_s.gsub('-','_')} BEFORE INSERT OR UPDATE ON #{'"'+@collection.id.to_s.gsub('-','_')+'s"'} FOR EACH ROW EXECUTE PROCEDURE tsvector_update_trigger(field_#{@schema.id.to_s.gsub('-','_')}_search_index, 'pg_catalog.english', field_#{@schema.id.to_s.gsub('-','_')});"
-        repository.adapter.execute(sql)
+        if @schema.type == Yogo::Collection::Property::String || @schema.type == Yogo::Collection::Property::Text
+          #lets have the table create
+          @collection.items.new
+          sql="ALTER TABLE #{'"'+@collection.id.to_s.gsub('-','_')+'s"'} ADD COLUMN field_#{@schema.id.to_s.gsub('-','_')}_search_index tsvector;"
+          repository.adapter.execute(sql)
+          sql = "UPDATE #{'"'+@collection.id.to_s.gsub('-','_')+'s"'} SET field_#{@schema.id.to_s.gsub('-','_')}_search_index = to_tsvector('english', coalesce(field_#{@schema.id.to_s.gsub('-','_')},''));"
+          repository.adapter.execute(sql)
+          sql = "CREATE TRIGGER field_#{@schema.id.to_s.gsub('-','_')} BEFORE INSERT OR UPDATE ON #{'"'+@collection.id.to_s.gsub('-','_')+'s"'} FOR EACH ROW EXECUTE PROCEDURE tsvector_update_trigger(field_#{@schema.id.to_s.gsub('-','_')}_search_index, 'pg_catalog.english', field_#{@schema.id.to_s.gsub('-','_')});"
+          repository.adapter.execute(sql)
+        end
         redirect_to project_collection_path(@project,@collection)
       else
         flash[:error] = "Schema failed to save!"
