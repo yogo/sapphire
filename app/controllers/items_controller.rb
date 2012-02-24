@@ -2,6 +2,11 @@ class ItemsController < ApplicationController
   before_filter :get_dependencies
 
   def index
+    if params[:item]
+      @item = @collection.items.new(params[:item])
+    else
+      @item =@collection.items.new()
+    end 
   end
   
   #expects the delete_at datetime in params[:deleted_at]
@@ -45,6 +50,11 @@ class ItemsController < ApplicationController
   
   def create
     @item = @collection.items.new(params[:item])
+    @collection.schema.each do |field|
+      if @item[field.name].blank?
+        @item[field.name]=nil
+      end
+    end
     if @item.save
       flash[:notice] = "Item Saved!"
       redirect_to project_collection_items_path(@project, @collection)
