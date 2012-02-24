@@ -15,13 +15,17 @@
 .block
   .content
     .inner
-      %h3 Current Schema
-      %ul.list.schema-list
-        - @collection.schema.each do |s|
-          %li 
-            .item 
-              =link_to(image_tag("web-app-theme/icons/edit.png", :border=>"0", :height=>"16px"), edit_project_collection_schema_path(@project,@collection,s)) 
-              #{s.name} (#{s.type.to_s.split('::').last})
+      %h3 
+        Current Schema
+        %a{:id=>"displayText", :href=>"javascript:toggle();"}
+          %img{:src=>'/images/web-app-theme/icons/plus.png', :height=>'16px'}
+      %div{:id=>"current_schema", :style=>'display:none;'}
+        %ul.list.schema-list
+          - @collection.schema.each do |s|
+            %li 
+              .item 
+                =link_to(image_tag("web-app-theme/icons/edit.png", :border=>"0", :height=>"16px"), edit_project_collection_schema_path(@project,@collection,s)) 
+                #{s.name} (#{s.type.to_s.split('::').last})
 .block
   .secondary-navigation.button-navigation
     .wat-cf
@@ -33,3 +37,16 @@
       %h3 Data (top 5)
       = render :partial => 'items/table', :locals => {:items => @collection.items(:order => :created_at.desc, :limit => 5), :collection => @collection}
 
+:javascript
+  function toggle() {
+  	var ele = document.getElementById("current_schema");
+  	var text = document.getElementById("displayText");
+  	if(ele.style.display == "block") {
+      		ele.style.display = "none";
+  		text.innerHTML = "<img src='/images/web-app-theme/icons/plus.png' height='16px'></img>";
+    	}
+  	else {
+  		ele.style.display = "block";
+  		text.innerHTML = "<img src='/images/web-app-theme/icons/minus.png' height='16px'></img>";
+  	}
+  } 
