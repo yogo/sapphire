@@ -28,10 +28,9 @@ class CollectionsController < ApplicationController
       @collection.type = Yogo::Collection::Asset
       if @collection.save
         flash[:notice] = "Collection created!"
-        redirect_to project_collections_path(@project)
+        redirect_to project_path(@project)
       else
         flash[:error] = "Collection failed to save!"
-        render :new
       end
     end
     
