@@ -44,7 +44,7 @@ class ProjectsController < ApplicationController
       if params[:upload][:collection].empty?
          #check if file is a zip file
          if @new_file.include?(".zip")
-           @data_collection=@project.process_zip_file_to_new_collection(@new_file)
+           @data_collection=@project.process_zip_file_to_collection(@new_file,params[:upload][:file].original_filename)
          else
            # create/update data_collection schema
            @data_collection= @project.collection_from_file(params[:upload][:file].original_filename, @new_file)
@@ -55,7 +55,7 @@ class ProjectsController < ApplicationController
         #TODO update schema?
         #fetch schema
         if @new_file.include?(".zip")
-           @data_collection=@project.process_zip_file_to_new_collection(@new_file)
+           @data_collection=@project.process_zip_file_to_collection(@new_file,params[:upload][:file].original_filename, @data_collection)
         else
           @data_collection =  @project.data_collections.get(params[:upload][:collection])
           # insert items into data_collection

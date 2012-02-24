@@ -4,10 +4,13 @@ module Yogo
   class Project
     
     #make a new collection with schema from CSV file
-    def collection_from_file(name, new_file)
+    def collection_from_file(name, new_file, collection=nil)
       csv = CSV.read(new_file)
-      new_data_collection = Yogo::Collection::Asset.first_or_create(:project=>self)
-      new_data_collection = self.data_collections.first_or_create(:name=>name,:type => Yogo::Collection::Asset)
+      if collection
+        new_data_collection = collection
+      else
+        new_data_collection = self.data_collections.first_or_create(:name=>name,:type => Yogo::Collection::Asset)
+      end
       header_row = csv[0]
       header_row.each do |field|
         unless field=="file" || field == "File"
@@ -39,17 +42,17 @@ module Yogo
       results
     end
     
-    def process_zip_file_to_new_collection(filename)
-      folder_name ="temp_data/#{Time.now.to_i.to_s}"
+    def process_zip_file_to_collection(filename, original_name, collection=nil)
+      folder_name ="tmp/uploads/#{Time.now.to_i.to_s}"
       sys_str="unzip #{filename} -d #{folder_name}"
       system(sys_str)
-      data_collection = self.collection_from_file(filename, folder_name+"/index.csv")
+      data_collection = self.collection_from_file(original_name, folder_name+"/index.csv",collection)
       puts data_collection.name + "(#{data_collection.new?})"
-      self.process_zip_file_to_existing_collection(folder_name, "index.csv", data_collection.id)
+      self.process_zip_file_data_to_collection(folder_name, "index.csv", data_collection.id)
       data_collection
     end
     
-    def process_zip_file_to_existing_collection(path, file, collection_id)
+    def process_zip_file_data_to_collection(path, file, collection_id)
       collection = Yogo::Collection::Asset.get(collection_id)
       csv = CSV.read(path+'/'+file)
       puts header_row = csv[0]
