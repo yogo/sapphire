@@ -31,6 +31,7 @@ group :development do
   gem 'archive-tar-minitar'
   gem 'columnize'
   gem 'multi_json', "~> 1.0.0"
+  gem 'ruby_core_source'
 
   #required for theme file generation
   gem 'web-app-theme'
