@@ -83,7 +83,6 @@ GEM
     activesupport (3.0.5)
     addressable (2.2.7)
     ansi (1.4.2)
-    archive-tar-minitar (0.5.2)
     arel (2.0.10)
     bcrypt-ruby (2.1.4)
     builder (2.1.2)
@@ -98,7 +97,6 @@ GEM
     carrierwave-datamapper (0.2.0)
       carrierwave (~> 0.5.6)
       dm-core (~> 1.0)
-    columnize (0.3.6)
     configatron (2.9.0)
       yamler (>= 0.1.0)
     data_mapper (1.1.0)
@@ -186,15 +184,13 @@ GEM
       railties (~> 3.0)
       thor (~> 0.14)
     json (1.4.6)
-    linecache19 (0.5.12)
-      ruby_core_source (>= 0.1.4)
     mail (2.2.19)
       activesupport (>= 2.3.6)
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     mime-types (1.17.2)
-    multi_json (1.0.4)
+    multi_json (1.1.0)
     net-scp (1.0.4)
       net-ssh (>= 1.99.1)
     net-sftp (2.0.5)
@@ -222,8 +218,6 @@ GEM
       rake (>= 0.8.7)
       thor (~> 0.14.4)
     rake (0.9.2.2)
-    ruby_core_source (0.1.5)
-      archive-tar-minitar (>= 0.5.2)
     ruby_parser (2.3.1)
       sexp_processor (~> 3.0)
     sexp_processor (3.0.10)
@@ -247,19 +241,14 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  archive-tar-minitar
   capistrano
-  columnize
   data_mapper (= 1.1.0)
   dm-is-nested_set
   dm-rails
   haml
   hpricot
   jquery-rails
-  linecache19
-  multi_json (~> 1.0.0)
   rails (= 3.0.5)
-  ruby_core_source
   ruby_parser
   sqlite3
   turn
