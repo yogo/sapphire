@@ -1,14 +1,17 @@
 $:.unshift(File.expand_path('./lib', ENV['rvm_path'])) # Add RVM's lib directory to the load path.
 require "rvm/capistrano"                  # Load RVM's capistrano plugin.
-set :rvm_ruby_string, 'ruby-1.9.2-p180@passenger'
-
 require "bundler/capistrano"
 
+set :rvm_ruby_string, 'ruby-1.9.2-p180@passenger'
 set :application, "sapphire"
 set :scm, :git
 set :repository,  "git://github.com/yogo/sapphire.git"
 set :branch, "rails_3.0.5"
 set :deploy_via, :remote_cache
+
+set :rails_env, "development"
+set :bundle_without, [:test]
+
 
 role :web, "sapphire.rcg.montana.edu"                          # Your HTTP server, Apache/etc
 role :app, "sapphire.rcg.montana.edu"                          # This may be the same as your `Web` server
@@ -37,14 +40,13 @@ set :links, {
 }
 
 namespace :sapphire do
-  
   namespace :db do
     task :setup do
-      run "cd #{current_path} && RAILS_ENV=production bundle exec rake db:setup"
+      run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake db:setup"
     end
 
     task :autoupgrade do
-      run "cd #{current_path} && RAILS_ENV=production bundle exec rake db:autoupgrade"
+      run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake db:autoupgrade"
     end
   end
   
