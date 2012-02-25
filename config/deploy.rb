@@ -6,7 +6,7 @@ set :rvm_ruby_string, 'ruby-1.9.2-p180@passenger'
 set :application, "sapphire"
 set :scm, :git
 set :repository,  "git://github.com/yogo/sapphire.git"
-set :branch, "rails_3.0.5"
+set :branch, "server"
 set :deploy_via, :remote_cache
 
 set :rails_env, "development"
