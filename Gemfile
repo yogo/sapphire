@@ -26,8 +26,11 @@ gem 'haml'
 group :development do
   # Deploy with Capistrano
   gem 'capistrano'
+  
+  # Required for the cap deploy (for some reason)
   gem 'archive-tar-minitar'
   gem 'columnize'
+  gem 'multi_json'
 
   #required for theme file generation
   gem 'web-app-theme'

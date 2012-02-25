@@ -252,6 +252,7 @@ DEPENDENCIES
   haml
   hpricot
   jquery-rails
+  multi_json
   rails (= 3.0.5)
   ruby_parser
   sqlite3
