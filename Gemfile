@@ -29,7 +29,7 @@ group :development do
   # Deploy with Capistrano
   gem 'capistrano'
   # To use debugger
-  gem 'ruby-debug19', :require => 'ruby-debug'
+  # gem 'ruby-debug19', :require => 'ruby-debug'
 
   #required for theme file generation
   gem 'web-app-theme'
