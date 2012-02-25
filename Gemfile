@@ -26,6 +26,7 @@ gem 'haml'
 group :development do
   # Deploy with Capistrano
   gem 'capistrano'
+  gem 'archive-tar-minitar'
 
   #required for theme file generation
   gem 'web-app-theme'
