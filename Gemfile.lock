@@ -192,7 +192,7 @@ GEM
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     mime-types (1.17.2)
-    multi_json (1.1.0)
+    multi_json (1.0.4)
     net-scp (1.0.4)
       net-ssh (>= 1.99.1)
     net-sftp (2.0.5)
@@ -252,7 +252,7 @@ DEPENDENCIES
   haml
   hpricot
   jquery-rails
-  multi_json
+  multi_json (~> 1.0.0)
   rails (= 3.0.5)
   ruby_parser
   sqlite3

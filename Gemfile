@@ -30,7 +30,7 @@ group :development do
   # Required for the cap deploy (for some reason)
   gem 'archive-tar-minitar'
   gem 'columnize'
-  gem 'multi_json'
+  gem 'multi_json', "~> 1.0.0"
 
   #required for theme file generation
   gem 'web-app-theme'
