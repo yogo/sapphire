@@ -39,11 +39,11 @@ set :links, {
 namespace :sapphire do
   namespace :db do
     task :setup do
-      run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake db:setup"
+      run "cd #{release_path} && RAILS_ENV=#{rails_env} bundle exec rake db:setup"
     end
 
     task :autoupgrade do
-      run "cd #{current_path} && RAILS_ENV=#{rails_env} bundle exec rake db:autoupgrade"
+      run "cd #{release_path} && RAILS_ENV=#{rails_env} bundle exec rake db:autoupgrade"
     end
   end
   
@@ -51,17 +51,19 @@ namespace :sapphire do
     task :setup do
       links[:dirs].each do |l|
         run "mkdir -p #{deploy_to}/#{shared_dir}/#{l}"
-      end      
+      end
     end
 
     task :link do
       (links[:files] + links[:dirs]).each do |l|
         run "ln -nfs #{deploy_to}/#{shared_dir}/#{l} #{release_path}/#{l}"
       end
+      run "ln -nfs #{release_path}/public/stylesheets/web-app-theme/themes/default/images #{release_path}/public/stylesheets/images"
+      run "ln -nfs #{release_path}/public/stylesheets/web-app-theme/themes/default/fonts #{release_path}/public/stylesheets/fonts"
     end
   end
 end
 
 after "deploy:setup",       "sapphire:symlink:setup"
 after "deploy:symlink",     "sapphire:symlink:link"
-after "deploy:update_code", "sapphire:db:autoupgrade"
+after "deploy",             "sapphire:db:autoupgrade"
