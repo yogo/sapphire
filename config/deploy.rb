@@ -9,13 +9,10 @@ set :repository,  "git://github.com/yogo/sapphire.git"
 set :branch, "server"
 set :deploy_via, :remote_cache
 
-set :rails_env, "development"
-set :bundle_without, [:test]
 
-
-role :web, "sapphire.rcg.montana.edu"                          # Your HTTP server, Apache/etc
-role :app, "sapphire.rcg.montana.edu"                          # This may be the same as your `Web` server
-role :db,  "sapphire.rcg.montana.edu", :primary => true # This is where Rails migrations will run
+role :web, "sapphire.rcg.montana.edu"
+role :app, "sapphire.rcg.montana.edu"
+role :db,  "sapphire.rcg.montana.edu", :primary => true
 
 set :use_sudo, false
 set :user, "sapphire"
