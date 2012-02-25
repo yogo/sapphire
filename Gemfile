@@ -16,8 +16,6 @@ gem 'yogo-project',     :git => "git://github.com/yogo/yogo-project.git",
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
-  # gem 'sass-rails'
-  # gem 'coffee-rails'
   gem 'uglifier'
 end
 
@@ -28,8 +26,6 @@ gem 'haml'
 group :development do
   # Deploy with Capistrano
   gem 'capistrano'
-  # To use debugger
-  # gem 'ruby-debug19', :require => 'ruby-debug'
 
   #required for theme file generation
   gem 'web-app-theme'
