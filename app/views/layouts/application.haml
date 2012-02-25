@@ -2,10 +2,11 @@
 %html
   %head
     %title Yogo Sapphire
-    = stylesheet_link_tag "web-app-theme/base", :cache => true
-    = stylesheet_link_tag  "web-app-theme/themes/default/style", :cache => true
-    = stylesheet_link_tag "web-app-theme/override", :cache => true
-    = stylesheet_link_tag "application", :cache => true
+    = stylesheet_link_tag "web-app-theme/override",
+                          "web-app-theme/override"
+                          "web-app-theme/themes/default/style"
+                          "web-app-theme/base"
+                          "application", :cache => true
     = javascript_include_tag :defaults, :cache => true
     = csrf_meta_tag
   %body
