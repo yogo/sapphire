@@ -1,0 +1,52 @@
+%h1 #{@project.name} > #{@collection.name}
+
+.block
+  .secondary-navigation.button-navigation
+    .wat-cf
+      = nav_button("Back to Project", "web-app-theme/icons/edit-undo.png", project_path(@project))
+      = nav_button("Edit Collection", "web-app-theme/icons/application_edit.png", edit_project_collection_path(@project,@collection))
+  .content
+    .inner
+      %h3 Add New Schema
+      = form_for("schema", :url => project_collection_schemas_path(@project, @collection), :html => {:class => 'form'}) do |f|
+        = render :partial => 'schemas/form', :locals => {:f => f}
+        .group.navform.wat-cf
+          = f.submit("Save", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"))
+.block
+  .content
+    .inner
+      %h3 
+        Current Schema
+        %a{:id=>"displayText", :href=>"javascript:toggle();"}
+          %img{:src=>'/images/web-app-theme/icons/plus.png', :height=>'16px'}
+      %div{:id=>"current_schema", :style=>'display:none;'}
+        %ul.list.schema-list
+          - @collection.schema.each do |s|
+            %li 
+              .item 
+                =link_to(image_tag("web-app-theme/icons/edit.png", :border=>"0", :height=>"16px"), edit_project_collection_schema_path(@project,@collection,s)) 
+                #{s.name} (#{s.type.to_s.split('::').last})
+.block
+  .secondary-navigation.button-navigation
+    .wat-cf
+      = nav_button("All Items", "web-app-theme/icons/x-office-spreadsheet.png", project_collection_items_path(@project, @collection))
+      = nav_button("Add Item", "web-app-theme/icons/list-add.png", project_collection_items_path(@project, @collection))
+      = nav_button("Upload Data", "web-app-theme/icons/list-add.png", project_collection_upload_path(@project, @collection))
+  .content
+    .inner
+      %h3 Data (top 5)
+      = render :partial => 'items/table', :locals => {:items => @collection.items(:order => :created_at.desc, :limit => 5), :collection => @collection}
+
+:javascript
+  function toggle() {
+  	var ele = document.getElementById("current_schema");
+  	var text = document.getElementById("displayText");
+  	if(ele.style.display == "block") {
+      		ele.style.display = "none";
+  		text.innerHTML = "<img src='/images/web-app-theme/icons/plus.png' height='16px'></img>";
+    	}
+  	else {
+  		ele.style.display = "block";
+  		text.innerHTML = "<img src='/images/web-app-theme/icons/minus.png' height='16px'></img>";
+  	}
+  } 

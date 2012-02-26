@@ -1,0 +1,28 @@
+- schema_hash = {}
+- collection.schema.each do |s|
+  - schema_hash[s] = s.name
+%table.table
+  %tr
+    %th Restore
+    %th Created At
+    %th Updated At
+    %th System Provenance
+    %th User Provenance
+    - collection.schema.each do |s|
+      %th= s.name
+    %th File
+  - items.each do |i|
+    %tr{:class => cycle('odd','even')}
+      %td= link_to image_tag("web-app-theme/icons/restore.png", :border=>"0", :height=>"32px"), project_collection_item_restore_path(project,collection,item, :deleted_at=>i.deleted_at), :method=>:put
+      %td= i.deleted_at.strftime("%B %d, %Y %I:%M:%S %p")
+      %td= i.updated_at.strftime("%B %d, %Y %I:%M:%S %p")
+      %td
+        - display_str =i.updated_comment
+        - schema_hash.keys.each do |k|
+          -display_str = display_str.gsub(k.to_s,schema_hash[k])
+        =display_str
+      %td= i.provenance_comment
+      - collection.schema.each do |s|
+        %td= i[s.name]
+      %td
+        %a{:href => i.file.to_s}= i.original_filename

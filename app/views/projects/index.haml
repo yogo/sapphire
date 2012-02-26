@@ -1,9 +1,23 @@
 %h1 Projects
 
-%a{:href => new_project_path} Create a Project
+.block
+  .secondary-navigation.button-navigation
+    .wat-cf
+      = nav_button("Create a Project", "web-app-theme/icons/list-add.png", new_project_path)
 
-%ul
-  - @projects.each do |p|
-    %li
-      %a{:href => project_path(p)}= p.name
+  .content
+    .inner
+      %ul.list.project-list
+        - @projects.each do |p|
+          %li
+            .counts
+              .collection_count Data Collections: #{p.data_collections.count}
+              .data_items_count Data Items: #{p.data_collections.map{|c| c.items.count }.reduce(:+)}
+            .left= image_tag("Yogo-tiny-trans.png")
+            %dl
+              %dt
+                %h4.item 
+                  %a{:href => project_path(p)}= p.name
+              %dd
+                #{p.description.blank? ? "No Description." : p.description}
 

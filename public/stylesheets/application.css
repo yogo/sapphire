@@ -1,0 +1,56 @@
+/*
+ * This is a manifest file that'll automatically include all the stylesheets available in this directory
+ * and any sub-directories. You're free to add application-wide styles to this file and they'll appear at
+ * the top of the compiled file, but it's generally better to create a new file per style scope.
+ *= require_self
+ *= require_tree . 
+*/
+
+#content{
+  padding: 10px 10px 10px 10px;
+}
+.form{
+  width: 300px;
+}
+
+.counts {
+  float: right;
+  text-align: right;
+}
+
+.form {
+  width: 100%;
+}
+
+.secondary-navigation.button-navigation {
+ padding: 5px;
+}
+
+.secondary-navigation.button-navigation a{
+  text-decoration: none;
+}
+
+body{
+  height: 100%;
+}
+
+html {
+  height: 100%;
+}
+
+main{
+  //overflow-y:auto;
+  padding-bottom: 80px;
+}
+
+#wrap {
+  min-height: 100%;
+}
+
+#footer {
+  //padding-bottom: 20px;
+  position: relative;
+  margin-top: -80px; /* negative value of footer height */
+  height: 80px;
+  clear:both;
+}

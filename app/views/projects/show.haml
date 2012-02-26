@@ -1,11 +1,34 @@
 %h1 Project: #{@project.name}
 
-%h2 Data Collections
-
-%ul
-  - @project.data_collections.each do |c|
-    %li
-      %a{:href => data_collection_path(c)}= c.name
-      = c.schema
- 
-%a{:href => projects_path} Project List
+.block
+  .secondary-navigation.button-navigation
+    .wat-cf
+      = nav_button("Back to Projects", "web-app-theme/icons/edit-undo.png", projects_path)
+      = nav_button("Upload Data", "web-app-theme/icons/list-add.png", project_upload_path(@project))
+      
+  .content
+    .inner
+      %h3 Add New Collection
+      = form_for("collection", :url => project_collections_path(@project), :html => {:class => 'form'}) do |f|
+        = render :partial => 'collections/form', :locals => {:f => f}
+        .group.navform.wat-cf
+          = f.submit("Save", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"))
+              
+.block
+  .content
+    .inner
+      %h3 Current Collections
+      %ul.list.collection-list
+        - @project.data_collections.each do |c|
+          %li
+            .counts
+              .data_items_count Data Items: #{c.items.count}
+            .left= image_tag("Yogo-tiny-trans.png")
+            %dl
+              %dt
+                %h4.item 
+                  %a{:href => project_collection_path(@project,c)}= c.name
+              %dd
+                Schema: #{c.schema.map(&:name)}
+                %br
+                #{c.description.blank? ? "No Description." : c.description}

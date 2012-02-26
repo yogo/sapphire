@@ -1,0 +1,24 @@
+%h1 Project: #{@project.name}
+
+.block
+  .secondary-navigation.button-navigation
+    .wat-cf
+      = nav_button("Back to Projects", "web-app-theme/icons/edit-undo.png", projects_path)
+      = nav_button("Create a Data Collection", "web-app-theme/icons/list-add.png", new_project_collection_path(@project))
+  .content
+    .inner
+    
+      %ul.list.collection-list
+        - @project.data_collections.each do |c|
+          %li
+            .counts
+              .data_items_count Data Items: #{c.items.count}
+            .left= image_tag("Yogo-tiny-trans.png")
+            %dl
+              %dt
+                %h4.item 
+                  %a{:href => project_collection_path(@project,c)}= c.name
+              %dd
+                Schema: #{c.schema.map(&:name)}
+                %br
+                #{c.description.blank? ? "No Description." : c.description}

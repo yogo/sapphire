@@ -1,0 +1,5 @@
+.group= f.text_field(:name,:label => "Name")
+  
+.group= f.select(:type, property_types_opts,:label => "Type")
+
+.group= f.select(:controlled_vocabulary_id, controlled_vocabulary_opts, :label => "Controlled Vocabulary", :include_blank => true)

@@ -1,0 +1,18 @@
+%h1 Search Results:
+.block
+
+  .content
+    .inner
+      %h4 #{@search_results.map{|k,v| v.length}.inject(:+)} records match your query.
+
+- @search_results.each do |collection, items|
+  -unless items.empty?
+    .content
+      .block
+        .secondary-navigation.button-navigation
+          .wat-cf
+            = nav_button(collection.name,"web-app-theme/icons/x-office-spreadsheet.png" ,project_collection_path(@project, collection))
+        .content
+          .inner
+            %h3= collection.name
+            = render :partial => 'items/table', :locals => {:items => items, :collection => collection}

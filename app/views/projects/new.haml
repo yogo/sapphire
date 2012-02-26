@@ -1,16 +1,18 @@
 %h1 Create Project
 
-
-= form_for(@project, :url => projects_path) do |f|
-  %p
-    = f.label(:name)
-    = f.text_field(:name)
-    
-  %p
-    = f.label(:description)
-    = f.text_area(:description)
-
-  = f.submit
-
-%a{:href => projects_path} Back
-
+.block
+  .secondary-navigation.button-navigation
+    .wat-cf
+      = nav_button("Back to Projects", "web-app-theme/icons/edit-undo.png", projects_path)
+  
+  .content
+    .inner
+      = form_for(@project, :url => projects_path, :html => {:class => 'form'}) do |f|
+        .group
+          = f.text_field(:name)
+        .group
+          = f.text_area(:description)
+        .group.navform.wat-cf
+          = f.submit("Save", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"), :cancel_link => link_to("Cancel", projects_path, :class => "text_button_padding link_button"))
+          
+          

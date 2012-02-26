@@ -1,41 +1,40 @@
 source 'http://rubygems.org'
 
-gem 'rails'
+gem 'rails', "3.0.5"
 gem 'sqlite3'
-gem 'dm-sqlite-adapter'
-gem 'dm-postgres-adapter'
+gem 'data_mapper', '1.1.0'
+gem 'dm-is-nested_set'
 
 #includes yogo-support, yogo-operation, yogo-datamapper
 gem 'yogo-support',     :git => "git://github.com/yogo/yogo-support.git"
 gem 'yogo-operation',   :git => "git://github.com/yogo/yogo-operation.git"
 gem 'yogo-datamapper',  :git => "git://github.com/yogo/yogo-datamapper.git"
-gem 'yogo-project',     :git => "git://github.com/yogo/yogo-project.git", 
-                        :require => 'yogo/project'
 gem 'yogo-framework',   :git => "git://github.com/yogo/yogo-framework.git"
+gem 'yogo-project',     :git => "git://github.com/yogo/yogo-project.git",
+                        :require => 'yogo/project'
 
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
-  gem 'sass-rails',   '~> 3.1.4'
-  gem 'coffee-rails'
-  gem 'uglifier', '>= 1.0.3'
+  gem 'uglifier'
 end
-gem 'dm-sqlite-adapter'
+
 gem 'jquery-rails'
 gem 'dm-rails'
 gem 'haml'
 
-# To use ActiveModel has_secure_password
-# gem 'bcrypt-ruby', '~> 3.0.0'
+group :development do
+  # Deploy with Capistrano
+  gem 'capistrano'
 
-# Use unicorn as the web server
-# gem 'unicorn'
+  # To use debugger
+  gem 'ruby-debug19', :require => 'ruby-debug'
 
-# Deploy with Capistrano
-# gem 'capistrano'
-
-# To use debugger
-# gem 'ruby-debug19', :require => 'ruby-debug'
+  #required for theme file generation
+  gem 'web-app-theme'
+  gem 'hpricot'
+  gem 'ruby_parser'
+end
 
 group :test do
   # Pretty printed test output
