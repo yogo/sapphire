@@ -76,7 +76,7 @@ class ProjectsController < ApplicationController
     def search_results
       @project = Yogo::Project.get(params[:project_id])
       @data_collections = @project.data_collections
-      @search_results = @project.full_text_search(params[:search][:terms])
+      @search_results = @project.full_text_search(params[:search][:terms].downcase)
       @schema_cv_hash={}
       collections = @project.data_collections.all(:id=>@search_results.keys)
       collections.each do |coll|
