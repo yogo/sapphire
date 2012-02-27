@@ -93,6 +93,24 @@ class ProjectsController < ApplicationController
       end
     end
     
+    def add_user
+      @project = Yogo::Project.get(params[:project_id])
+      @users = User.all.map{|u| ["#{u.last_name}, #{u.first_name}",u.id] }
+      @current_project_users = User.all(:id => Membership.all(:project_id=> @project.id).map{|m| m.user_id})
+    end
+    
+    def associate_user
+      @project = Yogo::Project.get(params[:project_id])
+      @user = User.get(params[:add_user][:user_id].to_i)
+      if @user.memberships.first_or_create(:project_id=> @project.id)
+        flash[:notice] = "#{@user.first_name} #{@user.last_name} has been add to this project."
+        redirect_to projects_path
+      else
+        flash[:error] = "Failed to add user!"
+        render :add_user
+      end
+    end
+    
     private
     
     def insert_nonfile_item_into_collection(file, collection)

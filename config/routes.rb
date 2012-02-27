@@ -7,6 +7,8 @@ Sapphire::Application.routes.draw do
     get :s, :action=> :search_results
     get :upload
     post :upload, :action=>:process_upload
+    get :add_user
+    post :associate_user
     resources :collections do
       get :upload
       post :upload, :controller => :projects, :action=>:process_upload
