@@ -258,7 +258,7 @@ input.checkbox {
   float: right;
 }
 
-.form label.label, .form input.text_field, .form textarea.text_area {
+.form label.label, .form input.text_field, .form textarea.text_area, #user_email, #user_password, #user_password_confirmation {
   font-size: 1.2em;
   padding: 1px 0;
   margin: 0;
@@ -290,11 +290,13 @@ input.checkbox {
   color: red;
 }
 
-.form input.text_field, .form textarea.text_area {
+.form input.text_field, .form textarea.text_area, #user_email, #user_password, #user_password_confirmation {
   width: 100%;
   border-width: 1px;
   border-style: solid;
 }
+
+
 
 /* lists */
 
