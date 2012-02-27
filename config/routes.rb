@@ -1,5 +1,7 @@
 Sapphire::Application.routes.draw do
 
+  devise_for :users
+
   resources :projects do 
     get :search
     get :s, :action=> :search_results
