@@ -3,7 +3,7 @@
 .block
   .secondary-navigation.button-navigation
     .wat-cf
-      = nav_button("Back to Collections", "web-app-theme/icons/edit-undo.png", project_path(@project))
+      = nav_button("Back to Project", "web-app-theme/icons/edit-undo.png", project_path(@project))
 
   .content
     .inner
@@ -13,5 +13,5 @@
           = select("upload","collection", @project.data_collections.all.collect{|d| [d.name, d.id]}, {:prompt => "Select Action", :required=>true,:include_blank => 'A New Collection',:selected=>params[:collection_id]})
         .group= f.file_field :file
         .group.navform.wat-cf
-          = f.submit("Upload Data", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"), :cancel_link => link_to("Cancel", projects_path, :class => "text_button_padding link_button"))
+          = f.submit("Upload Data", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"), :cancel_link => link_to("Cancel", :back, :class => "text_button_padding link_button"))
 

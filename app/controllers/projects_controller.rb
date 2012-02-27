@@ -35,7 +35,7 @@ class ProjectsController < ApplicationController
     end
     
     def upload
-     # @project = Yogo::Project.get(params[:project_id])
+     @project = Yogo::Project.get(params[:project_id])
     end
     
     def process_upload
