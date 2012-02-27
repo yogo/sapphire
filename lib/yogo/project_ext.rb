@@ -31,12 +31,14 @@ module Yogo
             s.type == Yogo::Collection::Property::String ||
             s.type == Yogo::Collection::Property::Text
           }
-          conds = search_schemas.map do |schema| 
-              "field_#{schema.id.to_s.gsub('-','_')} @@ tsquery(?)" 
-            end
-          conds_array = [conds.join(" OR ")]
-          search_schemas.count.times{ conds_array << escape_string(search_str) }
-          results[dc.id.to_s] = dc.items.all(:conditions => conds_array)
+          if !search_schemas.empty?
+            conds = search_schemas.map do |schema| 
+                "field_#{schema.id.to_s.gsub('-','_')} @@ tsquery(?)" 
+              end
+            conds_array = [conds.join(" OR ")]
+            search_schemas.count.times{ conds_array << escape_string(search_str) }
+            results[dc.id.to_s] = dc.items.all(:conditions => conds_array)
+          end
         end
       end
       results
