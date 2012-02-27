@@ -6,6 +6,7 @@ temp_data/*
 .sass-cache/
 bin/*
 public/asset_collection/*
-
+.DS\_Store
 public/javascripts/all.js
 public/stylesheets/all.css
+config/database.yml
