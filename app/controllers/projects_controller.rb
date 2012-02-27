@@ -70,7 +70,7 @@ class ProjectsController < ApplicationController
     end
     
     def search
-      #@project = Yogo::Project.get(params[:project_id])
+      @project = Yogo::Project.get(params[:project_id])
     end
     
     def search_results
