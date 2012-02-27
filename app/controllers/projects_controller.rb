@@ -1,7 +1,8 @@
 class ProjectsController < ApplicationController
-
+    before_filter :verify_project, :only =>[:show, :edit, :update, :upload, :process_upload, :search, :search_results]
+    
     def index
-      @projects = Yogo::Project.all
+      @projects = Yogo::Project.all(:id=>current_user.memberships.map{|m| m.project_id})
     end
 
     def show
@@ -33,7 +34,7 @@ class ProjectsController < ApplicationController
     end
     
     def upload
-      @project = Yogo::Project.get(params[:project_id])
+     # @project = Yogo::Project.get(params[:project_id])
     end
     
     def process_upload
@@ -68,7 +69,7 @@ class ProjectsController < ApplicationController
     end
     
     def search
-      @project = Yogo::Project.get(params[:project_id])
+      #@project = Yogo::Project.get(params[:project_id])
     end
     
     def search_results
@@ -103,6 +104,13 @@ class ProjectsController < ApplicationController
         i=0
         header_row.map{|h| item[h]=csv[j][i]; i+=1}
         item.save
+      end
+    end
+    
+    def verify_project
+      if current_user.memberships(:project_id => params[:id]).empty? && current_user.memberships(:project_id => params[:project_id]).empty?
+        flash[:error] = "You don't have access to that Project!"
+        redirect_to projects_path()
       end
     end
     
