@@ -35,7 +35,7 @@
   .content
     .inner
       %h3 Data (top 5)
-      = render :partial => 'items/table', :locals => {:items => @collection.items(:order => :created_at.desc, :limit => 5), :collection => @collection}
+      = render :partial => 'items/table', :locals => {:items => @collection.items(:order => :created_at.desc, :limit => 5), :collection => @collection, :project=>@project}
 
 :javascript
   function toggle() {

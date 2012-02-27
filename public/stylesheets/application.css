@@ -54,3 +54,7 @@ main{
   height: 80px;
   clear:both;
 }
+
+td.cv_error {
+  color:red;
+}

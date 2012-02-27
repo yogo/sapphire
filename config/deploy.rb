@@ -33,6 +33,7 @@ set :links, {
   :dirs => %w{
     public/asset_collection
     public/uploads
+    tmp/uploads
   }
 }
 
