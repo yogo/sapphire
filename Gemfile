@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', "3.0.5"
+gem 'rails'
 gem 'sqlite3'
 gem 'data_mapper', '1.1.0'
 gem 'dm-is-nested_set'
