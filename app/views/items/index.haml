@@ -17,4 +17,4 @@
   .content
     .inner
       %h3 All #{@collection.name.pluralize}
-      = render :partial => 'table', :locals => {:items => @collection.items(:order => :created_at.desc), :collection => @collection}
+      = render :partial => 'table', :locals => {:items => @collection.items(:order => :created_at.desc), :collection => @collection, :project=>@project}

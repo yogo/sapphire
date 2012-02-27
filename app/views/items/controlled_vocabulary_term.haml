@@ -1,0 +1,20 @@
+%h3
+  Term Meta Data:
+%table.table
+  %tr
+    %th Attribute
+    %th Value
+  %tr{:class => cycle('odd','even')}
+    %td Created At
+    %td=@item.created_at
+  %tr{:class => cycle('odd','even')}
+    %td Updated At
+    %td= @item.updated_at
+  -@collection.schema.each do |field|
+    %tr{:class => cycle('odd','even')}
+      %td=field.name
+      %td= @item[field.name]
+  %tr{:class => cycle('odd','even')}
+    %td File
+    %td
+      %a{:href => @item.file.to_s}= @item.original_filename

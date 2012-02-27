@@ -1,3 +1,4 @@
+
 %table.table
   %tr
     %th Edit
@@ -14,6 +15,29 @@
       %td= i.created_at.strftime("%B %d, %Y %I:%M:%S %p")
       %td= i.updated_at.strftime("%B %d, %Y %I:%M:%S %p")
       - collection.schema.each do |s|
-        %td= i[s.name]
+        -if s.controlled_vocabulary_id
+          %td
+            %a{:href=>"#", :onClick=>"return showDialog('#{project_collection_item_controlled_vocabulary_term_path(project,@schema_cv_hash[s.id],@schema_cv_hash[s.name][i[s.name]])}')"}
+              = i[s.name]
+        -else
+          %td= i[s.name]
       %td
         %a{:href => i.file.to_s}= i.original_filename
+        
+:javascript
+  function showDialog(url){
+     $("#CV_info").html('<iframe id="modalIframeId" width="100%" height="100%" marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"/>').dialog("open");
+     $("#modalIframeId").attr("src",url);
+     return false;
+  }
+
+  $(document).ready(function() {
+     $("#CV_info").dialog({
+             autoOpen: false,
+             modal: true,
+             height: 500,
+             width: 500
+         });
+  });
+  
+#CV_info{:title=>"Controlled Vocabulary" }

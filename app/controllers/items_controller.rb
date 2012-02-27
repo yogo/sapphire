@@ -1,12 +1,35 @@
 class ItemsController < ApplicationController
   before_filter :get_dependencies
-
+  layout :choose_layout
+  
+  def choose_layout
+    if action_name == 'controlled_vocabulary_term'
+      return 'controlled_vocabulary'
+    else
+      return 'application'
+    end
+  end
   def index
     if params[:item]
       @item = @collection.items.new(params[:item])
     else
       @item =@collection.items.new()
     end 
+    @schema_cv_hash={}
+    @collection.schema.each do |s|
+      link_hash={}
+      if s.controlled_vocabulary_id
+        @schema_cv_hash[s.id] = Yogo::Collection::Property.get(s.controlled_vocabulary_id).data_collection
+        s.data_collection.items.each do |i|
+          link_hash = link_hash.merge({i[s.name] => @schema_cv_hash[s.id].items.first("field_#{s.controlled_vocabulary_id.to_s.gsub('-','_')}".to_sym=>i[s.name])})
+        end
+        @schema_cv_hash[s.name]=link_hash
+      end
+    end
+  end
+  
+  def controlled_vocabulary_term
+    @item = @collection.items.get(params[:item_id])
   end
   
   #expects the delete_at datetime in params[:deleted_at]
