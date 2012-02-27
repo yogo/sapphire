@@ -28,9 +28,9 @@
               %a{:href => "#"}= t("web-app-theme.profile", :default => "Profile")
             %li
               %a{:href => "#"}= t("web-app-theme.settings", :default => "Settings")
-            %li
-              =link_to("Logout", destroy_user_session_path, :method=> :delete)
-              
+            -if current_user
+              %li
+                =link_to("Logout(#{current_user.first_name})", destroy_user_session_path, :method=> :delete)
         #main-navigation
           %ul.wat-cf
       #wrapper.wat-cf
