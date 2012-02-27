@@ -104,7 +104,7 @@ class ProjectsController < ApplicationController
       @user = User.get(params[:add_user][:user_id].to_i)
       if @user.memberships.first_or_create(:project_id=> @project.id)
         flash[:notice] = "#{@user.first_name} #{@user.last_name} has been add to this project."
-        redirect_to projects_path
+        redirect_to project_path(@project)
       else
         flash[:error] = "Failed to add user!"
         render :add_user
