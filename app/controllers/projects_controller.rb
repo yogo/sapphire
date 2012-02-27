@@ -26,6 +26,7 @@ class ProjectsController < ApplicationController
     def create
       @project = Yogo::Project.new(params[:yogo_project])
       if @project.save
+        current_user.memberships.create(:project_id => @project.id)
         redirect_to projects_path
       else
         flash[:error] = "Project failed to save!"
