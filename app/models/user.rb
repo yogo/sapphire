@@ -42,6 +42,8 @@ class User
   # property :authentication_token, String, :length => 255
 
   property :id, Serial
+  property :first_name, String
+  property :last_name, String
   
   has n, :memberships
 
