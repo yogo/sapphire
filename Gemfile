@@ -19,6 +19,9 @@ group :assets do
   gem 'uglifier'
 end
 
+gem 'devise'
+gem 'dm-devise'
+
 gem 'jquery-rails'
 gem 'dm-rails'
 gem 'haml'

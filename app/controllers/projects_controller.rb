@@ -1,7 +1,8 @@
 class ProjectsController < ApplicationController
-
+    before_filter :verify_project, :only =>[:show, :edit, :update, :upload, :process_upload, :search, :search_results]
+    
     def index
-      @projects = Yogo::Project.all
+      @projects = Yogo::Project.all(:id=>current_user.memberships.map{|m| m.project_id})
     end
 
     def show
@@ -25,6 +26,7 @@ class ProjectsController < ApplicationController
     def create
       @project = Yogo::Project.new(params[:yogo_project])
       if @project.save
+        current_user.memberships.create(:project_id => @project.id)
         redirect_to projects_path
       else
         flash[:error] = "Project failed to save!"
@@ -32,8 +34,19 @@ class ProjectsController < ApplicationController
       end
     end
     
+    def destroy
+      @project = Yogo::Project.get(params[:id])
+      if @project.destroy
+       flash[:notice] = "Project was Deleted."
+        redirect_to projects_path()
+      else
+        flash[:error] = "Project failed to Delete"
+        render :index
+      end
+    end
+    
     def upload
-      @project = Yogo::Project.get(params[:project_id])
+     @project = Yogo::Project.get(params[:project_id])
     end
     
     def process_upload
@@ -67,6 +80,7 @@ class ProjectsController < ApplicationController
       redirect_to project_collection_path(@project.id, @data_collection.id)
     end
     
+    
     def search
       @project = Yogo::Project.get(params[:project_id])
     end
@@ -74,7 +88,7 @@ class ProjectsController < ApplicationController
     def search_results
       @project = Yogo::Project.get(params[:project_id])
       @data_collections = @project.data_collections
-      @search_results = @project.full_text_search(params[:search][:terms])
+      @search_results = @project.full_text_search(params[:search][:terms].downcase)
       @schema_cv_hash={}
       collections = @project.data_collections.all(:id=>@search_results.keys)
       collections.each do |coll|
@@ -91,6 +105,24 @@ class ProjectsController < ApplicationController
       end
     end
     
+    def add_user
+      @project = Yogo::Project.get(params[:project_id])
+      @users = User.all.map{|u| ["#{u.last_name}, #{u.first_name}",u.id] }
+      @current_project_users = User.all(:id => Membership.all(:project_id=> @project.id).map{|m| m.user_id})
+    end
+    
+    def associate_user
+      @project = Yogo::Project.get(params[:project_id])
+      @user = User.get(params[:add_user][:user_id].to_i)
+      if @user.memberships.first_or_create(:project_id=> @project.id)
+        flash[:notice] = "#{@user.first_name} #{@user.last_name} has been add to this project."
+        redirect_to project_path(@project)
+      else
+        flash[:error] = "Failed to add user!"
+        render :add_user
+      end
+    end
+    
     private
     
     def insert_nonfile_item_into_collection(file, collection)
@@ -103,6 +135,13 @@ class ProjectsController < ApplicationController
         i=0
         header_row.map{|h| item[h]=csv[j][i]; i+=1}
         item.save
+      end
+    end
+    
+    def verify_project
+      if current_user.memberships(:project_id => params[:id]).empty? && current_user.memberships(:project_id => params[:project_id]).empty?
+        flash[:error] = "You don't have access to that Project!"
+        redirect_to projects_path()
       end
     end
     

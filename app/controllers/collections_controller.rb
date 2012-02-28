@@ -51,6 +51,18 @@ class CollectionsController < ApplicationController
       end
     end
     
+    def destroy
+      @collection = @project.data_collections.get(params[:id])
+      @collection.items.destroy
+      @collection.schema.destroy
+      if @collection.destroy
+       flash[:notice] = "Collection was Deleted."
+        redirect_to project_path(@project)
+      else
+        flash[:error] = "Collection failed to Delete"+@collection.errors.inspect
+        redirect_to project_path(@project)
+      end
+    end
     def upload
       render 'projects/upload'
     end
@@ -58,6 +70,12 @@ class CollectionsController < ApplicationController
     private
     
     def get_project
-      @project = Yogo::Project.get(params[:project_id])
+      if current_user.memberships(:project_id => params[:project_id]).empty?
+        flash[:error] = "You don't have access to that project!"
+        redirect_to projects_path()
+        return
+      else
+        return @project = Yogo::Project.get(params[:project_id])
+      end
     end
 end

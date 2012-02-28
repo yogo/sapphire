@@ -5,6 +5,7 @@
     .wat-cf
       = nav_button("Back to Projects", "web-app-theme/icons/edit-undo.png", projects_path)
       = nav_button("Upload Data", "web-app-theme/icons/list-add.png", project_upload_path(@project))
+      = nav_button("Add User to Project", "web-app-theme/icons/list-add.png", project_add_user_path(@project))
       
   .content
     .inner
@@ -32,3 +33,5 @@
                 Schema: #{c.schema.map(&:name)}
                 %br
                 #{c.description.blank? ? "No Description." : c.description}
+                %dd
+                  =link_to("delete", project_collection_path(@project,c), :method=>:delete, "data-confirm"=>"Are you sure you wish to delete this Collection?")

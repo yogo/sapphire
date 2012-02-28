@@ -71,6 +71,17 @@ class ItemsController < ApplicationController
   def new
   end
   
+  def destroy
+    @item = @collection.items.get(params[:id])
+    if @item.destroy
+      flash[:notice] = "Item was Deleted."
+      redirect_to project_collection_items_path(@project, @collection)
+    else
+      flash[:error] = "Item failed to Delete"
+      render :index
+    end
+  end
+  
   def create
     @item = @collection.items.new(params[:item])
     @collection.schema.each do |field|
@@ -92,7 +103,13 @@ class ItemsController < ApplicationController
   private
   
   def get_dependencies
-    @project = Yogo::Project.get(params[:project_id])
-    @collection = @project.data_collections.get(params[:collection_id])      
+    if current_user.memberships(:project_id => params[:project_id]).empty?
+      flash[:error] = "You don't have access to that project!"
+      redirect_to projects_path()
+      return
+    else
+      @project = Yogo::Project.get(params[:project_id])
+      @collection = @project.data_collections.get(params[:collection_id])   
+    end 
   end
 end
