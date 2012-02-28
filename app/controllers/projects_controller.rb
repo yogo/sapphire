@@ -34,6 +34,17 @@ class ProjectsController < ApplicationController
       end
     end
     
+    def destroy
+      @project = Yogo::Project.get(params[:id])
+      if @project.destroy
+       flash[:notice] = "Project was Deleted."
+        redirect_to projects_path()
+      else
+        flash[:error] = "Project failed to Delete"
+        render :index
+      end
+    end
+    
     def upload
      @project = Yogo::Project.get(params[:project_id])
     end
@@ -68,6 +79,7 @@ class ProjectsController < ApplicationController
       # redirect to data collection index
       redirect_to project_collection_path(@project.id, @data_collection.id)
     end
+    
     
     def search
       @project = Yogo::Project.get(params[:project_id])
