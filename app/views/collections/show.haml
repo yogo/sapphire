@@ -26,7 +26,8 @@
           - @collection.schema.each do |s|
             %li 
               .item 
-                =link_to(image_tag("web-app-theme/icons/edit.png", :border=>"0", :height=>"16px"), edit_project_collection_schema_path(@project,@collection,s)) 
+                -unless current_user.memberships.all(:project_id=>@project.id).empty?
+                  =link_to(image_tag("web-app-theme/icons/edit.png", :border=>"0", :height=>"16px"), edit_project_collection_schema_path(@project,@collection,s)) 
                 #{s.name} (#{s.type.to_s.split('::').last})
 .block
   .secondary-navigation.button-navigation
