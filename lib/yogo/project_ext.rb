@@ -72,7 +72,7 @@ module Yogo
         i=0
         header_row.each{|h| h.capitalize == "File" ? item.file =File.new("#{path}/#{csv[j][i].strip}") : item[h]=csv[j][i]; i+=1}
         item.save
-        if item.version.empty?
+        if item.versions.empty?
           item.make_version
         end
       end

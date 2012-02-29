@@ -158,7 +158,7 @@ class ProjectsController < ApplicationController
         i=0
         header_row.map{|h| item[h]=csv[j][i]; i+=1}
         item.save
-        if item.version.empty?
+        if item.versions.empty?
           item.make_version
         end
       end
