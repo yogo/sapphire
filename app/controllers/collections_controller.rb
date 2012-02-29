@@ -63,6 +63,26 @@ class CollectionsController < ApplicationController
         redirect_to project_path(@project)
       end
     end
+    
+    #use this API to publish or unpublish
+    #this essentially toggles the private field
+    def publish
+      unless current_user.memberships(:project_id => params[:project_id]).empty?
+        @collection = @project.data_collections.get(params[:collection_id])
+        @collection.private = @collection.private == true ? false : true
+        if @collection.save
+          flash[:notice] = "Collection successfully changed publicaction status."
+          redirect_to project_collection_path(@project,@collection)
+        else
+          flash[:error] = "Collection failed to change publication status!"
+          render :index
+        end
+      else
+        flash[:error] = "You don't have permission to change publication status!"
+        render :index
+      end
+    end
+    
     def upload
       render 'projects/upload'
     end
