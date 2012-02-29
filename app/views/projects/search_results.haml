@@ -18,7 +18,7 @@
               -unless current_user.memberships.all(:project_id=>@project.id).empty?        
                 = render :partial => '/items/table', :locals => {:items => @search_results[coll], :collection => cur_collection, :project=>@project}
               -else
-                = render :partial => '/items/table', :locals => {:items => @search_results[coll], :collection => cur_collection, :project=>@project}
+                = render :partial => '/items/public_table', :locals => {:items => @search_results[coll], :collection => cur_collection, :project=>@project}
              
           %hr
         =link_to("Back", project_search_path(@project))
