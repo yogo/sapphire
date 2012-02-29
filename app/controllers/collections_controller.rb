@@ -120,12 +120,11 @@ class CollectionsController < ApplicationController
         end
       end
       #if we are here the project is public so proceed
+      @project = Yogo::Project.get(params[:project_id])
     end
     
     def verify_membership
-      unless current_user.memberships(:project_id => params[:project_id]).empty?
-        return @project = Yogo::Project.get(params[:project_id])
-      else
+      if current_user.memberships(:project_id => params[:project_id]).empty?
         flash[:error] = "You don't have access to that project!"
         redirect_to projects_path()
         return
