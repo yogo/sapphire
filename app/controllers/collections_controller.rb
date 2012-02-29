@@ -83,6 +83,25 @@ class CollectionsController < ApplicationController
       end
     end
     
+    def export
+      @collection = @project.data_collections.get(params[:collection_id])
+            filename ="#{@collection.name}.csv"
+            name_array = @collection.items.properties.map{|h| h.name.to_s.include?("field") ?  Yogo::Collection::Property.get(h.name.to_s.gsub("field_",'').gsub('_','-')).name : nil}
+            name_array.delete(nil)
+            field_array = @collection.items.properties.map{|h| h.name.to_s.include?("field") ?  h.name : nil}
+            name_array.delete(nil)
+            field_array.delete(nil)
+            csv_string = CSV.generate do |csv|
+              csv << name_array
+              @collection.items.all(:fields=>field_array).each do |item|
+                  csv << name_array.map{|n| item[n].to_s}
+              end
+            end
+            send_data(csv_string,
+              :type => 'text/csv; charset=utf-8; header=present',
+              :filename => filename)
+    end
+     
     def upload
       render 'projects/upload'
     end

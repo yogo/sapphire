@@ -14,10 +14,10 @@ Sapphire::Application.routes.draw do
       get :upload
       post :publish
       post :upload, :controller => :projects, :action=>:process_upload
+      get :export
       resources :items do
         put :restore
         get :controlled_vocabulary_term
-        get :export
       end
       resources :schemas
     end
