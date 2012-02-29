@@ -35,7 +35,7 @@ class ProjectsController < ApplicationController
       @project = Yogo::Project.new(params[:yogo_project])
       if @project.save
         current_user.memberships.create(:project_id => @project.id)
-        redirect_to projects_path
+        redirect_to project_path(@project)
       else
         flash[:error] = "Project failed to save!"
         render :new
@@ -55,6 +55,21 @@ class ProjectsController < ApplicationController
     
     def upload
      @project = Yogo::Project.get(params[:project_id])
+    end
+    
+    #use this API to publish or unpublish
+    #this essentially toggles the private field
+    def publish
+      verify_membership
+      @project = Yogo::Project.get(params[:project_id])
+      @project.private = @project.private == true ? false : true
+      if @project.save
+        flash[:notice] = "Project successfully changed publicaction status."
+        redirect_to project_path(@project)
+      else
+        flash[:error] = "Project failed to change publication status!"
+        render :index
+      end
     end
     
     def process_upload
