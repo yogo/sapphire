@@ -82,6 +82,14 @@ class ItemsController < ApplicationController
     end
   end
   
+  def export
+    @item = @collection.items.get(params[:id])
+    filename ="#{@collection.name}.csv"
+    send_data(@items.to_csv,
+      :type => 'text/csv; charset=utf-8; header=present',
+      :filename => filename)
+  end
+  
   def create
     @item = @collection.items.new(params[:item])
     @collection.schema.each do |field|
@@ -103,13 +111,13 @@ class ItemsController < ApplicationController
   private
   
   def get_dependencies
-    if current_user.memberships(:project_id => params[:project_id]).empty?
+    if !current_user.memberships(:project_id => params[:project_id]).empty? || Yogo::Project.get(params[:project_id]).private == false || Yogo::Collection::Data.get(params[:collection_id]).private == false
+      @project = Yogo::Project.get(params[:project_id])
+      @collection = @project.data_collections.get(params[:collection_id])
+    else
       flash[:error] = "You don't have access to that project!"
       redirect_to projects_path()
       return
-    else
-      @project = Yogo::Project.get(params[:project_id])
-      @collection = @project.data_collections.get(params[:collection_id])   
     end 
   end
 end

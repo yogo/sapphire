@@ -2,7 +2,9 @@ class ProjectsController < ApplicationController
     before_filter :verify_project, :only =>[:show, :edit, :update, :upload, :process_upload, :search, :search_results]
     
     def index
-      @projects = Yogo::Project.all(:id=>current_user.memberships.map{|m| m.project_id})
+      @my_projects = Yogo::Project.all(:id=>current_user.memberships.map{|m| m.project_id})
+      @other_projects = Yogo::Project.all(:id.not=>current_user.memberships.map{|m| m.project_id}, :private=>false)
+      @public_collections = Yogo::Collection::Data.all(:private=>false)
     end
 
     def show
@@ -16,7 +18,13 @@ class ProjectsController < ApplicationController
 
     def update
       @project = Yogo::Project.get(params[:id])
-      @project.merge(params[:project])
+      if @project.update(params[:yogo_project])
+        flash[:notice] = "Project updated!"
+        redirect_to project_path(@project)
+      else
+        flash[:error] = "Project failed to save!"
+        render :new
+      end
     end
     
     def new
@@ -139,9 +147,11 @@ class ProjectsController < ApplicationController
     end
     
     def verify_project
-      if current_user.memberships(:project_id => params[:id]).empty? && current_user.memberships(:project_id => params[:project_id]).empty?
-        flash[:error] = "You don't have access to that Project!"
-        redirect_to projects_path()
+      if Yogo::Project.get(params[:id]).private
+        if current_user.memberships(:project_id => params[:id]).empty? && current_user.memberships(:project_id => params[:project_id]).empty?
+          flash[:error] = "You don't have access to that Project!"
+          redirect_to projects_path()
+        end
       end
     end
     

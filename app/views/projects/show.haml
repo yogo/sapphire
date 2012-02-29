@@ -4,16 +4,17 @@
   .secondary-navigation.button-navigation
     .wat-cf
       = nav_button("Back to Projects", "web-app-theme/icons/edit-undo.png", projects_path)
-      = nav_button("Upload Data", "web-app-theme/icons/list-add.png", project_upload_path(@project))
-      = nav_button("Add User to Project", "web-app-theme/icons/list-add.png", project_add_user_path(@project))
-      
-  .content
-    .inner
-      %h3 Add New Collection
-      = form_for("collection", :url => project_collections_path(@project), :html => {:class => 'form'}) do |f|
-        = render :partial => 'collections/form', :locals => {:f => f}
-        .group.navform.wat-cf
-          = f.submit("Save", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"))
+      -unless current_user.memberships.all(:project_id=>@project.id).empty?
+        = nav_button("Upload Data", "web-app-theme/icons/list-add.png", project_upload_path(@project))
+        = nav_button("Add User to Project", "web-app-theme/icons/list-add.png", project_add_user_path(@project))
+  -unless current_user.memberships.all(:project_id=>@project.id).empty?    
+    .content
+      .inner
+        %h3 Add New Collection
+        = form_for("collection", :url => project_collections_path(@project), :html => {:class => 'form'}) do |f|
+          = render :partial => 'collections/form', :locals => {:f => f}
+          .group.navform.wat-cf
+            = f.submit("Save", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"))
               
 .block
   .content

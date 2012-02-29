@@ -70,12 +70,12 @@ class CollectionsController < ApplicationController
     private
     
     def get_project
-      if current_user.memberships(:project_id => params[:project_id]).empty?
+      if !current_user.memberships(:project_id => params[:project_id]).empty? || Yogo::Collection::Data.get(params[:id]).private == false || Yogo::Project.get(params[:project_id]).private == false
+        return @project = Yogo::Project.get(params[:project_id])
+      else
         flash[:error] = "You don't have access to that project!"
         redirect_to projects_path()
         return
-      else
-        return @project = Yogo::Project.get(params[:project_id])
       end
     end
 end

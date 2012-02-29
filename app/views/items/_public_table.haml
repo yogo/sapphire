@@ -1,0 +1,44 @@
+
+%table.table
+  %tr
+    %th History
+    %th Created At
+    %th Updated At
+    - collection.schema.each do |s|
+      %th= s.name
+    %th File
+  - items.each do |i|
+    %tr{:class => cycle('odd','even')}
+      %td=link_to(image_tag("web-app-theme/icons/history.png", :border=>"0", :height=>"32px"), project_collection_item_path(params[:project_id],collection,i))
+      %td= i.created_at.strftime("%B %d, %Y %I:%M:%S %p")
+      %td= i.updated_at.strftime("%B %d, %Y %I:%M:%S %p")
+      - collection.schema.each do |s|
+        -if s.controlled_vocabulary_id  
+          -if @schema_cv_hash[s.name][i[s.name]]
+            %td
+              %a{:href=>"#", :onClick=>"return showDialog('#{project_collection_item_controlled_vocabulary_term_path(project,@schema_cv_hash[s.id],@schema_cv_hash[s.name][i[s.name]])}')"}
+                = i[s.name]
+          -else
+            %td{:class =>'cv_error'}= i[s.name]
+        -else
+          %td= i[s.name]
+      %td
+        %a{:href => i.file.to_s}= i.original_filename
+        
+:javascript
+  function showDialog(url){
+     $("#CV_info").html('<iframe id="modalIframeId" width="100%" height="100%" marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"/>').dialog("open");
+     $("#modalIframeId").attr("src",url);
+     return false;
+  }
+
+  $(document).ready(function() {
+     $("#CV_info").dialog({
+             autoOpen: false,
+             modal: true,
+             height: 500,
+             width: 500
+         });
+  });
+  
+#CV_info{:title=>"Controlled Vocabulary" }
