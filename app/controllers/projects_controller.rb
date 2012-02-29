@@ -173,7 +173,7 @@ class ProjectsController < ApplicationController
       elsif !Yogo::Project.get(params[:project_id]).nil?
         if Yogo::Project.get(params[:project_id]).private 
           #project is private so you need to be a member
-          verify_memeberhip
+          verify_membership
         end
       end
       #if we are here the project is public so proceed
