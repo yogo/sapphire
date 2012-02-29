@@ -147,12 +147,26 @@ class ProjectsController < ApplicationController
     end
     
     def verify_project
-      if Yogo::Project.get(params[:id]).private
-        if current_user.memberships(:project_id => params[:id]).empty? && current_user.memberships(:project_id => params[:project_id]).empty?
-          flash[:error] = "You don't have access to that Project!"
-          redirect_to projects_path()
+      if !Yogo::Project.get(params[:id]).nil? 
+        if Yogo::Project.get(params[:id]).private
+          #project is private so you need to be a member
+          verify_membership
+        end
+      elsif !Yogo::Project.get(params[:project_id]).nil?
+        if Yogo::Project.get(params[:project_id]).private 
+          #project is private so you need to be a member
+          verify_memeberhip
         end
       end
+      #if we are here the project is public so proceed
     end
     
+    def verify_membership
+      if current_user.memberships(:project_id => params[:id]).empty? && current_user.memberships(:project_id => params[:project_id]).empty?
+        #you aren't a member so go back
+        flash[:error] = "You don't have access to that Project!"
+        redirect_to projects_path()
+      end
+      #you are member proceed
+    end
 end
