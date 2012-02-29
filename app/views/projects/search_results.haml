@@ -15,7 +15,10 @@
                 .wat-cf
                   -cur_collection=@data_collections.get(coll)
                   = nav_button(cur_collection.name,"web-app-theme/icons/x-office-spreadsheet.png" ,project_collection_path(@project,cur_collection))
-              = render :partial => '/items/table', :locals => {:items => @search_results[coll], :collection => cur_collection, :project=>@project}
+              -unless current_user.memberships.all(:project_id=>@project.id).empty?        
+                = render :partial => '/items/table', :locals => {:items => @search_results[coll], :collection => cur_collection, :project=>@project}
+              -else
+                = render :partial => '/items/table', :locals => {:items => @search_results[coll], :collection => cur_collection, :project=>@project}
              
           %hr
         =link_to("Back", project_search_path(@project))
