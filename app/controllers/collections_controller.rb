@@ -97,7 +97,7 @@ class CollectionsController < ApplicationController
       @collection = @project.data_collections.get(params[:collection_id])
       filename ="#{@collection.name}-#{Time.now.to_i}.zip"
       Zip::ZipFile.open("tmp/downloads/"+filename, Zip::ZipFile::CREATE)do |z|
-        @collection.items.each do |item|
+        @collection.items.all(:original_filename.not => nil).each do |item|
           z.add(item.original_filename, "public/"+item.file.to_s)
         end
         csv_string = create_collection_csv_string(@collection,true)
