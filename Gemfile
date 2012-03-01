@@ -25,7 +25,7 @@ gem 'dm-devise'
 gem 'jquery-rails'
 gem 'dm-rails'
 gem 'haml'
-
+gem 'rubyzip'
 group :development do
   # Deploy with Capistrano
   gem 'capistrano'
