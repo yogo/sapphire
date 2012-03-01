@@ -9,9 +9,13 @@ Sapphire::Application.routes.draw do
     post :upload, :action=>:process_upload
     get :add_user
     post :associate_user
+    post :publish
     resources :collections do
       get :upload
+      post :publish
       post :upload, :controller => :projects, :action=>:process_upload
+      get :export
+      get :export_with_files
       resources :items do
         put :restore
         get :controlled_vocabulary_term

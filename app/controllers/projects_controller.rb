@@ -2,7 +2,9 @@ class ProjectsController < ApplicationController
     before_filter :verify_project, :only =>[:show, :edit, :update, :upload, :process_upload, :search, :search_results]
     
     def index
-      @projects = Yogo::Project.all(:id=>current_user.memberships.map{|m| m.project_id})
+      @my_projects = Yogo::Project.all(:id=>current_user.memberships.map{|m| m.project_id})
+      @other_projects = Yogo::Project.all(:id.not=>current_user.memberships.map{|m| m.project_id}, :private=>false)
+      @public_collections = Yogo::Collection::Data.all(:private=>false)
     end
 
     def show
@@ -16,7 +18,13 @@ class ProjectsController < ApplicationController
 
     def update
       @project = Yogo::Project.get(params[:id])
-      @project.merge(params[:project])
+      if @project.update(params[:yogo_project])
+        flash[:notice] = "Project updated!"
+        redirect_to project_path(@project)
+      else
+        flash[:error] = "Project failed to save!"
+        render :new
+      end
     end
     
     def new
@@ -27,7 +35,7 @@ class ProjectsController < ApplicationController
       @project = Yogo::Project.new(params[:yogo_project])
       if @project.save
         current_user.memberships.create(:project_id => @project.id)
-        redirect_to projects_path
+        redirect_to project_path(@project)
       else
         flash[:error] = "Project failed to save!"
         render :new
@@ -47,6 +55,21 @@ class ProjectsController < ApplicationController
     
     def upload
      @project = Yogo::Project.get(params[:project_id])
+    end
+    
+    #use this API to publish or unpublish
+    #this essentially toggles the private field
+    def publish
+      verify_membership
+      @project = Yogo::Project.get(params[:project_id])
+      @project.private = @project.private == true ? false : true
+      if @project.save
+        flash[:notice] = "Project successfully changed publicaction status."
+        redirect_to project_path(@project)
+      else
+        flash[:error] = "Project failed to change publication status!"
+        render :index
+      end
     end
     
     def process_upload
@@ -135,14 +158,33 @@ class ProjectsController < ApplicationController
         i=0
         header_row.map{|h| item[h]=csv[j][i]; i+=1}
         item.save
+        if item.versions.empty?
+          item.make_version
+        end
       end
     end
     
     def verify_project
+      if !Yogo::Project.get(params[:id]).nil? 
+        if Yogo::Project.get(params[:id]).private
+          #project is private so you need to be a member
+          verify_membership
+        end
+      elsif !Yogo::Project.get(params[:project_id]).nil?
+        if Yogo::Project.get(params[:project_id]).private 
+          #project is private so you need to be a member
+          verify_membership
+        end
+      end
+      #if we are here the project is public so proceed
+    end
+    
+    def verify_membership
       if current_user.memberships(:project_id => params[:id]).empty? && current_user.memberships(:project_id => params[:project_id]).empty?
+        #you aren't a member so go back
         flash[:error] = "You don't have access to that Project!"
         redirect_to projects_path()
       end
+      #you are member proceed
     end
-    
 end

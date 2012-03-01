@@ -34,6 +34,7 @@ set :links, {
     public/asset_collection
     public/uploads
     tmp/uploads
+    tmp/downloads
   }
 }
 
