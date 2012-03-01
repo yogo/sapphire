@@ -17,4 +17,4 @@
       -unless current_user.memberships.all(:project_id=>@project.id).empty?
         = render :partial => 'items/table', :locals => {:items => @items, :collection => @collection, :project=>@project}
       -else
-        = render :partial => 'items/public_table', :locals => {:items => @item, :collection => @collection, :project=>@project}
+        = render :partial => 'items/public_table', :locals => {:items => @items, :collection => @collection, :project=>@project}
