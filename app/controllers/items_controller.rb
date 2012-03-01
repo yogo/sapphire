@@ -1,5 +1,5 @@
 class ItemsController < ApplicationController
-  before_filter :get_dependencies
+  before_filter :get_dependencies, :except => :controlled_vocabulary_term
   layout :choose_layout
   
   def choose_layout
