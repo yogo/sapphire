@@ -1,0 +1,20 @@
+.block
+  .secondary-navigation.button-navigation
+    .wat-cf
+      = form_for("conditions", :url => project_collection_export_path(@project,@collection),  :html => {:class => 'form',:method=>:get}) do |f|  
+        -@filters.each do |k,v|
+          =f.hidden_field(k, :value=>v)
+        .group.navform.wat-cf
+          = f.submit("Download Data", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Download Data"))
+      = form_for("file_conditions", :url => project_collection_export_with_files_path(@project,@collection),  :html => {:class => 'form',:method=>:get}) do |f|  
+        -@filters.each do |k,v|
+          =f.hidden_field(k, :value=>v)
+        .group.navform.wat-cf
+          = f.submit("Download Data with Files", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Download Data"))
+  .content
+    .inner
+      %h3 Filter Results
+      -unless current_user.memberships.all(:project_id=>@project.id).empty?
+        = render :partial => 'items/table', :locals => {:items => @items, :collection => @collection, :project=>@project}
+      -else
+        = render :partial => 'items/public_table', :locals => {:items => @item, :collection => @collection, :project=>@project}
