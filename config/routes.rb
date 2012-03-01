@@ -15,6 +15,7 @@ Sapphire::Application.routes.draw do
       post :publish
       post :upload, :controller => :projects, :action=>:process_upload
       get :export
+      get :export_with_files
       resources :items do
         put :restore
         get :controlled_vocabulary_term

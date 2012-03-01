@@ -85,21 +85,33 @@ class CollectionsController < ApplicationController
     
     def export
       @collection = @project.data_collections.get(params[:collection_id])
-            filename ="#{@collection.name}.csv"
-            name_array = @collection.items.properties.map{|h| h.name.to_s.include?("field") ?  Yogo::Collection::Property.get(h.name.to_s.gsub("field_",'').gsub('_','-')).name : nil}
-            name_array.delete(nil)
-            field_array = @collection.items.properties.map{|h| h.name.to_s.include?("field") ?  h.name : nil}
-            name_array.delete(nil)
-            field_array.delete(nil)
-            csv_string = CSV.generate do |csv|
-              csv << name_array
-              @collection.items.all(:fields=>field_array).each do |item|
-                  csv << name_array.map{|n| item[n].to_s}
-              end
-            end
-            send_data(csv_string,
-              :type => 'text/csv; charset=utf-8; header=present',
-              :filename => filename)
+      filename ="#{@collection.name}.csv"
+      csv_string = create_collection_csv_string(@collection)      
+      send_data(csv_string,
+        :type => 'text/csv; charset=utf-8; header=present',
+        :filename => filename)
+    end
+    
+    def export_with_files
+      require 'zip/zip'
+      @collection = @project.data_collections.get(params[:collection_id])
+      filename ="#{@collection.name}-#{Time.now.to_i}.zip"
+      Zip::ZipFile.open("tmp/downloads/"+filename, Zip::ZipFile::CREATE)do |z|
+        @collection.items.each do |item|
+          z.add(item.original_filename, "public/"+item.file.to_s)
+        end
+        csv_string = create_collection_csv_string(@collection,true)
+        new_file = "tmp/downloads/#{@collection.name}.csv"
+        File.open(new_file, "wb"){ |f| f.write(csv_string)}
+        z.add("#{@collection.name}.csv",new_file)
+        #z.get_output_stream("#{@collection.name}.csv") { |f| f.puts IO.read(new_file) }
+        #z.mkdir("#{@collection.name}")
+        z.close()
+      end
+      send_file("tmp/downloads/"+filename,
+        :type => 'application/zip')#,
+        #:x_sendfile=>true
+        #:filename => filename)
     end
      
     def upload
@@ -130,6 +142,24 @@ class CollectionsController < ApplicationController
         return
       end
       #you are member proceed
+    end
+    
+    def create_collection_csv_string(collection, file=false)
+      name_array = collection.items.properties.map{|h| h.name.to_s.include?("field") ?  Yogo::Collection::Property.get(h.name.to_s.gsub("field_",'').gsub('_','-')).name : nil}
+      field_array = collection.items.properties.map{|h| h.name.to_s.include?("field") ?  h.name : nil}
+      name_array.delete(nil)
+      field_array.delete(nil)
+      if file == true
+        name_array << "File"
+        field_array << :original_filename
+      end
+      csv_string = CSV.generate do |csv|
+        csv << name_array
+        collection.items.all(:fields=>field_array).each do |item|
+            csv << name_array.map{|n| n == "File" ? item.original_filename : item[n].to_s}
+        end
+      end
+      csv_string
     end
     
 end

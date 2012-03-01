@@ -39,6 +39,7 @@
     .wat-cf
       -if @collection.schema.count > 0
         = nav_button("Download All Items", "web-app-theme/icons/edit-undo.png", project_collection_export_path(@project,@collection))
+        = nav_button("Download All Items With Files", "web-app-theme/icons/edit-undo.png", project_collection_export_with_files_path(@project,@collection))
       = nav_button("View All Items", "web-app-theme/icons/x-office-spreadsheet.png", project_collection_items_path(@project, @collection))
       -unless current_user.memberships.all(:project_id=>@project.id).empty?
         = nav_button("Add Item", "web-app-theme/icons/list-add.png", project_collection_items_path(@project, @collection))
