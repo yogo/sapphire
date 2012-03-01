@@ -18,6 +18,8 @@ class ItemsController < ApplicationController
   end
   
   def controlled_vocabulary_term
+    @project = Yogo::Project.get(params[:project_id])
+    @collection = @project.data_collections.get(params[:collection_id])
     @item = @collection.items.get(params[:item_id])
   end
   
