@@ -312,7 +312,7 @@ hr {
   font-weight: normal;
   color: #666666;
 }
-.form input.text_field, .form textarea.text_area, #user_email, #user_password, #user_password_confirmation {
+.form input.text_field, .form textarea.text_area {
   width: 100%;
   border: 1px solid #dddddd;
   -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
