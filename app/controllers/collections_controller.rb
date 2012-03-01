@@ -83,10 +83,10 @@ class CollectionsController < ApplicationController
       end
     end
     
-    def export
+    def export()
       @collection = @project.data_collections.get(params[:collection_id])
       filename ="#{@collection.name}.csv"
-      csv_string = create_collection_csv_string(@collection)      
+      csv_string = create_collection_csv_string(@collection,params[:conditions])      
       send_data(csv_string,
         :type => 'text/csv; charset=utf-8; header=present',
         :filename => filename)
@@ -97,10 +97,16 @@ class CollectionsController < ApplicationController
       @collection = @project.data_collections.get(params[:collection_id])
       filename ="#{@collection.name}-#{Time.now.to_i}.zip"
       Zip::ZipFile.open("tmp/downloads/"+filename, Zip::ZipFile::CREATE)do |z|
-        @collection.items.all(:original_filename.not => nil).each do |item|
-          z.add(item.original_filename, "public/"+item.file.to_s)
+        unless params[:file_conditions].nil?
+          @collection.items.all(:conditions=>params[:file_conditions], :original_filename.not => nil).each do |item|
+            z.add(item.original_filename, "public/"+item.file.to_s)
+          end
+        else
+          @collection.items.all(:original_filename.not => nil).each do |item|
+            z.add(item.original_filename, "public/"+item.file.to_s)
+          end
         end
-        csv_string = create_collection_csv_string(@collection,true)
+        csv_string = create_collection_csv_string(@collection,params[:file_conditions], true)
         new_file = "tmp/downloads/#{@collection.name}.csv"
         File.open(new_file, "wb"){ |f| f.write(csv_string)}
         z.add("#{@collection.name}.csv",new_file)
@@ -116,6 +122,19 @@ class CollectionsController < ApplicationController
      
     def upload
       render 'projects/upload'
+    end
+    
+    #this accepts a hash of condition to filter the collection items on
+    def filter
+      @collection = @project.data_collections.get(params[:collection_id])
+      params[:filter].each do |k,v|
+        if v.empty?
+          params[:filter].delete(k)
+        end
+      end
+      @items = @collection.items.all(:conditions=>params[:filter])
+      @filters = params[:filter]
+      render :filter_results
     end
     
     private
@@ -146,7 +165,7 @@ class CollectionsController < ApplicationController
       #you are member or project is public -proceed
     end
     
-    def create_collection_csv_string(collection, file=false)
+    def create_collection_csv_string(collection, conditions, file=false)
       name_array = collection.items.properties.map{|h| h.name.to_s.include?("field") ?  Yogo::Collection::Property.get(h.name.to_s.gsub("field_",'').gsub('_','-')).name : nil}
       field_array = collection.items.properties.map{|h| h.name.to_s.include?("field") ?  h.name : nil}
       name_array.delete(nil)
@@ -157,8 +176,14 @@ class CollectionsController < ApplicationController
       end
       csv_string = CSV.generate do |csv|
         csv << name_array
-        collection.items.all(:fields=>field_array).each do |item|
-            csv << name_array.map{|n| n == "File" ? item.original_filename : item[n].to_s}
+        unless conditions.nil?
+          collection.items.all(:conditions=>conditions, :fields=>field_array).each do |item|
+              csv << name_array.map{|n| n == "File" ? item.original_filename : item[n].to_s}
+          end
+        else
+          collection.items.all(:fields=>field_array).each do |item|
+              csv << name_array.map{|n| n == "File" ? item.original_filename : item[n].to_s}
+          end
         end
       end
       csv_string
