@@ -120,13 +120,13 @@ class CollectionsController < ApplicationController
     
     private
     def get_project
-      if !Yogo::Project.get(params[:id]).nil? 
-        if Yogo::Project.get(params[:id]).private
+      if !Yogo::Collection::Data.get(params[:id]).nil? 
+        if Yogo::Collection::Data.get(params[:id]).private
           #project is private so you need to be a member
           verify_membership
         end
-      elsif !Yogo::Project.get(params[:project_id]).nil?
-        if Yogo::Project.get(params[:project_id]).private 
+      elsif !Yogo::Collection::Data.get(params[:collection_id]).nil?
+        if Yogo::Collection::Data.get(params[:collection_id]).private 
           #project is private so you need to be a member
           verify_membership
         end
@@ -136,12 +136,14 @@ class CollectionsController < ApplicationController
     end
     
     def verify_membership
-      if current_user.memberships(:project_id => params[:project_id]).empty?
-        flash[:error] = "You don't have access to that project!"
-        redirect_to projects_path()
-        return
+      if Yogo::Project.get(params[:project_id]).private
+        if current_user.memberships(:project_id => params[:project_id]).empty?
+          flash[:error] = "You don't have access to that project!"
+          redirect_to projects_path()
+          return
+        end
       end
-      #you are member proceed
+      #you are member or project is public -proceed
     end
     
     def create_collection_csv_string(collection, file=false)
