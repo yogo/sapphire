@@ -18,7 +18,7 @@
   .secondary-navigation.button-navigation
     .wat-cf
       -if @collection.schema.count > 0
-        = nav_button("Download Items", "web-app-theme/icons/arrow_undo.png", project_collection_export_path(@project,@collection))
+        = nav_button("Download Items", "web-app-theme/icons/application_put.png", project_collection_export_path(@project,@collection))
   .content
     .inner
       %h3 All #{@collection.name.pluralize}
