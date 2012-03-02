@@ -9,7 +9,7 @@
     %th File
   - items.each do |i|
     %tr{:class => cycle('odd','even')}
-      %td=link_to(image_tag("web-app-theme/icons/history.png", :border=>"0", :height=>"32px"), project_collection_item_path(params[:project_id],collection,i))
+      %td=link_to(image_tag("web-app-theme/icons/time_go.png", :border=>"0", :height=>"32px"), project_collection_item_path(params[:project_id],collection,i))
       %td= i.created_at.strftime("%B %d, %Y %I:%M:%S %p")
       %td= i.updated_at.strftime("%B %d, %Y %I:%M:%S %p")
       - collection.schema.each do |s|
