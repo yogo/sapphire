@@ -44,11 +44,12 @@ class ProjectsController < ApplicationController
     
     def destroy
       @project = Yogo::Project.get(params[:id])
+      dtime = Time.now
       @project.data_collections.each do |c|
-        c.deleted_at = Time.now
+        c.deleted_at = dtime
         c.save
       end
-      @project.deleted_at = Time.now
+      @project.deleted_at = dtime
       if @project.save
        flash[:notice] = "Project was Deleted."
         redirect_to projects_path()
