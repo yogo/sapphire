@@ -9,7 +9,7 @@
         = nav_button("Upload Data", "web-app-theme/icons/list-add.png", project_upload_path(@project))
         = nav_button("Add User to Project", "web-app-theme/icons/list-add.png", project_add_user_path(@project))
         -if @project.private
-          = nav_button("Publish Project",  "web-app-theme/icons/plus.png", project_publish_path(@project), "post")
+          = nav_button("Publish Project",  "web-app-theme/icons/add.png", project_publish_path(@project), "post")
         -else
           = nav_button("Unpublish Project",  "web-app-theme/icons/minus.png", project_publish_path(@project), "post")
   -unless current_user.memberships.all(:project_id=>@project.id).empty?    
