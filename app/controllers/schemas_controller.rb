@@ -31,6 +31,18 @@ class SchemasController < ApplicationController
       @schema = @collection.schema.new
     end
     
+    def destroy
+      @schema = @collection.schema.get(params[:id])
+      @schema.deleted_at = Time.now
+      if @schema.save
+       flash[:notice] = "Schema was Deleted."
+        redirect_to project_collection_path(@project,@collection)
+      else
+        flash[:error] = "Schema failed to Delete"
+        redirect_to project_collection_path(@project,@collection)
+      end
+    end
+    
     def create
       if params[:schema][:controlled_vocabulary_id].blank?
         params[:schema].delete(:controlled_vocabulary_id)

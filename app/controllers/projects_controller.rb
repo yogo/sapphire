@@ -44,12 +44,18 @@ class ProjectsController < ApplicationController
     
     def destroy
       @project = Yogo::Project.get(params[:id])
-      if @project.destroy
+      dtime = Time.now
+      @project.data_collections.each do |c|
+        c.deleted_at = dtime
+        c.save
+      end
+      @project.deleted_at = dtime
+      if @project.save
        flash[:notice] = "Project was Deleted."
         redirect_to projects_path()
       else
-        flash[:error] = "Project failed to Delete"
-        render :index
+        flash[:error] = "Project failed to Delete" + @project.errors.inspect
+        redirect_to projects_path()
       end
     end
     

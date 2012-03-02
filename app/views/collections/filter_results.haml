@@ -1,6 +1,10 @@
+%h1 #{@project.name} > #{@collection.name}
+
 .block
   .secondary-navigation.button-navigation
     .wat-cf
+      = nav_button("Back to Project", "web-app-theme/icons/edit-undo.png", project_path(@project))
+      = nav_button("Back to Collection", "web-app-theme/icons/edit-undo.png", project_collection_path(@project, @collection))
       = form_for("conditions", :url => project_collection_export_path(@project,@collection),  :html => {:class => 'form',:method=>:get}) do |f|  
         -@filters.each do |k,v|
           =f.hidden_field(k, :value=>v)
@@ -14,7 +18,8 @@
   .content
     .inner
       %h3 Filter Results
+      %h4 For:  #{@filters.map{|k,v| "#{Yogo::Collection::Property.get(k.to_s.gsub("field_",'').gsub('_','-')).name} = #{v.to_s}"}.join(', ')}
       -unless current_user.memberships.all(:project_id=>@project.id).empty?
         = render :partial => 'items/table', :locals => {:items => @items, :collection => @collection, :project=>@project}
       -else
-        = render :partial => 'items/public_table', :locals => {:items => @item, :collection => @collection, :project=>@project}
+        = render :partial => 'items/public_table', :locals => {:items => @items, :collection => @collection, :project=>@project}

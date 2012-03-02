@@ -1,4 +1,13 @@
+-@schema_cv_hash={}
+-@collection.schema.each do |s|
+  -link_hash={}
+  -if s.controlled_vocabulary_id
+  -@schema_cv_hash[s.id] =Yogo::Collection::Property.get(s.controlled_vocabulary_id).data_collection
+    -s.data_collection.items.each do |i|
+      -link_hash = link_hash.merge({i[s.name] => @schema_cv_hash[s.id].items.first("field_#{s.controlled_vocabulary_id.to_s.gsub('-','_')}".to_sym=>i[s.name])})
+    -@schema_cv_hash[s.name]=link_hash
 
+end
 %table.table
   %tr
     %th History

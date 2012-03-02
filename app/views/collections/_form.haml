@@ -2,7 +2,7 @@
 
 .group= f.text_area(:description, :label => "Description")
 
-
+.group= f.select(:category, collection_category_options, :label => "Category")
 .group 
   Collection is Private:
   =f.check_box(:private, :label=>"Private Project")
