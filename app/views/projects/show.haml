@@ -5,9 +5,9 @@
     .wat-cf
       = nav_button("Back to Projects", "web-app-theme/icons/arrow_undo.png", projects_path)
       -unless current_user.memberships.all(:project_id=>@project.id).empty?
-        = nav_button("Edit Project", "web-app-theme/icons/application_table_edit.png", edit_project_path(@project))
-        = nav_button("Upload Data", "web-app-theme/icons/add.png", project_upload_path(@project))
-        = nav_button("Add User to Project", "web-app-theme/icons/add.png", project_add_user_path(@project))
+        = nav_button("Edit Project", "web-app-theme/icons/database_edit.png", edit_project_path(@project))
+        = nav_button("Upload Data", "web-app-theme/icons/application_get.png", project_upload_path(@project))
+        = nav_button("Add User to Project", "web-app-theme/icons/user_add.png", project_add_user_path(@project))
         -if @project.private
           = nav_button("Publish Project",  "web-app-theme/icons/world_add.png", project_publish_path(@project), "post")
         -else
