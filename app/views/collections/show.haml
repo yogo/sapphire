@@ -10,7 +10,7 @@
           -if @collection.private
             = nav_button("Publish Collection",  "web-app-theme/icons/add.png", project_collection_publish_path(@project,@collection), "post")
           -else
-            = nav_button("Unpublish Collection",  "web-app-theme/icons/minus.png", project_collection_publish_path(@project,@collection), "post")
+            = nav_button("Unpublish Collection",  "web-app-theme/icons/delete.png", project_collection_publish_path(@project,@collection), "post")
   -unless current_user.memberships.all(:project_id=>@project.id).empty?
     .content
       .inner

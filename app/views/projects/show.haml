@@ -11,7 +11,7 @@
         -if @project.private
           = nav_button("Publish Project",  "web-app-theme/icons/add.png", project_publish_path(@project), "post")
         -else
-          = nav_button("Unpublish Project",  "web-app-theme/icons/minus.png", project_publish_path(@project), "post")
+          = nav_button("Unpublish Project",  "web-app-theme/icons/delete.png", project_publish_path(@project), "post")
   -unless current_user.memberships.all(:project_id=>@project.id).empty?    
     .content
       .inner
