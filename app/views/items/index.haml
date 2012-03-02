@@ -3,8 +3,8 @@
 .block
   .secondary-navigation.button-navigation
     .wat-cf
-      = nav_button("Back to Project", "web-app-theme/icons/edit-undo.png", project_path(@project))
-      = nav_button("Back to Collection", "web-app-theme/icons/edit-undo.png", project_collection_path(@project, @collection))
+      = nav_button("Back to Project", "web-app-theme/icons/arrow_undo.png", project_path(@project))
+      = nav_button("Back to Collection", "web-app-theme/icons/arrow_undo.png", project_collection_path(@project, @collection))
   -unless current_user.memberships.all(:project_id=>@project.id).empty?
     .content
       .inner
@@ -18,7 +18,7 @@
   .secondary-navigation.button-navigation
     .wat-cf
       -if @collection.schema.count > 0
-        = nav_button("Download Items", "web-app-theme/icons/edit-undo.png", project_collection_export_path(@project,@collection))
+        = nav_button("Download Items", "web-app-theme/icons/arrow_undo.png", project_collection_export_path(@project,@collection))
   .content
     .inner
       %h3 All #{@collection.name.pluralize}

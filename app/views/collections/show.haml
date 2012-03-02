@@ -3,14 +3,14 @@
 .block
   .secondary-navigation.button-navigation
     .wat-cf
-      = nav_button("Back to Project", "web-app-theme/icons/edit-undo.png", project_path(@project))
+      = nav_button("Back to Project", "web-app-theme/icons/arrow_undo.png", project_path(@project))
       -unless current_user.memberships.all(:project_id=>@project.id).empty?
         = nav_button("Edit Collection", "web-app-theme/icons/application_edit.png", edit_project_collection_path(@project,@collection))
         -if @project.private #if the project is not published show these
           -if @collection.private
-            = nav_button("Publish Collection",  "web-app-theme/icons/plus.png", project_collection_publish_path(@project,@collection), "post")
+            = nav_button("Publish Collection",  "web-app-theme/icons/world_add.png", project_collection_publish_path(@project,@collection), "post")
           -else
-            = nav_button("Unpublish Collection",  "web-app-theme/icons/minus.png", project_collection_publish_path(@project,@collection), "post")
+            = nav_button("Unpublish Collection",  "web-app-theme/icons/world_delete.png", project_collection_publish_path(@project,@collection), "post")
   -unless current_user.memberships.all(:project_id=>@project.id).empty?
     .content
       .inner
@@ -25,26 +25,26 @@
       %h3 
         Current Schema
         %a{:id=>"displayText", :href=>"javascript:toggle();"}
-          %img{:src=>'/images/web-app-theme/icons/plus.png', :height=>'16px'}
+          %img{:src=>'/images/web-app-theme/icons/add.png', :height=>'16px'}
       %div{:id=>"current_schema", :style=>'display:none;'}
         %ul.list.schema-list
           - @collection.schema.each do |s|
             %li 
               .item 
                 -unless current_user.memberships.all(:project_id=>@project.id).empty?
-                  =link_to(image_tag("web-app-theme/icons/edit.png", :border=>"0", :height=>"16px"), edit_project_collection_schema_path(@project,@collection,s)) 
+                  =link_to(image_tag("web-app-theme/icons/table_edit.png", :border=>"0", :height=>"16px"), edit_project_collection_schema_path(@project,@collection,s)) 
                 #{s.name} (#{s.type.to_s.split('::').last})
                 =link_to("delete", project_collection_schema_path(@project,@collection,s), :method=>:delete, "data-confirm"=>"Are you sure you wish to delete this Schema Column?")
 .block
   .secondary-navigation.button-navigation
     .wat-cf
       -if @collection.schema.count > 0
-        = nav_button("Download All Items", "web-app-theme/icons/edit-undo.png", project_collection_export_path(@project,@collection))
-        = nav_button("Download All Items With Files", "web-app-theme/icons/edit-undo.png", project_collection_export_with_files_path(@project,@collection))
-      = nav_button("View All Items", "web-app-theme/icons/x-office-spreadsheet.png", project_collection_items_path(@project, @collection))
+        = nav_button("Download All Items", "web-app-theme/icons/arrow_undo.png", project_collection_export_path(@project,@collection))
+        = nav_button("Download All Items With Files", "web-app-theme/icons/package_go.png", project_collection_export_with_files_path(@project,@collection))
+      = nav_button("View All Items", "web-app-theme/icons/table.png", project_collection_items_path(@project, @collection))
       -unless current_user.memberships.all(:project_id=>@project.id).empty?
-        = nav_button("Add Item", "web-app-theme/icons/list-add.png", project_collection_items_path(@project, @collection))
-        = nav_button("Upload Data", "web-app-theme/icons/list-add.png", project_collection_upload_path(@project, @collection))
+        = nav_button("Add Item", "web-app-theme/icons/add.png", project_collection_items_path(@project, @collection))
+        = nav_button("Upload Data", "web-app-theme/icons/add.png", project_collection_upload_path(@project, @collection))
   .content
     .inner
       %h3 Data (top 5)
@@ -60,11 +60,11 @@
   	var text = document.getElementById("displayText");
   	if(ele.style.display == "block") {
       		ele.style.display = "none";
-  		text.innerHTML = "<img src='/images/web-app-theme/icons/plus.png' height='16px'></img>";
+  		text.innerHTML = "<img src='/images/web-app-theme/icons/add.png' height='16px'></img>";
     	}
   	else {
   		ele.style.display = "block";
-  		text.innerHTML = "<img src='/images/web-app-theme/icons/minus.png' height='16px'></img>";
+  		text.innerHTML = "<img src='/images/web-app-theme/icons/delete.png' height='16px'></img>";
   	}
   } 
   

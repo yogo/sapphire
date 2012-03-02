@@ -2,7 +2,7 @@
 .block
   .secondary-navigation.button-navigation
     .wat-cf
-      = nav_button("Back to Project", "web-app-theme/icons/edit-undo.png", project_path(@project))
+      = nav_button("Back to Project", "web-app-theme/icons/arrow_undo.png", project_path(@project))
   .content
     .inner
       = form_for(:search, :url => project_s_path, :html => {:class => 'form', :method => :get}) do |f|
