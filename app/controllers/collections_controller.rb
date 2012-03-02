@@ -54,8 +54,12 @@ class CollectionsController < ApplicationController
     def destroy
       @collection = @project.data_collections.get(params[:id])
       @collection.items.destroy
-      @collection.schema.destroy
-      if @collection.destroy
+      @collection.schema.each do |s|
+        s.deleted_at = Time.now
+        s.save
+      end
+      @collection.deleted_at = Time.now
+      if @collection.save
        flash[:notice] = "Collection was Deleted."
         redirect_to project_path(@project)
       else
