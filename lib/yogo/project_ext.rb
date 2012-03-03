@@ -2,15 +2,10 @@ require 'yogo/project'
 
 module Yogo
   class Project
-    module Model 
-      module ModelProperties
-       def self.extended(model)
-         model.class_eval do
-           has n, :memberships, :model=>"Membership"
-         end
-       end
-      end
-    end
+
+    has n, :memberships, :model=>"Membership"
+    alias :members :memberships
+
     #make a new collection with schema from CSV file
     def collection_from_file(name, new_file, collection=nil)
       csv = CSV.read(new_file)
