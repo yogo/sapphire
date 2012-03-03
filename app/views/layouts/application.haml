@@ -33,6 +33,10 @@
                 =link_to("Logout(#{current_user.first_name})", destroy_user_session_path, :method=> :delete)
         #main-navigation
           %ul.wat-cf
+            %li{:class => my_project?(@project, "active") }
+              = link_to("My Projects", projects_path)
+            %li{:class => public_project?(@project, "active") }
+              = link_to("Public Projects", projects_path(:public => true))
       #wrapper.wat-cf
         .flash
           - flash.each do |type, message|
