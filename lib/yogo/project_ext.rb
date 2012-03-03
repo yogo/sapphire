@@ -72,6 +72,10 @@ module Yogo
         end
       end
     end
+
+    def public?
+      !private?
+    end
     
     private 
     
