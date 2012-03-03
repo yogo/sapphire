@@ -24,13 +24,13 @@
               %dd
                 =link_to("delete", project_path(p), :method=>:delete, "data-confirm"=>"Are you sure you wish to delete this Project?")
 
--unless @other_projects.empty?
+-unless @public_projects.empty?
   .block
     .content
       .inner
-        %h3 Other Public Projects
+        %h3 Public Projects
         %ul.list.project-list
-          - @other_projects.each do |p|
+          - @public_projects.each do |p|
             %li
               .counts
                 .collection_count Data Collections: #{p.data_collections.count}
@@ -43,23 +43,23 @@
                 %dd
                   #{p.description.blank? ? "No Description." : p.description}
                 
-
-.block
-  .content
-    .inner
-      %h3 Public Collections
-      %ul.list.collection-list
-        - @public_collections.each do |c|
-          %li
-            .counts
-              .data_items_count Data Items: #{c.items.count}
-            .left= image_tag("Yogo-tiny-trans.png")
-            %dl
-              %dt
-                %h4.item 
-                  %a{:href => project_collection_path(c.project,c)}= c.name
-              %dd
-                Schema: #{c.schema.map(&:name)}
-                %br
-                #{c.description.blank? ? "No Description." : c.description}
+-unless @public_collections.empty?
+  .block
+    .content
+      .inner
+        %h3 Public Collections
+        %ul.list.collection-list
+          - @public_collections.each do |c|
+            %li
+              .counts
+                .data_items_count Data Items: #{c.items.count}
+              .left= image_tag("Yogo-tiny-trans.png")
+              %dl
+                %dt
+                  %h4.item 
+                    %a{:href => project_collection_path(c.project,c)}= c.name
+                %dd
+                  Schema: #{c.schema.map(&:name)}
+                  %br
+                  #{c.description.blank? ? "No Description." : c.description}
                 
