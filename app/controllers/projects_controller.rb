@@ -2,9 +2,9 @@ class ProjectsController < ApplicationController
     before_filter :verify_project, :only =>[:show, :edit, :update, :upload, :process_upload, :search, :search_results]
     
     def index
-      @my_projects = Yogo::Project.all(:id=>current_user.memberships.map{|m| m.project_id})
-      @other_projects = Yogo::Project.all(:id.not=>current_user.memberships.map{|m| m.project_id}, :private=>false)
-      @public_collections = Yogo::Collection::Data.all(:private=>false)
+      @my_projects = current_user.memberships.projects
+      @public_projects = Yogo::Project.all(:private => false) - @my_projects
+      @public_collections = Yogo::Collection::Data.all(:private=>false) - @my_projects.data_collections
     end
 
     def show
