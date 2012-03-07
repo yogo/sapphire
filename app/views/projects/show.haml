@@ -24,20 +24,13 @@
 .block
   .content
     .inner
-      %h3 Current Collections
-      %ul.list.collection-list
-        - @project.data_collections.each do |c|
-          %li
-            .counts
-              .data_items_count Data Items: #{c.items.count}
-            .left= image_tag("Yogo-tiny-trans.png")
-            %dl
-              %dt
-                %h4.item 
-                  %a{:href => project_collection_path(@project,c)}= c.name
-              %dd
-                Schema: #{c.schema.map(&:name)}
-                %br
-                #{c.description.blank? ? "No Description." : c.description}
-                %dd
-                  =link_to("delete", project_collection_path(@project,c), :method=>:delete, "data-confirm"=>"Are you sure you wish to delete this Collection?")
+      -unless @collections.empty?
+        %h3 Current Collections
+        = render(:partial => "collections/list", :locals=>{:collections => @collections})
+      -unless @cv_collections.empty?
+        %h3 Controlled Vocabularies
+        = render(:partial => "collections/list", :locals=>{:collections => @cv_collections})
+      -unless @scv_collections.empty?
+        %h3 Schema Controlled Vocabularies
+        = render(:partial => "collections/list", :locals=>{:collections => @scv_collections })
+      

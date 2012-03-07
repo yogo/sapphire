@@ -9,7 +9,9 @@ class ProjectsController < ApplicationController
 
     def show
       @project = Yogo::Project.get(params[:id])
-      @collections = @project.data_collections
+      @collections = @project.data_collections(:category.not => ["Schema Controlled Vocabulary","Controlled Vocabulary"])
+      @cv_collections = @project.data_collections(:category => "Controlled Vocabulary")
+      @scv_collections =@project.data_collections(:category => "Schema Controlled Vocabulary")
     end
 
     def edit
