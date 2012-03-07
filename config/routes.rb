@@ -10,6 +10,9 @@ Sapphire::Application.routes.draw do
     get :add_user
     post :associate_user
     post :publish
+    collection do
+      get :manage_controlled_vocabularies
+    end
     resources :collections do
       get :upload
       post :publish
@@ -19,9 +22,6 @@ Sapphire::Application.routes.draw do
       get :filter
       get :cv
       get :edit_cv
-      collection do
-        get :manage_controlled_vocabularies
-      end
       resources :items do
         put :restore
         get :controlled_vocabulary_term

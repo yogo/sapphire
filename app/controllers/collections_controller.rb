@@ -144,10 +144,6 @@ class CollectionsController < ApplicationController
       render :filter_results
     end
     
-    def manage_controlled_vocabularies
-      @collections = @project.data_collections.all(:category => "Controlled Vocabulary")
-    end
-    
     def cv
       @collection = @project.data_collections.get(params[:collection_id])
       @schema_cv_hash={}

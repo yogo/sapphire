@@ -1,0 +1,10 @@
+%h1 Controlled Vocabularies
+
+.block
+  .content
+    .inner
+      %h3 My Controlled Vocabularies
+      = render(:partial => "collections/list", :locals=>{:collections => @collections})
+      %br
+      %h3 Public Controlled Vocabularies
+      = render(:partial => "collections/list", :locals=>{:collections => @public_collections})
