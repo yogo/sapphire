@@ -24,11 +24,19 @@ class CollectionsController < ApplicationController
       @collection = @project.data_collections.get(params[:id])
     end
 
+    def edit_cv
+      @collection = @project.data_collections.get(params[:collection_id])
+    end
+    
     def update
       @collection = @project.data_collections.get(params[:id])
       if @collection.update(params[:collection])
         flash[:notice] = "Collection updated!"
-        redirect_to project_collection_path(@project,@collection)
+        if params[:redirect_path]
+          redirect_to params[:redirect_path]
+        else
+          redirect_to project_collection_path(@project,@collection)
+        end
       else
         flash[:error] = "Collection failed to update!"
         render edit
@@ -136,6 +144,24 @@ class CollectionsController < ApplicationController
       render :filter_results
     end
     
+    def manage_controlled_vocabularies
+      @collections = @project.data_collections.all(:category => "Controlled Vocabulary")
+    end
+    
+    def cv
+      @collection = @project.data_collections.get(params[:collection_id])
+      @schema_cv_hash={}
+      @collection.schema.each do |s|
+        link_hash={}
+        if s.controlled_vocabulary_id
+          @schema_cv_hash[s.id] = Yogo::Collection::Property.get(s.controlled_vocabulary_id).data_collection
+          s.data_collection.items.each do |i|
+            link_hash = link_hash.merge({i[s.name] => @schema_cv_hash[s.id].items.first("field_#{s.controlled_vocabulary_id.to_s.gsub('-','_')}".to_sym=>i[s.name])})
+          end
+          @schema_cv_hash[s.name]=link_hash
+        end
+      end
+    end
     private
     def get_project
       if !Yogo::Collection::Data.get(params[:id]).nil? 

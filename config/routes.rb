@@ -17,6 +17,11 @@ Sapphire::Application.routes.draw do
       get :export
       get :export_with_files
       get :filter
+      get :cv
+      get :edit_cv
+      collection do
+        get :manage_controlled_vocabularies
+      end
       resources :items do
         put :restore
         get :controlled_vocabulary_term

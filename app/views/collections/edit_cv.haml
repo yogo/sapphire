@@ -1,0 +1,13 @@
+%h1 #{@project.name} > Edit Controlled Vocabulary Collection
+
+.block
+  .secondary-navigation.button-navigation
+    .wat-cf
+      = nav_button("Back to Controlled Vocabulary", "web-app-theme/icons/arrow_undo.png", project_collection_cv_path(@project, @collection))
+  .content
+    .inner
+      = form_for("collection",@collection, :url => project_collection_path(@project,@collection), :html => {:class => 'form', :method=> :put}) do |f|
+        = render :partial => 'form', :locals => {:f => f}
+        =hidden_field_tag(:redirect_path, project_collection_cv_path(@project, @collection))
+        .group.navform.wat-cf
+          = f.submit("Save", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"), :cancel_link => link_to("Cancel", :back, :class => "text_button_padding link_button"))

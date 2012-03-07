@@ -59,7 +59,9 @@ class SchemasController < ApplicationController
           sql = "CREATE TRIGGER field_#{@schema.id.to_s.gsub('-','_')} BEFORE INSERT OR UPDATE ON #{'"'+@collection.id.to_s.gsub('-','_')+'s"'} FOR EACH ROW EXECUTE PROCEDURE tsvector_update_trigger(field_#{@schema.id.to_s.gsub('-','_')}_search_index, 'pg_catalog.english', field_#{@schema.id.to_s.gsub('-','_')});"
           repository.adapter.execute(sql)
         end
-        redirect_to project_collection_path(@project,@collection)
+        #redirect_to project_collection_path(@project,@collection)
+        flash[:notice] = "Schema saved successfully!"
+        redirect_to :back
       else
         flash[:error] = "Schema failed to save!"
       end

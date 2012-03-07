@@ -90,12 +90,14 @@ class ItemsController < ApplicationController
     end
     if @item.save
       flash[:notice] = "Item Saved!"
-      redirect_to project_collection_items_path(@project, @collection)
+      redirect_to :back
+      #redirect_to project_collection_items_path(@project, @collection)
     else
       flash[:error] = "Item failed to save: #{@item.errors.to_hash.map{|h| Yogo::Collection::Property.get(h.to_s.split(',')[0].gsub("[:field_",'').gsub('_','-')).name + h.to_s.split(',')[1].gsub(h.to_s.split(',')[0].gsub("field_",'Field ').gsub('_',' '),'')}.join(', ')}"
       
       #+ h.split(',')[1][0].gsub(h.to_s.split(',')[0].gsub("field_",'Field ').gsub('_',' '),'')
-      render :index
+      redirect_to :back
+      #render :back
     end
   end
   
