@@ -39,19 +39,19 @@
                   =link_to(image_tag("web-app-theme/icons/table_edit.png", :border=>"0", :height=>"16px"), edit_project_collection_schema_path(@project,@collection,s)) 
                 #{s.name} (#{s.type.to_s.split('::').last})
                 =link_to("delete", project_collection_schema_path(@project,@collection,s), :method=>:delete, "data-confirm"=>"Are you sure you wish to delete this Schema Column?")
-
-.block
-  .content
-    .inner  
-      %h3 
-        Add Controlled Vocabulary Item    
-        %a{:id=>"cv", :href=>"javascript:toggle('add_item','cv');"}
-          %img{:src=>'/images/web-app-theme/icons/add.png', :height=>'16px'}
-      %div{:id=>"add_item", :style=>'display:none;'}    
-        =form_for("item", :url => project_collection_items_path, :html => {"multipart" => true, "data-ajax"=> false, :class => 'form'}) do |f| 
-          = render :partial => 'items/form', :locals => {:f => f, :collection => @collection}
-          .group.navform.wat-cf
-            = f.submit("Save", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"), :cancel_link => link_to("Cancel", projects_path, :class => "text_button_padding link_button"))
+-unless current_user.memberships.all(:project_id=>@project.id).empty?
+  .block
+    .content
+      .inner  
+        %h3 
+          Add Controlled Vocabulary Item    
+          %a{:id=>"cv", :href=>"javascript:toggle('add_item','cv');"}
+            %img{:src=>'/images/web-app-theme/icons/add.png', :height=>'16px'}
+        %div{:id=>"add_item", :style=>'display:none;'}    
+          =form_for("item", :url => project_collection_items_path, :html => {"multipart" => true, "data-ajax"=> false, :class => 'form'}) do |f| 
+            = render :partial => 'items/form', :locals => {:f => f, :collection => @collection}
+            .group.navform.wat-cf
+              = f.submit("Save", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"), :cancel_link => link_to("Cancel", projects_path, :class => "text_button_padding link_button"))
 .block
   .secondary-navigation.button-navigation
     .wat-cf
