@@ -37,7 +37,7 @@
               = link_to("My Projects", projects_path)
             %li{:class => public_project?(@project, "active") }
               = link_to("Public Projects", projects_path(:public => true))
-            -if @project && !@project.new?
+            -if @project && !@project.new? && !current_user.memberships(:project_id=>@project.id).empty?
               %li
                 = link_to("Controlled Vocabularies", manage_controlled_vocabularies_project_collections_path(@project))
       #wrapper.wat-cf
