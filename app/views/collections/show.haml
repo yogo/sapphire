@@ -72,6 +72,6 @@
   .sidebar-block
     %h2 Filter Data:
     = form_for("filter", :url => project_collection_filter_path(@project,@collection),  :html => {:class => 'form',:method=>:get}) do |f|  
-      = render :partial => 'filter', :locals => {:f => f, :collection => @collection}
+      = render :partial => 'filter', :locals => {:f => f, :collection => @collection, :filters => nil}
       .group.navform.wat-cf
         = f.submit("Filter", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Filter"))
