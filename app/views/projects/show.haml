@@ -1,4 +1,6 @@
-%h1 #{@project.name} Dashboard
+%h1 
+  = @project.private? ? image_tag("web-app-theme/icons/lock.png") :  image_tag("web-app-theme/icons/world.png")
+  #{@project.name} Project
 
 - content_for(:sidebar) do
   .block
@@ -7,13 +9,15 @@
       %ul.toolbar
         %li= nav_button("All Projects", "web-app-theme/icons/arrow_undo.png", projects_path)
         -if current_user.member_of?(@project)
-          %li= nav_button("Project Settings", "web-app-theme/icons/database_edit.png", "onclick = \"$('#project_edit_form').toggle();\"")
-          %li= nav_button("Upload Data", "web-app-theme/icons/application_get.png", project_upload_path(@project))
+          %li= nav_button("Project Settings", "web-app-theme/icons/database_edit.png", 
+            "onclick = \"$('#project_edit_form').toggle();\"")
+          %li= nav_button("Upload Data", "web-app-theme/icons/application_get.png", 
+            "onclick = \"$('#project_upload_form').toggle();\"")
           %li= nav_button("Add User to Project", "web-app-theme/icons/user_add.png", project_add_user_path(@project))
-          -if @project.private
+          -if @project.private?
             %li= nav_button("Publish Project",  "web-app-theme/icons/world_add.png", project_publish_path(@project), "post")
           -else
-            = nav_button("Unpublish Project",  "web-app-theme/icons/world_delete.png", project_publish_path(@project), "post")
+            %li= nav_button("Unpublish Project",  "web-app-theme/icons/world_delete.png", project_publish_path(@project), "post")
 
 
 
@@ -23,17 +27,21 @@
     .block
       .content
         .inner
-          %h3 Project Settings
-          = form_for(@project, :url => project_path, :html => {:class => 'form', :method=> :put}) do |f|
-            = render :partial => 'form', :locals => {:f => f}
-            .group.navform.wat-cf
-              = f.submit("Save", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"), :cancel_link => link_to("Cancel", '#', {:class => "text_button_padding link_button", :onclick => "$('#project_edit_form').toggle();"}))
-
+          %h4 Project Settings
+          = render :partial => 'edit_form', :locals => {:project => @project, 
+          :cancel_link => link_to("Cancel", '#', :class => "text_button_padding link_button", 
+            :onclick => "$('#project_edit_form').toggle()") }
 
 =# Project#upload_data form
 -if current_user.member_of?(@project)
-  #project_edit_form{:style => "display: none"}
-    = render :partial => 'edit_form', :locals => {:project => @project}
+  #project_upload_form{:style => "display: none"}
+    .block
+      .content
+        .inner
+          %h4 Upload Data
+          = render :partial => 'upload_form', :locals => {:project => @project,
+          :cancel_link => link_to("Cancel", '#', :class => "text_button_padding link_button", 
+            :onclick => "$('#project_upload_form').toggle()")}
 
 .block
   .secondary-navigation.button-navigation
