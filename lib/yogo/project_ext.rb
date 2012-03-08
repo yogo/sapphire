@@ -66,10 +66,12 @@ module Yogo
         item = collection.items.new
         i=0
         header_row.each{|h| h.capitalize == "File" ? item.file =File.new("#{path}/#{csv[j][i].strip}") : item[h]=csv[j][i]; i+=1}
-        item.save
-        if item.versions.empty?
-          item.make_version
+        collection.schema.each do |field|
+          if item[field.name].blank?
+            item[field.name]=nil
+          end
         end
+        item.save
       end
     end
 

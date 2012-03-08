@@ -175,10 +175,15 @@ class ProjectsController < ApplicationController
         item = collection.items.new
         i=0
         header_row.map{|h| item[h]=csv[j][i]; i+=1}
-        item.save
-        if item.versions.empty?
-          item.make_version
+        collection.schema.each do |field|
+          if item[field.name].blank?
+            item[field.name]=nil
+          end
         end
+        item.save
+        #if item.versions.empty?
+        #  item.make_version
+        #end
       end
     end
     
