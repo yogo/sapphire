@@ -5,15 +5,27 @@
     %h3 Toolbar
     .content
       %ul.toolbar
-        %li= nav_button("Back to Projects", "web-app-theme/icons/arrow_undo.png", projects_path)
-        -unless current_user.memberships.all(:project_id=>@project.id).empty?
-          %li= nav_button("Edit Project", "web-app-theme/icons/database_edit.png", edit_project_path(@project))
+        %li= nav_button("All Projects", "web-app-theme/icons/arrow_undo.png", projects_path)
+        -if current_user.member_of?(@project)
+          %li= nav_button("Project Settings", "web-app-theme/icons/database_edit.png", "onclick = \"$('#project_edit_form').toggle();\"")
           %li= nav_button("Upload Data", "web-app-theme/icons/application_get.png", project_upload_path(@project))
           %li= nav_button("Add User to Project", "web-app-theme/icons/user_add.png", project_add_user_path(@project))
           -if @project.private
             %li= nav_button("Publish Project",  "web-app-theme/icons/world_add.png", project_publish_path(@project), "post")
           -else
             = nav_button("Unpublish Project",  "web-app-theme/icons/world_delete.png", project_publish_path(@project), "post")
+
+=# Project#edit form
+-if current_user.member_of?(@project)
+  #project_edit_form{:style => "display: none"}
+    .block
+      .content
+        .inner
+          %h3 Project Settings
+          = form_for(@project, :url => project_path, :html => {:class => 'form', :method=> :put}) do |f|
+            = render :partial => 'form', :locals => {:f => f}
+            .group.navform.wat-cf
+              = f.submit("Save", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"), :cancel_link => link_to("Cancel", '#', {:class => "text_button_padding link_button", :onclick => "$('#project_edit_form').toggle();"}))
 
 .block
   .secondary-navigation.button-navigation
@@ -27,6 +39,7 @@
             :alt => 'Add A Data Collection', 
             :onclick => "$('#new_collection_form').toggle();") 
 
+      =# Collection#create form
       -if current_user.member_of?(@project)
         #new_collection_form{:style => "display: none"}
           %h3 Add New Collection

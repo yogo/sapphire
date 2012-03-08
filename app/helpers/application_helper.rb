@@ -3,7 +3,11 @@ module ApplicationHelper
   
   def nav_button(str, img, href, method=nil)
     button = "<button class='button'>#{image_tag(img) } #{str}</button>".html_safe
-    link_to(button, href, :method=>method) + "&nbsp;".html_safe
+    if href =~ /onclick/i
+      "<span #{href}>#{button}</span>".html_safe
+    else
+      link_to(button, href, :method=>method) + "&nbsp;".html_safe
+    end
   end
 
   def nav_helper
