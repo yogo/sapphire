@@ -43,5 +43,5 @@ a.button:link, a.button:visited, a.button:hover, a.button:active, button.button 
 }
 
 #sidebar ul.toolbar button {
-  width: 90%;
+  width: 100%;
 }
