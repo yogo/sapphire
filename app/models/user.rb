@@ -47,5 +47,8 @@ class User
   
   has n, :memberships
 
+  def member_of?(proj)
+    memberships.projects.include?(proj)
+  end
 
 end
