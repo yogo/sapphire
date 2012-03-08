@@ -18,3 +18,30 @@
 #main-navigation ul li a:hover{
   color: #C4C4C4;
 }
+
+#sidebar {
+  width: 15%;
+  float: left;
+}
+
+#main {
+  width: 83%;
+  float: right;
+}
+
+a.button:link, a.button:visited, a.button:hover, a.button:active, button.button {
+  font-weight: normal;
+}
+
+#sidebar ul.toolbar{
+  margin-top: 5px;
+}
+
+#sidebar ul.toolbar li{
+  height: 28px;
+  border-bottom: none;
+}
+
+#sidebar ul.toolbar button {
+  width: 90%;
+}
