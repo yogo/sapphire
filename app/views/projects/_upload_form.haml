@@ -1,0 +1,8 @@
+= form_for('upload', :url => project_upload_path(project), :html => {"multipart" => true, "data-ajax"=> false,:class => 'form'}) do |f|
+  .group
+    %label Upload Into:
+    = select("upload","collection", project.data_collections.all.collect{|d| [d.name, d.id]}, {:prompt => "Select Action", :required=>true,:include_blank => 'A New Collection',:selected=>params[:collection_id]})
+  .group= f.file_field :file
+  .group.navform.wat-cf
+    = f.submit("Upload Data", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"), :cancel_link => cancel_link)
+

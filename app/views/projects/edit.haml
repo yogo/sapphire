@@ -1,3 +1,7 @@
-%h1 Edit Project
+.block
+  .content
+    .inner
+      %h1 Edit Project
 
- = render :partial => 'edit_form', :locals => {:project => @project}
+      = render :partial => 'edit_form', :locals => {:project => @project, 
+        :cancel_link => link_to("Cancel", project_path(@project), :class => "text_button_padding link_button")}
