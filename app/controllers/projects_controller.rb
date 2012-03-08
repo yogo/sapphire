@@ -2,9 +2,15 @@ class ProjectsController < ApplicationController
     before_filter :verify_project, :only =>[:show, :edit, :update, :upload, :process_upload, :search, :search_results]
     
     def index
-      @my_projects = current_user.memberships.projects
-      @public_projects = Yogo::Project.all(:private => false) - @my_projects
-      @public_collections = Yogo::Collection::Data.all(:private=>false) - @my_projects.data_collections
+      if params[:public]
+        my_projects = current_user.memberships.projects
+        @projects = Yogo::Project.all(:private => false) - my_projects
+        @collections = Yogo::Collection::Data.all(:private=>false) - my_projects.data_collections
+        @nav_public_project = true
+      else
+        @projects = current_user.memberships.projects
+        @nav_my_project = true
+      end
     end
 
     def show
@@ -69,6 +75,8 @@ class ProjectsController < ApplicationController
       public_collection_ids = (public_collection_ids + Yogo::Collection::Data.all(:private=>false, :category=>"Controlled Vocabulary").map{|c| c.id}).uniq
       public_collection_ids = public_collection_ids - @collections.map{|c| c.id}
       @public_collections = Yogo::Collection::Data.all(:id => public_collection_ids)
+   
+      @nav_controlled_vocabulary = true # light up the "controlled vocabulary nav"
     end
     
     def upload
