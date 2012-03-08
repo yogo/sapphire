@@ -3,20 +3,23 @@ module ApplicationHelper
   
   def nav_button(str, img, href, method=nil)
     button = "<button class='button'>#{image_tag(img) } #{str}</button>".html_safe
-    link_to(button, href, :method=>method)
+    if href =~ /onclick/i
+      "<span #{href}>#{button}</span>".html_safe
+    else
+      link_to(button, href, :method=>method) + "&nbsp;".html_safe
+    end
   end
 
-  def my_project?(project, response = '')
-    if project && project.members.include?(current_user)
-      return response
+  def nav_helper
+    nav = {}
+    if    @nav_my_project
+      nav[:my_project] = 'active'
+    elsif @nav_public_project
+      nav[:public_project] = 'active'
     end
-    return ''
-  end
-  
-  def public_project?(project, response = '')
-    if project && project.public?
-      return response
+    if    @nav_controlled_vocabulary
+      nav[:controlled_vocabulary] = 'active'
     end
-    return ''
+    nav
   end
 end

@@ -7,9 +7,13 @@
 
   .content
     .inner
-      %h3 My Projects
+      %h3 
+        - if params[:public]
+          Public Projects
+        - else
+          My Projects
       %ul.list.project-list
-        - @my_projects.each do |p|
+        - @projects.each do |p|
           %li
             .counts
               .collection_count Data Collections: #{p.data_collections.count}
@@ -24,32 +28,14 @@
               %dd
                 =link_to("delete", project_path(p), :method=>:delete, "data-confirm"=>"Are you sure you wish to delete this Project?")
 
--unless @public_projects.empty?
-  .block
-    .content
-      .inner
-        %h3 Public Projects
-        %ul.list.project-list
-          - @public_projects.each do |p|
-            %li
-              .counts
-                .collection_count Data Collections: #{p.data_collections.count}
-                .data_items_count Data Items: #{p.data_collections.map{|c| c.items.count }.reduce(:+)}
-              .left= image_tag("Yogo-tiny-trans.png")
-              %dl
-                %dt
-                  %h4.item 
-                    %a{:href => project_path(p)}= p.name
-                %dd
-                  #{p.description.blank? ? "No Description." : p.description}
-                
--unless @public_collections.empty?
+              
+-if @collections && !@collections.empty?
   .block
     .content
       .inner
         %h3 Public Collections
         %ul.list.collection-list
-          - @public_collections.each do |c|
+          - @collections.each do |c|
             %li
               .counts
                 .data_items_count Data Items: #{c.items.count}

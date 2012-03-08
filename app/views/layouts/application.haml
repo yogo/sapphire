@@ -5,6 +5,7 @@
     = stylesheet_link_tag "web-app-theme/base",
       "web-app-theme/themes/default/style",
       "web-app-theme/override",
+      "font-awesome",
       "http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.0/themes/base/jquery-ui.css",
       "application", 
       :cache => false
@@ -33,11 +34,11 @@
                 =link_to("Logout(#{current_user.first_name})", destroy_user_session_path, :method=> :delete)
         #main-navigation
           %ul.wat-cf
-            %li{:class => my_project?(@project, "active") }
+            %li{:class => nav_helper[:my_project]}
               = link_to("My Projects", projects_path)
-            %li{:class => public_project?(@project, "active") }
+            %li{:class => nav_helper[:public_project] }
               = link_to("Public Projects", projects_path(:public => true))
-            %li
+            %li{:class => nav_helper[:controlled_vocabulary] }
               = link_to("Controlled Vocabularies", manage_controlled_vocabularies_projects_path())
       #wrapper.wat-cf
         .flash
@@ -46,9 +47,8 @@
               %p= message
         #sidebar
           = yield :sidebar
-        #wrap
-          #main
-            = yield
+        #main
+          = yield
         #footer
           .block
             %p

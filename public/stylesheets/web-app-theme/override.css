@@ -6,3 +6,42 @@
   border: 1px solid #8a9daa;
   background: #b8d1e2 url("themes/default/images/messages/notice.png") no-repeat 10px center;
 }
+
+#main-navigation ul li.active a:link, #main-navigation ul li.active a:visited, #main-navigation ul li.active a:hover, #main-navigation ul li.active a:active {
+  color: #EEE;
+}
+
+#main-navigation ul li a:link, #main-navigation ul li a:visited, #main-navigation ul li a:hover, #main-navigation ul li a:active {
+  color: #A4A4A4;
+}
+
+#main-navigation ul li a:hover{
+  color: #C4C4C4;
+}
+
+#sidebar {
+  width: 15%;
+  float: left;
+}
+
+#main {
+  width: 83%;
+  float: right;
+}
+
+a.button:link, a.button:visited, a.button:hover, a.button:active, button.button {
+  font-weight: normal;
+}
+
+#sidebar ul.toolbar{
+  margin-top: 5px;
+}
+
+#sidebar ul.toolbar li{
+  height: 28px;
+  border-bottom: none;
+}
+
+#sidebar ul.toolbar button {
+  width: 100%;
+}

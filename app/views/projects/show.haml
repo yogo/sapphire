@@ -1,31 +1,69 @@
-%h1 Project: #{@project.name}
+%h1 
+  = @project.private? ? image_tag("web-app-theme/icons/lock.png") :  image_tag("web-app-theme/icons/world.png")
+  #{@project.name} Project
+
+- content_for(:sidebar) do
+  .block
+    %h3 Toolbar
+    .content
+      %ul.toolbar
+        %li= nav_button("All Projects", "web-app-theme/icons/arrow_undo.png", projects_path)
+        -if current_user.member_of?(@project)
+          %li= nav_button("Project Settings", "web-app-theme/icons/database_edit.png", 
+            "onclick = \"$('#project_edit_form').toggle();\"")
+          %li= nav_button("Upload Data", "web-app-theme/icons/application_get.png", 
+            "onclick = \"$('#project_upload_form').toggle();\"")
+          %li= nav_button("Add User to Project", "web-app-theme/icons/user_add.png", project_add_user_path(@project))
+          -if @project.private?
+            %li= nav_button("Publish Project",  "web-app-theme/icons/world_add.png", project_publish_path(@project), "post")
+          -else
+            %li= nav_button("Unpublish Project",  "web-app-theme/icons/world_delete.png", project_publish_path(@project), "post")
+
+
+
+=# Project#edit form
+-if current_user.member_of?(@project)
+  #project_edit_form{:style => "display: none"}
+    .block
+      .content
+        .inner
+          %h4 Project Settings
+          = render :partial => 'edit_form', :locals => {:project => @project, 
+          :cancel_link => link_to("Cancel", '#', :class => "text_button_padding link_button", 
+            :onclick => "$('#project_edit_form').toggle()") }
+
+=# Project#upload_data form
+-if current_user.member_of?(@project)
+  #project_upload_form{:style => "display: none"}
+    .block
+      .content
+        .inner
+          %h4 Upload Data
+          = render :partial => 'upload_form', :locals => {:project => @project,
+          :cancel_link => link_to("Cancel", '#', :class => "text_button_padding link_button", 
+            :onclick => "$('#project_upload_form').toggle()")}
 
 .block
   .secondary-navigation.button-navigation
-    .wat-cf
-      = nav_button("Back to Projects", "web-app-theme/icons/arrow_undo.png", projects_path)
-      -unless current_user.memberships.all(:project_id=>@project.id).empty?
-        = nav_button("Edit Project", "web-app-theme/icons/database_edit.png", edit_project_path(@project))
-        = nav_button("Upload Data", "web-app-theme/icons/application_get.png", project_upload_path(@project))
-        = nav_button("Add User to Project", "web-app-theme/icons/user_add.png", project_add_user_path(@project))
-        -if @project.private
-          = nav_button("Publish Project",  "web-app-theme/icons/world_add.png", project_publish_path(@project), "post")
-        -else
-          = nav_button("Unpublish Project",  "web-app-theme/icons/world_delete.png", project_publish_path(@project), "post")
-  -unless current_user.memberships.all(:project_id=>@project.id).empty?    
-    .content
-      .inner
-        %h3 Add New Collection
-        = form_for("collection", :url => project_collections_path(@project), :html => {:class => 'form'}) do |f|
-          = render :partial => 'collections/form', :locals => {:f => f}
-          .group.navform.wat-cf
-            = f.submit("Save", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"))
-              
-.block
+    .wat-cf   
   .content
     .inner
-      -unless @collections.empty?
-        %h3 Current Collections
+      %h3 
+        = @collections.empty? ? "No Data Collections" : "Data Collections"
+        - if current_user.member_of?(@project)
+          = image_tag("web-app-theme/icons/add.png", 
+            :alt => 'Add A Data Collection', 
+            :onclick => "$('#new_collection_form').toggle();") 
+
+      =# Collection#create form
+      -if current_user.member_of?(@project)
+        #new_collection_form{:style => "display: none"}
+          %h3 Add New Collection
+          = form_for("collection", :url => project_collections_path(@project), :html => {:class => 'form'}) do |f|
+            = render :partial => 'collections/form', :locals => {:f => f}
+            .group.navform.wat-cf
+              = f.submit("Save", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"))
+
         = render(:partial => "collections/list", :locals=>{:collections => @collections})
       -unless @cv_collections.empty?
         %h3 Controlled Vocabularies

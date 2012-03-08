@@ -1,0 +1,7 @@
+= form_for(project, :url => project_path, :html => {:class => 'form', :method=> :put}) do |f|
+  = render :partial => 'form', :locals => {:f => f}
+  .group.navform.wat-cf
+    = f.submit("Save", 
+      :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"), 
+      :cancel_link => cancel_link)
+
