@@ -2,13 +2,7 @@ class ItemsController < ApplicationController
   before_filter :get_dependencies, :except => :controlled_vocabulary_term
   layout :choose_layout
   
-  def choose_layout
-    if action_name == 'controlled_vocabulary_term'
-      return 'controlled_vocabulary'
-    else
-      return 'application'
-    end
-  end
+
   def index
     if params[:item]
       @item = @collection.items.new(params[:item])
@@ -102,6 +96,13 @@ class ItemsController < ApplicationController
   end
   
   private
+  def choose_layout
+    if action_name == 'controlled_vocabulary_term' || action_name == 'show' 
+      return 'controlled_vocabulary'
+    else
+      return 'application'
+    end
+  end
   
   def get_dependencies
     if !current_user.memberships(:project_id => params[:project_id]).empty? || Yogo::Project.get(params[:project_id]).private == false || Yogo::Collection::Data.get(params[:collection_id]).private == false
