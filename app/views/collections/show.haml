@@ -34,6 +34,8 @@
                 -unless current_user.memberships.all(:project_id=>@project.id).empty?
                   =link_to(image_tag("web-app-theme/icons/table_edit.png", :border=>"0", :height=>"16px"), edit_project_collection_schema_path(@project,@collection,s)) 
                 #{s.name} (#{s.type.to_s.split('::').last})
+                -if s.associated_schema
+                  | Associated With #{s.associated_schema.data_collection.name}>#{s.associated_schema.name}
                 =link_to("delete", project_collection_schema_path(@project,@collection,s), :method=>:delete, "data-confirm"=>"Are you sure you wish to delete this Schema Column?")
 .block
   .secondary-navigation.button-navigation

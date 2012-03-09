@@ -29,6 +29,11 @@ end
                 = i[s.name]
           -else
             %td{:class =>'cv_error'}= i[s.name]
+        -elsif s.associated_schema     
+          %td
+            -unless i[s.name].nil?
+              %a{:href=>"#", :onClick=>"return showDialog('#{project_collection_item_controlled_vocabulary_term_path(s.associated_schema.data_collection.project_id,s.associated_schema.data_collection.id,i[s.name])}')"}
+                =s.associated_schema.data_collection.items.get(i[s.name])[s.associated_schema.name]
         -else
           %td= i[s.name]
       %td

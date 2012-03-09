@@ -2,4 +2,6 @@
   
 .group= f.select(:type, property_types_opts,:label => "Type")
 
-.group= f.select(:controlled_vocabulary_id, controlled_vocabulary_opts, :label => "Controlled Vocabulary", :include_blank => true)
+.group= f.select(:controlled_vocabulary_id, controlled_vocabulary_opts.sort, :label => "Controlled Vocabulary", :include_blank => true)
+
+.group= f.select(:associated_schema_id, association_opts.sort, :label => "Associations", :include_blank => true)
