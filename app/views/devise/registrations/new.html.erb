@@ -1,8 +1,7 @@
-<h2>Sign up</h2>
 
 <div class='block'>
+  <h2>Sign up</h2>
   <div class='content'>
-    <div class='inner'>
 
       <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html=> {:class=>'form'}) do |f| %>
         <%= devise_error_messages! %>
@@ -36,6 +35,5 @@
       <% end %>
 
       <%= render :partial => "devise/shared/links" %>
-    </div>
   </div>
 </div>

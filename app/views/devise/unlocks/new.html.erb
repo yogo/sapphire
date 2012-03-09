@@ -1,4 +1,6 @@
+<div class="block">
 <h2>Resend unlock instructions</h2>
+  <div class='content'>
 
 <%= form_for(resource, :as => resource_name, :url => unlock_path(resource_name), :html => { :method => :post }) do |f| %>
   <%= devise_error_messages! %>
@@ -10,3 +12,4 @@
 <% end %>
 
 <%= render :partial => "devise/shared/links" %>
+</div></div>
