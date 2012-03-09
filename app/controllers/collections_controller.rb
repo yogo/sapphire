@@ -139,7 +139,14 @@ class CollectionsController < ApplicationController
           params[:filter].delete(k)
         end
       end
-      @items = @collection.items.all(:conditions=>params[:filter])
+      cond_hash={}
+      params[:filter].each do |k,v|
+        cond_hash = cond_hash.merge({"#{k}".to_sym.like => "%#{v}%"})
+      end
+      @items = @collection.items.all(:conditions=>cond_hash)
+      # @collection.schema.all(:associated_schema_id.not=>nil).each do |s|
+      #  
+      # end
       @filters = params[:filter]
       render :filter_results
     end
