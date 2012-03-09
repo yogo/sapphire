@@ -13,7 +13,7 @@
     %th File
   - items.each do |i|
     %tr{:class => cycle('odd','even')}
-      %td= link_to image_tag("web-app-theme/icons/table_go.png", :border=>"0", :height=>"32px"), project_collection_item_restore_path(project,collection,item, :deleted_at=>i.deleted_at), :method=>:put
+      %td= link_to image_tag("web-app-theme/icons/table_go.png", :border=>"0", :height=>"32px"), project_collection_item_restore_path(project,collection,item, :deleted_at=>i.deleted_at), :method=>:put,"data-confirm"=>"Are you sure you wish to restore this Item?"
       %td= i.deleted_at.strftime("%B %d, %Y %I:%M:%S %p")
       %td= i.updated_at.strftime("%B %d, %Y %I:%M:%S %p")
       %td
