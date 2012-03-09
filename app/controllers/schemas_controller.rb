@@ -47,10 +47,11 @@ class SchemasController < ApplicationController
       if params[:schema][:controlled_vocabulary_id].blank?
         params[:schema].delete(:controlled_vocabulary_id)
       end
-
+      if params[:schema][:associated_schema_id].blank?
+        params[:schema].delete(:associated_schema_id)
+      end
       @schema = @collection.schema.new(params[:schema])
       if @schema.save
-
         if @schema.type == Yogo::Collection::Property::String || @schema.type == Yogo::Collection::Property::Text
           #lets have the table create
           @collection.items.new
