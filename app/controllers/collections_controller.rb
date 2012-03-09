@@ -30,6 +30,9 @@ class CollectionsController < ApplicationController
     
     def update
       @collection = @project.data_collections.get(params[:id])
+      if params[:collection][:controlled_vocabulary_id].blank?
+        params[:collection][:controlled_vocabulary_id]=nil
+      end
       if @collection.update(params[:collection])
         flash[:notice] = "Collection updated!"
         if params[:redirect_path]
@@ -48,6 +51,10 @@ class CollectionsController < ApplicationController
     end
     
     def create
+      @collection = @project.data_collections.new()
+      if params[:collection][:controlled_vocabulary_id].blank?
+        params[:collection][:controlled_vocabulary_id]=nil
+      end
       @collection = @project.data_collections.new(params[:collection])
       @collection.project = @project
       @collection.type = Yogo::Collection::Asset
@@ -56,6 +63,7 @@ class CollectionsController < ApplicationController
         redirect_to project_path(@project)
       else
         flash[:error] = "Collection failed to save!"
+        render :controller=>"projects", :action=>"index"
       end
     end
     

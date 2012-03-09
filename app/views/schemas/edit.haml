@@ -7,6 +7,6 @@
   .content
     .inner
       = form_for("schema", @schema, :url => project_collection_schema_path(@project, @collection, @schema), :html => {:class => 'form', :method=>"put"}) do |f|
-        = render :partial => 'form', :locals => {:f => f}
+        = render :partial => 'form', :locals => {:f => f, :collection=>@collection}
         .group.navform.wat-cf
           = f.submit("Save", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"), :cancel_link => link_to("Cancel", project_collection_path(@project, @collection), :class => "text_button_padding link_button"))

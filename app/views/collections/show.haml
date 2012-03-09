@@ -16,7 +16,7 @@
       .inner
         %h3 Add New Schema
         = form_for("schema", :url => project_collection_schemas_path(@project, @collection), :html => {:class => 'form'}) do |f|
-          = render :partial => 'schemas/form', :locals => {:f => f}
+          = render :partial => 'schemas/form', :locals => {:f => f, :collection=>@collection}
           .group.navform.wat-cf
             = f.submit("Save", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"))
 .block

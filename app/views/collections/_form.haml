@@ -3,6 +3,8 @@
 .group= f.text_area(:description, :label => "Description")
 
 .group= f.select(:category, collection_category_options, :label => "Category")
+
+.group= f.select(:controlled_vocabulary_id, controlled_vocabulary_opts, :label => "Restrict Column Names To This Controlled Vocabulary", :include_blank => true)
 .group 
   Collection is Private:
   =f.check_box(:private, :label=>"Private Project")
