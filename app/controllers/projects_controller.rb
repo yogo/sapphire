@@ -158,8 +158,6 @@ class ProjectsController < ApplicationController
     
     def add_user
       @project = Yogo::Project.get(params[:project_id])
-      @users = User.all.map{|u| ["#{u.last_name}, #{u.first_name}",u.id] }
-      @current_project_users = User.all(:id => Membership.all(:project_id=> @project.id).map{|m| m.user_id})
     end
     
     def associate_user

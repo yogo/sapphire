@@ -3,10 +3,10 @@
     %li
       .counts
         .data_items_count Data Items: #{c.items.count}
-      .left= image_tag("Yogo-tiny-trans.png")
-      %dl
+      .left.big-img= image_tag("web-app-theme/icons/table.png")
+      %dl.item
         %dt
-          %h4.item 
+          %h4 
             -if c.category == "Controlled Vocabulary"
               %a{:href => project_collection_cv_path(c.project_id,c)}= c.name
             -else
