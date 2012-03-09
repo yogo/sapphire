@@ -16,7 +16,13 @@
   -@collection.schema.each do |field|
     %tr{:class => cycle('odd','even')}
       %td=field.name
-      %td= @item[field.name]
+      -if field.associated_schema     
+        %td
+          -unless @item[field.name].nil?
+            =field.associated_schema.data_collection.items.get(@item[field.name])[field.associated_schema.name]
+            ="(#{@item[field.name]})"
+      -else
+        %td= @item[field.name]
   %tr{:class => cycle('odd','even')}
     %td File
     %td
