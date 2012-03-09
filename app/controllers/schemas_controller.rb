@@ -18,12 +18,21 @@ class SchemasController < ApplicationController
       if params[:schema][:controlled_vocabulary_id].blank?
         params[:schema][:controlled_vocabulary_id] = nil
       end
-      if @schema.update(params[:schema])
-        # success
+      if params[:schema][:associated_schema_id].blank?
+        params[:schema].delete(:associated_schema_id)
+      elsif @schema.associated_schema_id !=params[:schema][:associated_schema_id]
+        @schema.deleted_at = Time.now
+        @schema.save
+        @schema = @collection.schema.create(params[:schema])
         redirect_to project_collection_path(@project,@collection)
       else
-        # fail
-        render :edit
+        if @schema.update(params[:schema])
+          # success
+          redirect_to project_collection_path(@project,@collection)
+        else
+          # fail
+          render :edit
+        end
       end
     end
     
