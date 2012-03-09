@@ -20,7 +20,9 @@
   - items.each do |i|
     %tr{:class => cycle('odd','even')}
       %td= link_to(image_tag("web-app-theme/icons/table_edit.png"), edit_project_collection_item_path(params[:project_id],collection,i))
-      %td=link_to(image_tag("web-app-theme/icons/time_go.png"), project_collection_item_path(params[:project_id],collection,i))
+      %td
+        %a{:href=>"#", :onClick=>"return showDialog('#{project_collection_item_path(params[:project_id],collection,i)}')"}
+          =link_to(image_tag("web-app-theme/icons/time_go.png")
       %td=link_to("delete", project_collection_item_path(params[:project_id],collection,i), :method=>:delete, "data-confirm"=>"Are you sure you wish to delete this Item?")
       %td= i.created_at.strftime("%B %d, %Y %I:%M:%S %p")
       %td= i.updated_at.strftime("%B %d, %Y %I:%M:%S %p")
@@ -56,7 +58,7 @@
              autoOpen: false,
              modal: true,
              height: 500,
-             width: 500
+             width: 800
          });
   });
   
