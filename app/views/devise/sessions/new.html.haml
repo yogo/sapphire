@@ -1,19 +1,17 @@
-%h1 Sign in
-
 .block
-  .content
-    .inner
-      = form_for(resource, :as => resource_name, :url => session_path(resource_name), :html=>{:class=> 'form'}) do |f|
+  %h2 Sign in
+  .content.login
+    = form_for(resource, :as => resource_name, :url => session_path(resource_name), :html=>{:class=> 'form'}) do |f|
+      .group
+        = f.label "Email", :class => 'label'
+        = f.email_field :email, :class => 'text_field'
+      .group
+        = f.label "Password", :class => 'label'
+        = f.password_field :password, :class => 'text_field'
+      - if devise_mapping.rememberable?
         .group
-          = f.label "Email", :class => 'label'
-          = f.email_field :email
-        .group
-          = f.label "Password", :class => 'label'
-          = f.password_field :password 
-        - if devise_mapping.rememberable?
-          .group
-            = f.check_box :remember_me
-            = f.label :remember_me 
-        .group.navform.wat-cf
-          = f.submit("Sign in", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Sign in"))
-      = render :partial => "devise/shared/links"
+          = f.check_box :remember_me
+          = f.label :remember_me 
+      .group.navform.wat-cf
+        = f.submit("Sign in", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Sign in"))
+    = render :partial => "devise/shared/links"

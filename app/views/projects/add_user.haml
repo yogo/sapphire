@@ -6,26 +6,5 @@
       = nav_button("Back to Project", "web-app-theme/icons/arrow_undo.png", project_path(@project))
   .content
     .inner
-      %h3 Current Project Members:
-      %table.table
-        %tr
-          %th Last Name
-          %th First Name
-          %th Email
-        -@current_project_users.all(:order => [:last_name]).each do |user|
-          %tr{:class => cycle('odd','even')}
-            %td
-              =user.last_name
-            %td
-              =user.first_name
-            %td
-              =user.email
-.block
-  .content
-    .inner
-      %h3 Select User to Add:
-      = form_for("add_user", :url => project_associate_user_path(@project), :html => {:class => 'form'}) do |f|
-        .group
-          =f.select(:user_id,options_for_select(@users), :label => "User")
-        .group.navform.wat-cf
-          = f.submit("Save", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"), :cancel_link => link_to("Cancel", projects_path, :class => "text_button_padding link_button"))
+      = render :partial => 'project_users', :locals => {:project => @project,
+      :cancel_link => nil}
