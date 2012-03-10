@@ -58,7 +58,8 @@
       -if @collection.schema.count > 0
         = nav_button("Download All Items", "web-app-theme/icons/arrow_undo.png", project_collection_export_path(@project,@collection))
         = nav_button("Download All Items With Files", "web-app-theme/icons/package_go.png", project_collection_export_with_files_path(@project,@collection))
-        = nav_button("Upload Data", "web-app-theme/icons/application_get.png", project_collection_upload_path(@project, @collection))
+        -unless current_user.memberships.all(:project_id=>@project.id).empty?
+          = nav_button("Upload Data", "web-app-theme/icons/application_get.png", project_upload_path(@project, :collection_id=>@collection.id))
   .content
     .inner
       %h3 Data

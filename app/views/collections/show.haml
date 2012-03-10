@@ -46,7 +46,7 @@
       = nav_button("View All Items", "web-app-theme/icons/table.png", project_collection_items_path(@project, @collection))
       -unless current_user.memberships.all(:project_id=>@project.id).empty?
         = nav_button("Add Item", "web-app-theme/icons/table_add.png", project_collection_items_path(@project, @collection))
-        = nav_button("Upload Data", "web-app-theme/icons/application_get.png", project_collection_upload_path(@project, @collection))
+        = nav_button("Upload Data", "web-app-theme/icons/application_get.png", project_upload_path(@project, :collection_id=>@collection.id))
   .content
     .inner
       %h3 Data (top 5)

@@ -120,6 +120,8 @@ class ProjectsController < ApplicationController
            @data_collection=@project.process_zip_file_to_collection(@new_file,params[:upload][:file].original_filename, @data_collection)
         else
           @data_collection =  @project.data_collections.get(params[:upload][:collection])
+          #if there are new field update the collection
+          @data_collection= @project.collection_from_file(params[:upload][:file].original_filename, @new_file, @data_collection)
           # insert items into data_collection
           insert_nonfile_item_into_collection(@new_file, @data_collection)
         end
