@@ -11,6 +11,7 @@ class SchemasController < ApplicationController
 
     def edit
       @schema = @collection.schema.get(params[:id])
+      @versions = Yogo::Collection::Property.with_deleted.all(:original_uid=>@schema.id, :order=>[:deleted_at])
     end
 
     def update
@@ -41,6 +42,23 @@ class SchemasController < ApplicationController
         # fail
         render :edit
       end
+    end
+    
+    #expects the delete_at datetime in params[:deleted_at]
+    def restore
+       @schema = @collection.schema.get(params[:schema_id])
+       old_schema =Yogo::Collection::Property.with_deleted.first(:original_uid=>@schema.id, :deleted_at => params[:deleted_at])
+       att = old_schema.attributes
+       att.delete(:deleted_at)
+       att.delete(:original_uid)
+       att.delete(:id)
+       if @schema.update(att)
+         flash[:notice] = "Schema Restored Successfully!"
+         redirect_to edit_project_collection_schema_path(@project, @collection, @schema)
+       else
+         flash[:error] = "Schema failed to restore!"
+         render :edit
+       end
     end
     
     def new

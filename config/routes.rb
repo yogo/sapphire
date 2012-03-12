@@ -26,7 +26,9 @@ Sapphire::Application.routes.draw do
         put :restore
         get :controlled_vocabulary_term
       end
-      resources :schemas
+      resources :schemas do
+        put :restore
+      end
     end
   end
 
