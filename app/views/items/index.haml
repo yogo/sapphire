@@ -26,3 +26,5 @@
         = render :partial => 'table', :locals => {:items => @collection.items(:order => :created_at.desc), :collection => @collection, :project=>@project}
       -else
         = render :partial => 'public_table', :locals => {:items => @collection.items(:order => :created_at.desc), :collection => @collection, :project=>@project}
+        
+=render :partial=> 'grid', :locals=>{:collection=> @collection, :project=>@project}        

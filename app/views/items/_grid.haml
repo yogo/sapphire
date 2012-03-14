@@ -1,0 +1,96 @@
+= javascript_include_tag 'jquery.event.drag-2.0.min.js','slickgrid/slick.core.js','slickgrid/slick.grid.js'
+= stylesheet_link_tag 'jquery-ui/jquery-ui-1.8.16.custom.css','slickgrid/slick.grid.css','slickgrid/grid_style.css'
+
+%table{:html=>{:width=>"100%"}}
+  %tr
+    %td
+      #myGrid{:style=>"width:900px;height:500px;"}
+
+
+#term_info
+:javascript
+  var grid;
+  
+  var columns =[ {id: "edit", name: "Edit", field: "id", formatter: editFormatter },{id: "history", name: "History", field: "id", formatter: historyFormatter },#{collection.schema.map{|s| '{id: "'+ s.field_name + '", name: "' + s.name + '", field: "' + s.field_name + '", sortable: true' + "#{s.controlled_vocabulary_id.nil? ? "" : ", formatter: cvFormatter"}" + "#{s.associated_schema_id.nil? ? "" : ", formatter: assocFormatter"}" +  '}'}.join(',')}, {id: "file", name: "File", field: "file"}, {id: "original_filename", name: "Filename", field: "original_filename", sortable: true, formatter: fileFormatter}];
+
+  function editFormatter(row, cell, value, columnDef, dataContext) {
+    return '<a href="#{project_collection_path(project,collection)}/items/' + value + '/edit">#{image_tag("web-app-theme/icons/table_edit.png")}</a>'
+  }
+  
+  function historyFormatter(row, cell, value, columnDef, dataContext) {
+    return '<a href="#{project_collection_path(project,collection)}/items/' + value + '">#{image_tag("web-app-theme/icons/time_go.png")}</a>'
+  }
+  
+  function cvFormatter(row, cell, value, columnDef, dataContext) {
+    if (value != null)
+      return '<a href="#{project_collection_path(project,collection)}/items/' + value + '/controlled_vocabulary_term">' + value + '</a>'
+    else
+      return ""
+    end
+  }
+  
+  function assocFormatter(row, cell, value, columnDef, dataContext) {
+    if (value != null)
+      return '<a href="#{project_collection_path(project,collection)}/items/' + value + '">' + value + '</a>'
+    else
+      return ""
+    end
+  }
+  
+  function fileFormatter(row, cell, value, columnDef, dataContext) {
+    if (value != null)
+      return '<a href="' + value + '">' + value + '</a>'
+    else
+      return ""
+    end
+  }
+  
+  
+  var options = {
+    enableCellNavigation: true,
+    enableColumnReorder: true,
+    multiColumnSort: true,
+    enableRowReordering: true
+  };
+  var data= #{DataMapper.raw_select(collection.items).sql_to_json}
+  
+
+  $(function () {
+    grid = new Slick.Grid("#myGrid", data, columns, options);
+  
+    grid.onSort.subscribe(function (e, args) {
+      var cols = args.sortCols;
+
+      data.sort(function (dataRow1, dataRow2) {
+        for (var i = 0, l = cols.length; i < l; i++) {
+          var field = cols[i].sortCol.field;
+          var sign = cols[i].sortAsc ? 1 : -1;
+          var value1 = dataRow1[field], value2 = dataRow2[field];
+          var result = (value1 == value2 ? 0 : (value1 > value2 ? 1 : -1)) * sign;
+          if (result != 0) {
+            return result;
+          }
+        }
+        return 0;
+      });
+      grid.invalidate();
+      grid.render();
+    });
+  })
+  
+  function showDialog(url){
+     $("#term_info").html('<iframe id="modalIframeId" width="100%" height="100%" marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"/>').dialog("open");
+     $("#modalIframeId").attr("src",url);
+     return false;
+  }
+
+  $(document).ready(function() {
+     $("#term_info").dialog({
+             autoOpen: false,
+             modal: true,
+             height: 500,
+             width: 950
+         });
+  });
+  
+
