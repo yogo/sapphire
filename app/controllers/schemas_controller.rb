@@ -11,6 +11,7 @@ class SchemasController < ApplicationController
 
     def edit
       @schema = @collection.schema.get(params[:id])
+      @versions = Yogo::Collection::Property.with_deleted.all(:original_uid=>@schema.id, :order=>[:deleted_at])
     end
 
     def update
@@ -20,20 +21,44 @@ class SchemasController < ApplicationController
       end
       if params[:schema][:associated_schema_id].blank?
         params[:schema].delete(:associated_schema_id)
-      elsif @schema.associated_schema_id !=params[:schema][:associated_schema_id]
-        @schema.deleted_at = Time.now
-        @schema.save
-        @schema = @collection.schema.create(params[:schema])
-        redirect_to project_collection_path(@project,@collection)
-      else
-        if @schema.update(params[:schema])
-          # success
-          redirect_to project_collection_path(@project,@collection)
+      elsif !@schema.associated_schema_id.nil?  && @schema.associated_schema_id !=params[:schema][:associated_schema_id]  
+        if Yogo::Collection::Property.get(params[:schema][:associated_schema_id]).data_collection_id == @schema.associated_schema.data_collection_id
+          #do nothing because the existing UIDs will still work we have just changed the display column
+          flash[:notice] = "Schema was Updated with different column from existing Association."
         else
-          # fail
-          render :edit
+          @schema.deleted_at = Time.now
+          @schema.save
+          @schema = @collection.schema.create(params[:schema])
+          flash[:notice] = "Schema was Updated with new Association."
+          redirect_to project_collection_path(@project,@collection)
+          return
         end
       end
+      @schema = @collection.schema.get(params[:id])
+      if @schema.update(params[:schema])
+        # success
+        redirect_to project_collection_path(@project,@collection)
+      else
+        # fail
+        render :edit
+      end
+    end
+    
+    #expects the delete_at datetime in params[:deleted_at]
+    def restore
+       @schema = @collection.schema.get(params[:schema_id])
+       old_schema =Yogo::Collection::Property.with_deleted.first(:original_uid=>@schema.id, :deleted_at => params[:deleted_at])
+       att = old_schema.attributes
+       att.delete(:deleted_at)
+       att.delete(:original_uid)
+       att.delete(:id)
+       if @schema.update(att)
+         flash[:notice] = "Schema Restored Successfully!"
+         redirect_to edit_project_collection_schema_path(@project, @collection, @schema)
+       else
+         flash[:error] = "Schema failed to restore!"
+         render :edit
+       end
     end
     
     def new

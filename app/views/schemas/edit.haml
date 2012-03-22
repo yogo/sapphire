@@ -10,3 +10,9 @@
         = render :partial => 'form', :locals => {:f => f, :collection=>@collection}
         .group.navform.wat-cf
           = f.submit("Save", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"), :cancel_link => link_to("Cancel", project_collection_path(@project, @collection), :class => "text_button_padding link_button"))
+          
+.block
+  .content
+    .innner
+      %h3 History
+      =render :partial=> "version_table", :locals =>{:versions=>@versions, :schema=>@schema, :project=>@project, :collection=>@collection}

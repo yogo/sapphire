@@ -31,7 +31,7 @@ GIT
 
 GIT
   remote: git://github.com/yogo/yogo-project.git
-  revision: e3fb0638beabbdf025fc8aee36511fcbe4d5bca5
+  revision: a63096c804f0cc7f234f162951cba0d8bc92abf6
   specs:
     yogo-project (0.5.3)
       carrierwave

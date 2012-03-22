@@ -1,4 +1,5 @@
 class ItemsController < ApplicationController
+
   before_filter :get_dependencies, :except => :controlled_vocabulary_term
   layout :choose_layout
   
@@ -15,6 +16,7 @@ class ItemsController < ApplicationController
     @project = Yogo::Project.get(params[:project_id])
     @collection = @project.data_collections.get(params[:collection_id])
     @item = @collection.items.get(params[:item_id])
+    #@item = @collection.items.first(:params[:cv])
   end
   
   #expects the delete_at datetime in params[:deleted_at]
@@ -37,13 +39,26 @@ class ItemsController < ApplicationController
   def update
     @item = @collection.items.get(params[:id])
     if @item.update(params[:item])
-      flash[:notice] = "Item Updated Successfully!"
-      redirect_to project_collection_items_path(@project, @collection)
+      respond_to do |format|
+        format.html do
+          flash[:notice] = "Item Updated Successfully!"
+          redirect_to project_collection_items_path(@project, @collection)   
+        end
+        #format.json { render json: @item.to_json, status: :updated}
+        format.js { render :js => '$("#message").html("<h2>Item updated. Close window and refresh your page.</h2>").attr("class","message notice"); $("html, body").animate({scrollTop: "0px"})' }
+      end
     else
-      flash[:error] = "Item failed to save!"
-      render :edit
+      respond_to do |format|
+        format.html do
+          flash[:error] = "Item failed to save!"
+          render :edit
+        end
+        format.json { render json: @item.to_json, status: :error}
+        format.js { render :js => '$("#message").html("<h2>Item failed updated.</h2>").attr("class","message error").scrollTop(0); $("html, body").animate({scrollTop: "0px"})' }
+      end
     end
   end
+  
   def show
     @item = @collection.items.get(params[:id])
   end
@@ -52,6 +67,9 @@ class ItemsController < ApplicationController
     @item = @collection.items.get(params[:id])
   end
 
+  def association_edit
+    @item = @collection.items.get(params[:item_id])
+  end
   
   def new
   end
@@ -97,7 +115,9 @@ class ItemsController < ApplicationController
   
   private
   def choose_layout
-    if action_name == 'controlled_vocabulary_term' || action_name == 'show' 
+    if action_name == 'controlled_vocabulary_term' || 
+       action_name == 'show' || 
+       action_name == 'association_edit'
       return 'controlled_vocabulary'
     else
       return 'application'
