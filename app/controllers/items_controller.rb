@@ -1,4 +1,5 @@
 class ItemsController < ApplicationController
+
   before_filter :get_dependencies, :except => :controlled_vocabulary_term
   layout :choose_layout
   
@@ -37,20 +38,27 @@ class ItemsController < ApplicationController
   
   def update
     @item = @collection.items.get(params[:id])
-    responds_to do |format|
-      format.html do
-        if @item.update(params[:item])
-          responds_to do |format|
+    if @item.update(params[:item])
+      respond_to do |format|
+        format.html do
           flash[:notice] = "Item Updated Successfully!"
-          redirect_to project_collection_items_path(@project, @collection)
-        else
+          redirect_to project_collection_items_path(@project, @collection)   
+        end
+        #format.json { render json: @item.to_json, status: :updated}
+        format.js { render :js => '$("#message").html("<h2>Item updated. Close window and refresh your page.</h2>").attr("class","message notice"); $("html, body").animate({scrollTop: "0px"})' }
+      end
+    else
+      respond_to do |format|
+        format.html do
           flash[:error] = "Item failed to save!"
           render :edit
-        end        
+        end
+        format.json { render json: @item.to_json, status: :error}
+        format.js { render :js => '$("#message").html("<h2>Item failed updated.</h2>").attr("class","message error").scrollTop(0); $("html, body").animate({scrollTop: "0px"})' }
       end
-      format.json { render json: @item.to_json, status: :updated}
-      format.js { render :nothing => true }
+    end
   end
+  
   def show
     @item = @collection.items.get(params[:id])
   end
@@ -107,7 +115,9 @@ class ItemsController < ApplicationController
   
   private
   def choose_layout
-    if action_name == 'controlled_vocabulary_term' || action_name == 'show' || 'association_edit'
+    if action_name == 'controlled_vocabulary_term' || 
+       action_name == 'show' || 
+       action_name == 'association_edit'
       return 'controlled_vocabulary'
     else
       return 'application'
