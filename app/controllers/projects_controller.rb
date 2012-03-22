@@ -162,8 +162,8 @@ class ProjectsController < ApplicationController
     
     def associate_user
       @project = Yogo::Project.get(params[:project_id])
-      @user = User.get(params[:add_user][:user_id].to_i)
-      if @user.memberships.first_or_create(:project_id=> @project.id)
+      @user = User.get(params[:add_user][:user_id].to_i) if params[:add_user]
+      if @user && @user.memberships.first_or_create(:project_id=> @project.id)
         flash[:notice] = "#{@user.first_name} #{@user.last_name} has been add to this project."
         redirect_to project_path(@project)
       else
