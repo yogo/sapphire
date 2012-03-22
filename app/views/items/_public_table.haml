@@ -1,5 +1,5 @@
 -@schema_cv_hash={}
--@collection.schema.each do |s|
+-collection.schema.each do |s|
   -link_hash={}
   -if s.controlled_vocabulary_id
   -@schema_cv_hash[s.id] =Yogo::Collection::Property.get(s.controlled_vocabulary_id).data_collection
