@@ -1,0 +1,23 @@
+
+%h3 Current Project Members:
+= form_for("add_user", :url => project_associate_user_path(project), :html => {:class => 'form'}) do |f|
+  .group{:style => 'float: left; margin-right: 5px;'}
+    = f.select(:user_id,options_for_select(users_for_select(project)), :label => "")
+  .navform.wat-cf
+    = f.submit("Add User to Project", :submit_image => image_tag("web-app-theme/icons/user_add.png", :alt => "Save"), :cancel_link => cancel_link)
+
+%table.table
+  %tr
+    %th Last Name
+    %th First Name
+    %th Email
+  -project.members.users(:order => [:last_name]).each do |user|
+    %tr{:class => cycle('odd','even')}
+      %td
+        =user.last_name
+      %td
+        =user.first_name
+      %td
+        =user.email
+
+  %br{:clear => 'all'}
