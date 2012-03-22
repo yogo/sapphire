@@ -9,7 +9,7 @@
       %ul.toolbar
         %li= nav_button("All Projects", "web-app-theme/icons/arrow_undo.png", projects_path)
         -if current_user.member_of?(@project)
-          %li= nav_button("Project Settings", "web-app-theme/icons/database_edit.png", 
+          %li= nav_button("Project Settings", "web-app-theme/icons/database_gear.png", 
             "onclick = \"$('#project_edit_form').toggle();\"")
           %li= nav_button("Project Members", "web-app-theme/icons/user_add.png",
             "onclick = \"$('#project_add_user').toggle();\"")
@@ -50,24 +50,16 @@
           :cancel_link => link_to("Cancel", '#', :class => "text_button_padding link_button", 
             :onclick => "$('#project_add_user').toggle()")}
 
-:javascript
-  change_tab = function(section, tab_id) {
-    // set previous tab to inactive
-    $(section).removeClass('active');
-    // activate the new tab
-    $(section + " > " + tab_id ).addClass('active');
-  };
-
-
 .block
-  .secondary-navigation.data_collections
+  .secondary-navigation
     - if current_user.member_of?(@project)
       .right-nav-button= nav_button("Add a Data Collection", "web-app-theme/icons/table_multiple.png", 
         "onclick = \"$('#new_collection_form').toggle();\"")
-    %ul.wat-cf
-      %li.dc.first.active= link_to("Data Collections", "#", :onclick => "$('#data_collections #main').toggle(); $('.secondary-navigation > li.active').removeClass('active'); $('li.dc').addClass('active') ")
-      %li.cv= link_to("Controlled Vocabularies", "#", :onclick => "$('#controlled_vocabularies').toggle(); $('ul.dat_collections > li').removeClass('active'); $('li.cv').addClass('active') ") 
-      %li.scv= link_to("Schema Controlled Vocabularies", "#", :onclick => "$('#schema_controlled_vocabularies').toggle(); $('ul.dat_collections > li').removeClass('active'); $('li.scv').addClass('active') ") 
+    %ul.wat-cf.tabs
+      %li.dc.first.active
+        %span.link{:onclick => "changeTab('.dc','#data_collections')"} Data Collections
+      %li.cv
+        %span.link{:onclick => "changeTab('.cv','#controlled_vocabularies')"} Controlled Vocabularies 
 
   .content
     .inner
@@ -81,12 +73,9 @@
               = f.submit("Save", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"), :cancel_link => link_to("Cancel", '#', :class => "text_button_padding link_button", 
                   :onclick => "$('#new_collection_form').toggle()") )
 
-        #data_collections
+        #data_collections.collection
           = render(:partial => "collections/list", :locals=>{:collections => @collections})
       -unless @cv_collections.empty?
-        #controlled_vocabularies{:style => 'display: none'}
+        #controlled_vocabularies.collection{:style => 'display: none'}
           = render(:partial => "collections/list", :locals=>{:collections => @cv_collections})
-      -unless @scv_collections.empty?
-        #schema_controlled_vocabularies{:style => 'display: none'}
-          = render(:partial => "collections/list", :locals=>{:collections => @scv_collections })
       
