@@ -60,6 +60,8 @@
         %span.link{:onclick => "changeTab('.dc','#data_collections')"} Data Collections
       %li.cv
         %span.link{:onclick => "changeTab('.cv','#controlled_vocabularies')"} Controlled Vocabularies 
+      %li.scv
+        %span.link{:onclick => "changeTab('.scv','#schema_controlled_vocabularies')"} Schema Controlled Vocabularies 
 
   .content
     .inner
@@ -78,4 +80,6 @@
       -unless @cv_collections.empty?
         #controlled_vocabularies.collection{:style => 'display: none'}
           = render(:partial => "collections/list", :locals=>{:collections => @cv_collections})
-      
+      -unless @scv_collections.empty?
+        #schema_controlled_vocabularies.collection{:style => 'display: none'}
+          = render(:partial => "collections/list", :locals=>{:collections => @scv_collections})
