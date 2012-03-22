@@ -31,6 +31,15 @@
   text-decoration: none;
 }
 
+.secondary-navigation ul li span.link, .secondary-navigation ul li span.link:hover {
+  text-decoration: none;
+  color: #111;
+  cursor: pointer;
+  display: block;
+  padding: 10px 15px;
+}
+
+
 body, #container {
   min-height: 700px;
 }
