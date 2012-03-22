@@ -39,7 +39,7 @@
             -unless i[s.name].nil?
               %a{:href=>"#", :onClick=>"return showDialog('#{project_collection_item_controlled_vocabulary_term_path(s.associated_schema.data_collection.project_id,s.associated_schema.data_collection.id,i[s.name])}')"}
                 =s.associated_schema.data_collection.items.get(i[s.name])[s.associated_schema.name]
-              %a{:href=>"#", :onClick=>"return showDialog('#{edit_project_collection_item_path(s.associated_schema.data_collection.project_id,s.associated_schema.data_collection.id,i[s.name])}')"}
+              %a{:href=>"#", :onClick=>"return showDialog('#{project_collection_item_association_edit_path(s.associated_schema.data_collection.project_id,s.associated_schema.data_collection.id,i[s.name])}')"}
                 =image_tag("web-app-theme/icons/table_edit.png")
         -else
           %td= i[s.name]
@@ -48,7 +48,7 @@
         
 :javascript
   function showDialog(url){
-     $("#CV_info").html('<iframe id="modalIframeId" width="100%" height="100%" marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"/>').dialog("open");
+     $("#CV_info").html('<iframe id="modalIframeId" width="100%" height="100%" marginWidth="0" marginHeight="0" frameBorder="0" overflow="visible"/>').dialog("open");
      $("#modalIframeId").attr("src",url);
      return false;
   }

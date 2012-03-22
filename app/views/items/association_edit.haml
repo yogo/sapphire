@@ -1,0 +1,16 @@
+%h1 Editing #{@collection.name} Item
+
+.block
+  .content
+    .inner
+      %h3 Edit #{@item.id}
+      = form_for("item", @item, :url => project_collection_item_path(@project, @collection, @item),:remote=>true, :html=>{:method=>"put", :class => 'form'}) do |f| 
+        = render :partial => 'form', :locals => {:f => f, :collection => @collection}
+        .group.navform.wat-cf
+          = f.submit("Save", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"), :cancel_link => link_to("Cancel", project_collection_path(@project, @collection), :class => "text_button_padding link_button", :onclick=>"closeDialog()"))
+
+:javascript
+  function closeDialog(){
+    $("#CV_info").dialog("close")
+    window.location.href=window.location.href
+  }
