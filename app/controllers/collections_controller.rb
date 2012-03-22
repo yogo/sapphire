@@ -144,19 +144,23 @@ class CollectionsController < ApplicationController
     #this accepts a hash of condition to filter the collection items on
     def filter
       @collection = @project.data_collections.get(params[:collection_id])
-      params[:filter].each do |k,v|
-        if v.empty?
-          params[:filter].delete(k)
+      if params[:filter]
+        params[:filter].each do |k,v|
+          if v.empty?
+            params[:filter].delete(k)
+          end
         end
+        cond_hash={}
+        params[:filter].each do |k,v|
+          cond_hash = cond_hash.merge({"#{k}".to_sym.like => "%#{v}%"})
+        end
+        @items = @collection.items.all(:conditions=>cond_hash)
+        # @collection.schema.all(:associated_schema_id.not=>nil).each do |s|
+        #  
+        # end
+      else
+        @items = @collection.items.all
       end
-      cond_hash={}
-      params[:filter].each do |k,v|
-        cond_hash = cond_hash.merge({"#{k}".to_sym.like => "%#{v}%"})
-      end
-      @items = @collection.items.all(:conditions=>cond_hash)
-      # @collection.schema.all(:associated_schema_id.not=>nil).each do |s|
-      #  
-      # end
       @filters = params[:filter]
       render :filter_results
     end
