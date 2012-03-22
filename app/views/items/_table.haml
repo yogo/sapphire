@@ -9,23 +9,18 @@
     
 %table.table
   %tr
-    %th Edit
-    %th History
-    %th Delete
-    %th Created At
-    %th Updated At
+    %th.actions 
     - collection.schema.each do |s|
       %th= s.name
     %th File
   - items.each do |i|
     %tr{:class => cycle('odd','even')}
-      %td= link_to(image_tag("web-app-theme/icons/table_edit.png"), edit_project_collection_item_path(params[:project_id],collection,i))
       %td
-        %a{:href=>"#", :onClick=>"return showDialog('#{project_collection_item_path(params[:project_id],collection,i)}')"}
-          =image_tag("web-app-theme/icons/time_go.png")
-      %td=link_to("delete", project_collection_item_path(params[:project_id],collection,i), :method=>:delete, "data-confirm"=>"Are you sure you wish to delete this Item?")
-      %td= i.created_at.strftime("%B %d, %Y %I:%M:%S %p")
-      %td= i.updated_at.strftime("%B %d, %Y %I:%M:%S %p")
+        = link_to(image_tag("web-app-theme/icons/time_go.png"), '#', :onClick=>"return showDialog('#{project_collection_item_path(params[:project_id],collection,i)}')")
+        = link_to(image_tag("web-app-theme/icons/pencil.png"), edit_project_collection_item_path(params[:project_id],collection,i))
+        = link_to(image_tag("web-app-theme/icons/delete.png"), project_collection_item_path(params[:project_id],collection,i), :method=>:delete, "data-confirm"=>"Are you sure you wish to delete this Item?")
+      =#%td= i.created_at.strftime("%B %d, %Y %I:%M:%S %p")
+      =#%td= i.updated_at.strftime("%B %d, %Y %I:%M:%S %p")
       - collection.schema.each do |s|
         -if s.controlled_vocabulary_id  
           -if @schema_cv_hash[s.name][i[s.name]]

@@ -47,3 +47,7 @@ a.button:link, a.button:visited, a.button:hover, a.button:active, button.button 
   width: 100%;
   text-align: left;
 }
+
+table th.actions, table td.actions{
+  width: 55px;
+}
