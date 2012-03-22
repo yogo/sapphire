@@ -8,6 +8,7 @@ Sapphire::Application.routes.draw do
     get :upload
     post :upload, :action=>:process_upload
     get :add_user
+    put :remove_user
     post :associate_user
     post :publish
     collection do

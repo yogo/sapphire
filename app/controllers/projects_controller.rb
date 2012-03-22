@@ -132,6 +132,7 @@ class ProjectsController < ApplicationController
     end
     
     
+    
     def search
       @project = Yogo::Project.get(params[:project_id])
     end
@@ -158,6 +159,19 @@ class ProjectsController < ApplicationController
     
     def add_user
       @project = Yogo::Project.get(params[:project_id])
+    end
+    
+    #remove a user from a project
+    def remove_user
+      @project = Yogo::Project.get(params[:project_id])
+      @user = User.get(params[:user_id].to_i)
+      if @user.memberships.first(:project_id=> @project.id).destroy
+        flash[:notice] = "#{@user.first_name} #{@user.last_name} has been removed from this project."
+        redirect_to project_path(@project)
+      else
+        flash[:error] = "Failed to add user!"
+        render :add_user
+      end
     end
     
     def associate_user

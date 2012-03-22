@@ -11,6 +11,7 @@
     %th Last Name
     %th First Name
     %th Email
+    %th Remove User
   -project.members.users(:order => [:last_name]).each do |user|
     %tr{:class => cycle('odd','even')}
       %td
@@ -19,5 +20,7 @@
         =user.first_name
       %td
         =user.email
-
+      %td 
+        -if project.members.users(:order => [:last_name]).count > 1
+          = nav_button("Remove User", "web-app-theme/icons/arrow_undo.png", project_remove_user_path(@project, :user_id=>user.id), "put")
   %br{:clear => 'all'}
