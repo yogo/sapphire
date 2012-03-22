@@ -7,6 +7,8 @@ class CollectionsController < ApplicationController
 
     def show
       @collection = @project.data_collections.get(params[:id])
+      @items =  @collection.items(:order => :created_at.desc)
+      @item = @collection.items.new(params[:item])
       @schema_cv_hash={}
       @collection.schema.each do |s|
         link_hash={}
