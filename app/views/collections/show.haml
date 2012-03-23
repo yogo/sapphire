@@ -17,8 +17,6 @@
             "onclick = \"$('#collection_edit_form').toggle();\"")
           %li= nav_button("Upload Data", "web-app-theme/icons/application_get.png", 
             "onclick = \"$('#collection_upload_form').toggle();\"")
-          %li= nav_button("Add Data Row", "web-app-theme/icons/add.png", 
-            "onclick = \"$('#collection_data_form').toggle();\"")
           %li= nav_button("Add Column", "web-app-theme/icons/table_add.png", 
             "onclick = \"$('#collection_schema_form').toggle();\"")
           -if @collection.private?
@@ -72,15 +70,6 @@
             = render :partial => 'schemas/form', :locals => {:f => f, :collection=>@collection}
             .group.navform.wat-cf
               = f.submit("Save", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"), :cancel_link => link_to("Cancel", '#', :class => "text_button_padding link_button", :onclick => "$('#collection_schema_form').toggle()"))
-  #collection_data_form{:style => "display: none"}
-    .block
-      .content
-        .inner
-          %h3 New #{@collection.name}
-          = form_for("item", @item, :url => project_collection_items_path(@project, @collection), :html => {"multipart" => true, "data-ajax"=> false, :class => 'form'}) do |f| 
-            = render :partial => 'items/form', :locals => {:f => f, :collection => @collection}
-            .group.navform.wat-cf
-              = f.submit("Save", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"), :cancel_link => link_to("Cancel", '#', :class => "text_button_padding link_button", :onclick => "$('#collection_data_form').toggle()"))
 
 .block
   .secondary-navigation

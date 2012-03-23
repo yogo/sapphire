@@ -1,0 +1,9 @@
+- collection.schema.each do |field|
+  -if field.controlled_vocabulary
+    %td= f.select(field.to_s, field_value_options(field.controlled_vocabulary), :label => '', :include_blank => true)
+  -elsif field.associated_schema
+    %td= f.select(field.to_s, associated_field_value_options(field.associated_schema), :label => '', :include_blank => true)
+  -else
+    %td= f.text_field(field.to_s, :label => '') 
+
+%td= f.file_field :file
