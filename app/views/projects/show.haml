@@ -74,8 +74,8 @@
               = f.submit("Save", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"), :cancel_link => link_to("Cancel", '#', :class => "text_button_padding link_button", 
                   :onclick => "$('#new_collection_form').toggle()") )
 
-        #data_collections.collection
-          = render(:partial => "collections/list", :locals=>{:collections => @collections})
+      #data_collections.collection
+        = render(:partial => "collections/list", :locals=>{:collections => @collections})
       -unless @cv_collections.empty?
         #controlled_vocabularies.collection{:style => 'display: none'}
           = render(:partial => "collections/list", :locals=>{:collections => @cv_collections})
