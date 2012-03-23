@@ -59,7 +59,7 @@
     multiColumnSort: true,
     enableRowReordering: true
   };
-  var data= #{DataMapper.raw_select(collection.items).sql_to_json}
+  var data= #{items.sql_to_json}
   
 
   $(function () {

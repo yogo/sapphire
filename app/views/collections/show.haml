@@ -93,11 +93,11 @@
       - unless @filters.empty?
         Filtered By: #{@filters.map{|k,v| @collection.schema.by_field_name(k.target.to_s).name + " : #{v}"}.join(', ')}
       -unless current_user.memberships.all(:project_id=>@project.id).empty?
-        = render :partial => 'items/table', :locals => {:items =>@items, :collection => @collection, :project=>@project}
+        -#= render :partial => 'items/table', :locals => {:items =>@items, :collection => @collection, :project=>@project}
       -else
-        = render :partial => 'items/public_table', :locals => {:items => @items, :collection => @collection, :project=>@project}
+        -#= render :partial => 'items/public_table', :locals => {:items => @items, :collection => @collection, :project=>@project}
 
-=render :partial=> 'items/grid', :locals=>{:collection=> @collection, :project=>@project, :collection_associations=>@collection_associations, :collection_cvs=>@collection_cvs}        
+      =render :partial=> 'items/grid', :locals=>{:collection=> @collection, :project=>@project, :collection_associations=>@collection_associations, :collection_cvs=>@collection_cvs, :items=>@items}        
 
 :javascript
   function toggle() {
@@ -112,12 +112,5 @@
   		text.innerHTML = "<img src='/images/web-app-theme/icons/delete.png' height='16px'></img>";
   	}
   } 
-  
--content_for :sidebar do
-  .sidebar-block
-    %h2 Filter Data:
-    = form_for("filter", :url => project_collection_filter_path(@project,@collection),  :html => {:class => 'form',:method=>:get}) do |f|  
-      = render :partial => 'filter', :locals => {:f => f, :collection => @collection, :filters => nil}
-      .group.navform.wat-cf
-        = f.submit("Filter", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Filter"))
+
 
