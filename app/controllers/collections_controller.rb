@@ -18,6 +18,28 @@ class CollectionsController < ApplicationController
           @schema_cv_hash[s.name]=link_hash
         end
       end
+      @collection_associations={}
+      @collection.schema.each do |s|
+        if s.associated_schema_id
+          assoc_schema = Yogo::Collection::Property.get(s.associated_schema_id)
+          collection_items = DataMapper.raw_select(@collection.items(:fields=>["#{s.field_name}"]))
+          collection_items.delete(nil)
+          assoc_items = DataMapper.raw_select(assoc_schema.data_collection.items(
+             :id=>collection_items))
+          assoc_items.each{|v| @collection_associations[v.id]={:value=>v[assoc_schema.field_name], :url=>project_collection_item_path(assoc_schema.data_collection.project, assoc_schema.data_collection, v.id)}}
+        end
+      end
+      @collection_cvs={}
+      @collection.schema.each do |s|
+        if s.controlled_vocabulary_id
+          cv_schema = Yogo::Collection::Property.get(s.controlled_vocabulary_id)
+          collection_items = DataMapper.raw_select(@collection.items(:fields=>["#{s.field_name}"]))
+          collection_items.delete(nil)
+          cv_items = DataMapper.raw_select(cv_schema.data_collection.items(
+             "#{cv_schema.field_name}"=>collection_items.uniq))
+          cv_items.each{|v| @collection_cvs[v[cv_schema.field_name]]=project_collection_item_controlled_vocabulary_term_path(cv_schema.data_collection.project, cv_schema.data_collection, v.id)}
+        end
+      end
     end
 
     def edit

@@ -8,11 +8,17 @@
 
 
 #term_info
+
 :javascript
+  var association_value = #{collection_associations.to_json}
+  var cv_value = #{collection_cvs.to_json}
   var grid;
   
-  var columns =[ {id: "edit", name: "Edit", field: "id", formatter: editFormatter },{id: "history", name: "History", field: "id", formatter: historyFormatter },#{collection.schema.map{|s| '{id: "'+ s.field_name + '", name: "' + s.name + '", field: "' + s.field_name + '", sortable: true' + "#{s.controlled_vocabulary_id.nil? ? "" : ", formatter: cvFormatter"}" + "#{s.associated_schema_id.nil? ? "" : ", formatter: assocFormatter"}" +  '}'}.join(',')}, {id: "file", name: "File", field: "file"}, {id: "original_filename", name: "Filename", field: "original_filename", sortable: true, formatter: fileFormatter}];
+  var columns =[ {id: "button", name: "", field: "id", formatter: buttonFormatter },#{collection.schema.map{|s| '{id: "'+ s.field_name + '", name: "' + s.name + '", field: "' + s.field_name + '", sortable: true' + "#{s.controlled_vocabulary_id.nil? ? "" : ", formatter: cvFormatter"}" + "#{s.associated_schema_id.nil? ? "" : ", formatter: assocFormatter"}" +  '}'}.join(',')}, {id: "file", name: "File", field: "file", formatter: fileFormatter}, {id: "original_filename", name: "Filename", field: "original_filename", sortable: true}];
 
+  function buttonFormatter(row, cell, value, columnDef, dataContext) {
+    return '<a href="#{project_collection_path(project,collection)}/items/' + value + '/edit">#{image_tag("web-app-theme/icons/table_edit.png")}</a><a href="#{project_collection_path(project,collection)}/items/' + value + '">#{image_tag("web-app-theme/icons/time_go.png")}</a><a href="#{project_collection_path(project,collection)}/items/' + value + '" data-method="delete" data-confirm="Are you sure you wish to delete this Item?" rel="nofollow">#{image_tag("collapse.gif")}</a>'
+  }
   function editFormatter(row, cell, value, columnDef, dataContext) {
     return '<a href="#{project_collection_path(project,collection)}/items/' + value + '/edit">#{image_tag("web-app-theme/icons/table_edit.png")}</a>'
   }
@@ -23,7 +29,8 @@
   
   function cvFormatter(row, cell, value, columnDef, dataContext) {
     if (value != null)
-      return '<a href="#{project_collection_path(project,collection)}/items/' + value + '/controlled_vocabulary_term">' + value + '</a>'
+      //return '<a href="#{project_collection_path(project,collection)}/items/' + value + '/controlled_vocabulary_term">' + value + '</a>'
+      return '<a href="#" onclick="return showDialog(\'' + cv_value[value] + '\')">' + value + '</a>'
     else
       return ""
     end
@@ -31,7 +38,7 @@
   
   function assocFormatter(row, cell, value, columnDef, dataContext) {
     if (value != null)
-      return '<a href="#{project_collection_path(project,collection)}/items/' + value + '">' + value + '</a>'
+      return '<a href="#" onclick="return showDialog(\'' + association_value[value]["url"] + '\')">' + association_value[value]["value"] + '</a>'
     else
       return ""
     end
@@ -39,7 +46,7 @@
   
   function fileFormatter(row, cell, value, columnDef, dataContext) {
     if (value != null)
-      return '<a href="' + value + '">' + value + '</a>'
+      return '<a href="#{root_url}asset_collection/#{collection.id.to_s}/' + value + '">Download</a>'
     else
       return ""
     end
