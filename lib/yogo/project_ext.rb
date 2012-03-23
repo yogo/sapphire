@@ -12,7 +12,7 @@ module Yogo
       if collection
         new_data_collection = collection
       else
-        new_data_collection = self.data_collections.first_or_create(:name=>name,:type => Yogo::Collection::Asset)
+        new_data_collection = self.data_collections.first_or_create(:name=>name,:type => Yogo::Collection::Asset, :category=>'')
       end
       header_row = csv[0]
       header_row.each do |field|

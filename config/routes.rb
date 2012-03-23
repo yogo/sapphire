@@ -8,6 +8,7 @@ Sapphire::Application.routes.draw do
     get :upload
     post :upload, :action=>:process_upload
     get :add_user
+    put :remove_user
     post :associate_user
     post :publish
     collection do
@@ -19,11 +20,11 @@ Sapphire::Application.routes.draw do
       post :upload, :controller => :projects, :action=>:process_upload
       get :export
       get :export_with_files
-      get :filter
       get :cv
       get :edit_cv
       resources :items do
         put :restore
+        get :association_edit
         get :controlled_vocabulary_term
       end
       resources :schemas do

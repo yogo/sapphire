@@ -1,5 +1,5 @@
 -@schema_cv_hash={}
--@collection.schema.each do |s|
+-collection.schema.each do |s|
   -link_hash={}
   -if s.controlled_vocabulary_id
   -@schema_cv_hash[s.id] =Yogo::Collection::Property.get(s.controlled_vocabulary_id).data_collection
@@ -9,23 +9,18 @@
     
 %table.table
   %tr
-    %th Edit
-    %th History
-    %th Delete
-    %th Created At
-    %th Updated At
+    %th.actions 
     - collection.schema.each do |s|
       %th= s.name
     %th File
   - items.each do |i|
     %tr{:class => cycle('odd','even')}
-      %td= link_to(image_tag("web-app-theme/icons/table_edit.png"), edit_project_collection_item_path(params[:project_id],collection,i))
       %td
-        %a{:href=>"#", :onClick=>"return showDialog('#{project_collection_item_path(params[:project_id],collection,i)}')"}
-          =image_tag("web-app-theme/icons/time_go.png")
-      %td=link_to("delete", project_collection_item_path(params[:project_id],collection,i), :method=>:delete, "data-confirm"=>"Are you sure you wish to delete this Item?")
-      %td= i.created_at.strftime("%B %d, %Y %I:%M:%S %p")
-      %td= i.updated_at.strftime("%B %d, %Y %I:%M:%S %p")
+        = link_to(image_tag("web-app-theme/icons/time_go.png"), '#', :onClick=>"return showDialog('#{project_collection_item_path(params[:project_id],collection,i)}')")
+        = link_to(image_tag("web-app-theme/icons/pencil.png"), edit_project_collection_item_path(params[:project_id],collection,i))
+        = link_to(image_tag("web-app-theme/icons/delete.png"), project_collection_item_path(params[:project_id],collection,i), :method=>:delete, "data-confirm"=>"Are you sure you wish to delete this Item?")
+      =#%td= i.created_at.strftime("%B %d, %Y %I:%M:%S %p")
+      =#%td= i.updated_at.strftime("%B %d, %Y %I:%M:%S %p")
       - collection.schema.each do |s|
         -if s.controlled_vocabulary_id  
           -if @schema_cv_hash[s.name][i[s.name]]
@@ -39,7 +34,7 @@
             -unless i[s.name].nil?
               %a{:href=>"#", :onClick=>"return showDialog('#{project_collection_item_controlled_vocabulary_term_path(s.associated_schema.data_collection.project_id,s.associated_schema.data_collection.id,i[s.name])}')"}
                 =s.associated_schema.data_collection.items.get(i[s.name])[s.associated_schema.name]
-              %a{:href=>"#", :onClick=>"return showDialog('#{edit_project_collection_item_path(s.associated_schema.data_collection.project_id,s.associated_schema.data_collection.id,i[s.name])}')"}
+              %a{:href=>"#", :onClick=>"return showDialog('#{project_collection_item_association_edit_path(s.associated_schema.data_collection.project_id,s.associated_schema.data_collection.id,i[s.name])}')"}
                 =image_tag("web-app-theme/icons/table_edit.png")
         -else
           %td= i[s.name]
@@ -48,7 +43,7 @@
         
 :javascript
   function showDialog(url){
-     $("#CV_info").html('<iframe id="modalIframeId" width="100%" height="100%" marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"/>').dialog("open");
+     $("#CV_info").html('<iframe id="modalIframeId" width="100%" height="100%" marginWidth="0" marginHeight="0" frameBorder="0" overflow="visible"/>').dialog("open");
      $("#modalIframeId").attr("src",url);
      return false;
   }

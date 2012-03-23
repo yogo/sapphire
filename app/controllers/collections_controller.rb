@@ -1,5 +1,6 @@
 class CollectionsController < ApplicationController
     before_filter :get_project
+    before_filter :get_filters
 
     def index
       @collections = @project.data_collections
@@ -40,6 +41,10 @@ class CollectionsController < ApplicationController
           cv_items.each{|v| @collection_cvs[v[cv_schema.field_name]]=project_collection_item_controlled_vocabulary_term_path(cv_schema.data_collection.project, cv_schema.data_collection, v.id)}
         end
       end
+
+      @item = @collection.items.new(params[:item])
+      @items =  @collection.items(:order => :created_at.desc).all(@filters)
+
     end
 
     def edit
@@ -161,26 +166,7 @@ class CollectionsController < ApplicationController
       render 'projects/upload'
     end
     
-    #this accepts a hash of condition to filter the collection items on
-    def filter
-      @collection = @project.data_collections.get(params[:collection_id])
-      params[:filter].each do |k,v|
-        if v.empty?
-          params[:filter].delete(k)
-        end
-      end
-      cond_hash={}
-      params[:filter].each do |k,v|
-        cond_hash = cond_hash.merge({"#{k}".to_sym.like => "%#{v}%"})
-      end
-      @items = @collection.items.all(:conditions=>cond_hash)
-      # @collection.schema.all(:associated_schema_id.not=>nil).each do |s|
-      #  
-      # end
-      @filters = params[:filter]
-      render :filter_results
-    end
-    
+    # TODO: Is this necessary?
     def cv
       @collection = @project.data_collections.get(params[:collection_id])
       @schema_cv_hash={}
@@ -195,6 +181,8 @@ class CollectionsController < ApplicationController
         end
       end
     end
+
+
     private
     def get_project
       if !Yogo::Collection::Data.get(params[:id]).nil? 
@@ -246,5 +234,14 @@ class CollectionsController < ApplicationController
       end
       csv_string
     end
-    
+
+    def get_filters
+      @filters = {}
+      if params[:filters] && !params[:filters].empty?
+        params[:filters].each do |k,v|
+          next if v.blank?
+          @filters[k.to_sym.like] = "%#{v}%"
+        end
+      end
+    end
 end

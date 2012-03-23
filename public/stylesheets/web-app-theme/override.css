@@ -20,7 +20,7 @@
 }
 
 #sidebar {
-  width: 15%;
+  width: 170px;
   float: left;
 }
 
@@ -40,8 +40,14 @@ a.button:link, a.button:visited, a.button:hover, a.button:active, button.button 
 #sidebar ul.toolbar li{
   height: 28px;
   border-bottom: none;
+  font-size: smaller;
 }
 
 #sidebar ul.toolbar button {
   width: 100%;
+  text-align: left;
+}
+
+table th.actions, table td.actions{
+  width: 55px;
 }

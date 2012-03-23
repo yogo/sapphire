@@ -15,9 +15,9 @@ class ProjectsController < ApplicationController
 
     def show
       @project = Yogo::Project.get(params[:id])
-      @collections = @project.data_collections(:category.not => ["Schema Controlled Vocabulary","Controlled Vocabulary"])
       @cv_collections = @project.data_collections(:category => "Controlled Vocabulary")
       @scv_collections =@project.data_collections(:category => "Schema Controlled Vocabulary")
+      @collections = @project.data_collections - @cv_collections - @scv_collections
     end
 
     def edit
@@ -132,6 +132,7 @@ class ProjectsController < ApplicationController
     end
     
     
+    
     def search
       @project = Yogo::Project.get(params[:project_id])
     end
@@ -158,14 +159,25 @@ class ProjectsController < ApplicationController
     
     def add_user
       @project = Yogo::Project.get(params[:project_id])
-      @users = User.all.map{|u| ["#{u.last_name}, #{u.first_name}",u.id] }
-      @current_project_users = User.all(:id => Membership.all(:project_id=> @project.id).map{|m| m.user_id})
+    end
+    
+    #remove a user from a project
+    def remove_user
+      @project = Yogo::Project.get(params[:project_id])
+      @user = User.get(params[:user_id].to_i)
+      if @user.memberships.first(:project_id=> @project.id).destroy
+        flash[:notice] = "#{@user.first_name} #{@user.last_name} has been removed from this project."
+        redirect_to project_path(@project)
+      else
+        flash[:error] = "Failed to add user!"
+        render :add_user
+      end
     end
     
     def associate_user
       @project = Yogo::Project.get(params[:project_id])
-      @user = User.get(params[:add_user][:user_id].to_i)
-      if @user.memberships.first_or_create(:project_id=> @project.id)
+      @user = User.get(params[:add_user][:user_id].to_i) if params[:add_user]
+      if @user && @user.memberships.first_or_create(:project_id=> @project.id)
         flash[:notice] = "#{@user.first_name} #{@user.last_name} has been add to this project."
         redirect_to project_path(@project)
       else
