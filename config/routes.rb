@@ -20,7 +20,6 @@ Sapphire::Application.routes.draw do
       post :upload, :controller => :projects, :action=>:process_upload
       get :export
       get :export_with_files
-      get :filter
       get :cv
       get :edit_cv
       resources :items do

@@ -1,5 +1,6 @@
 class CollectionsController < ApplicationController
     before_filter :get_project
+    before_filter :get_filters
 
     def index
       @collections = @project.data_collections
@@ -7,19 +8,19 @@ class CollectionsController < ApplicationController
 
     def show
       @collection = @project.data_collections.get(params[:id])
-      @items =  @collection.items(:order => :created_at.desc)
       @item = @collection.items.new(params[:item])
-      @schema_cv_hash={}
-      @collection.schema.each do |s|
-        link_hash={}
-        if s.controlled_vocabulary_id
-          @schema_cv_hash[s.id] = Yogo::Collection::Property.get(s.controlled_vocabulary_id).data_collection
-          s.data_collection.items.each do |i|
-            link_hash = link_hash.merge({i[s.name] => @schema_cv_hash[s.id].items.first("field_#{s.controlled_vocabulary_id.to_s.gsub('-','_')}".to_sym=>i[s.name])})
-          end
-          @schema_cv_hash[s.name]=link_hash
-        end
-      end
+      @items =  @collection.items(:order => :created_at.desc).all(@filters)
+      # @schema_cv_hash={}
+      # @collection.schema.each do |s|
+      #   link_hash={}
+      #   if s.controlled_vocabulary_id
+      #     @schema_cv_hash[s.id] = Yogo::Collection::Property.get(s.controlled_vocabulary_id).data_collection
+      #     s.data_collection.items.each do |i|
+      #       link_hash = link_hash.merge({i[s.name] => @schema_cv_hash[s.id].items.first("field_#{s.controlled_vocabulary_id.to_s.gsub('-','_')}".to_sym=>i[s.name])})
+      #     end
+      #     @schema_cv_hash[s.name]=link_hash
+      #   end
+      # end
     end
 
     def edit
@@ -141,30 +142,7 @@ class CollectionsController < ApplicationController
       render 'projects/upload'
     end
     
-    #this accepts a hash of condition to filter the collection items on
-    def filter
-      @collection = @project.data_collections.get(params[:collection_id])
-      if params[:filter]
-        params[:filter].each do |k,v|
-          if v.empty?
-            params[:filter].delete(k)
-          end
-        end
-        cond_hash={}
-        params[:filter].each do |k,v|
-          cond_hash = cond_hash.merge({"#{k}".to_sym.like => "%#{v}%"})
-        end
-        @items = @collection.items.all(:conditions=>cond_hash)
-        # @collection.schema.all(:associated_schema_id.not=>nil).each do |s|
-        #  
-        # end
-      else
-        @items = @collection.items.all
-      end
-      @filters = params[:filter]
-      render :filter_results
-    end
-    
+    # TODO: Is this necessary?
     def cv
       @collection = @project.data_collections.get(params[:collection_id])
       @schema_cv_hash={}
@@ -179,6 +157,8 @@ class CollectionsController < ApplicationController
         end
       end
     end
+
+
     private
     def get_project
       if !Yogo::Collection::Data.get(params[:id]).nil? 
@@ -230,5 +210,14 @@ class CollectionsController < ApplicationController
       end
       csv_string
     end
-    
+
+    def get_filters
+      @filters = {}
+      if params[:filters] && !params[:filters].empty?
+        params[:filters].each do |k,v|
+          next if v.blank?
+          @filters[k.to_sym.like] = "%#{v}%"
+        end
+      end
+    end
 end

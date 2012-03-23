@@ -28,7 +28,7 @@
 
     %h3 Filter Data
     .content 
-      = form_for("filter", :url => project_collection_filter_path(@project,@collection),  :html => {:class => 'form',:method=>:get}) do |f|  
+      = form_for("filters", :url => project_collection_path(@project,@collection),  :html => {:class => 'form',:method=>:get}) do |f|  
         = render :partial => 'filter', :locals => {:f => f, :collection => @collection, :filters => nil}
         .group.navform.wat-cf
           = f.submit("Filter", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Filter"))
@@ -90,6 +90,9 @@
         .right-nav-button= nav_button("Add Column", "web-app-theme/icons/table_edit.png", project_collection_items_path(@project, @collection))
   .content
     .inner
+      - if @filters
+        =#Filtered By: #{@filters.map{|k,v| @collection.schema.select{|s| s.field_name == k.target.to_s}.first.name + ": #{v}"}.join(', ')}
+        Filtered By: #{@filters.map{|k,v| @collection.schema.by_field_name(k.target.to_s).name + " : #{v}"}.join(', ')}
       -unless current_user.memberships.all(:project_id=>@project.id).empty?
         = render :partial => 'items/table', :locals => {:items =>@items, :collection => @collection, :project=>@project}
       -else
