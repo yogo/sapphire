@@ -28,8 +28,8 @@
 
     %h3 Filter Data
     .content 
-      = form_for("filters", :url => project_collection_path(@project,@collection),  :html => {:class => 'form',:method=>:get}) do |f|  
-        = render :partial => 'filter', :locals => {:f => f, :collection => @collection, :filters => nil}
+      = form_for("filters", @filter_item, :url => project_collection_path(@project,@collection),  :html => {:class => 'form',:method=>:get}) do |f|  
+        = render :partial => 'filter', :locals => {:f => f, :collection => @collection}
         .group.navform.wat-cf
           = f.submit("Filter", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Filter"))
 

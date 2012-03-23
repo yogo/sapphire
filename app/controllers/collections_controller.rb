@@ -9,6 +9,7 @@ class CollectionsController < ApplicationController
     def show
       @collection = @project.data_collections.get(params[:id])
       @item = @collection.items.new(params[:item])
+      @filter_item = @collection.items.new
       @items =  @collection.items(:order => :created_at.desc).all(@filters)
       # @schema_cv_hash={}
       # @collection.schema.each do |s|
