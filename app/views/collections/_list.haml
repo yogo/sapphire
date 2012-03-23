@@ -7,10 +7,7 @@
       %dl.item
         %dt
           %h4 
-            -if c.category == "Controlled Vocabulary"
-              %a{:href => project_collection_cv_path(c.project_id,c)}= c.name
-            -else
-              %a{:href => project_collection_path(c.project_id,c)}= c.name
+            %a{:href => project_collection_path(c.project_id,c)}= c.name
         %dd
           Schema: #{c.schema.map(&:name)}
           %br
