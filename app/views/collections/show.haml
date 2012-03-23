@@ -9,8 +9,8 @@
     .content
       %ul.toolbar
         %li= nav_button("Back to Project", "web-app-theme/icons/arrow_undo.png", project_path(@project))
-        %li= nav_button("Download Metadata", "web-app-theme/icons/table_go.png", project_collection_export_path(@project,@collection))
-        %li= nav_button("Download All Data", "web-app-theme/icons/package_go.png", project_collection_export_with_files_path(@project,@collection))
+        %li= nav_button("Download Metadata", "web-app-theme/icons/table_go.png", project_collection_export_path(@project,@collection, :filters => params[:filters]))
+        %li= nav_button("Download All Data", "web-app-theme/icons/package_go.png", project_collection_export_with_files_path(@project,@collection, :filters => params[:filters]))
 
         -if current_user.member_of?(@project)
           %li= nav_button("Collection Settings", "web-app-theme/icons/table_gear.png", 
