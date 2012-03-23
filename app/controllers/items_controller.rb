@@ -78,7 +78,7 @@ class ItemsController < ApplicationController
     @item = @collection.items.get(params[:id])
     if @item.destroy
       flash[:notice] = "Item was Deleted."
-      redirect_to project_collection_items_path(@project, @collection)
+      redirect_to project_collection_path(@project, @collection)
     else
       flash[:error] = "Item failed to Delete"
       render :index
