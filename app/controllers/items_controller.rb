@@ -42,7 +42,7 @@ class ItemsController < ApplicationController
       respond_to do |format|
         format.html do
           flash[:notice] = "Item Updated Successfully!"
-          redirect_to project_collection_items_path(@project, @collection)   
+          redirect_to project_collection_path(@project, @collection)   
         end
         #format.json { render json: @item.to_json, status: :updated}
         format.js { render :js => '$("#message").html("<h2>Item updated. Close window and refresh your page.</h2>").attr("class","message notice"); $("html, body").animate({scrollTop: "0px"})' }
