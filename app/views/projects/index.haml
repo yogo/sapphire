@@ -25,8 +25,9 @@
                   %a{:href => project_path(p)}= p.name
               %dd
                 #{p.description.blank? ? "No Description." : p.description}
-              %dd
-                =link_to("delete", project_path(p), :method=>:delete, "data-confirm"=>"Are you sure you wish to delete this Project?")
+              - unless params[:public] 
+                %dd
+                  =link_to("delete", project_path(p), :method=>:delete, "data-confirm"=>"Are you sure you wish to delete this Project?")
 
               
 -if @collections && !@collections.empty?
