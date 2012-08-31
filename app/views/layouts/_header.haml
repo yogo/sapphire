@@ -1,7 +1,7 @@
 %h1
   %a{:href => "/"} YOGO SAPPHIRE
 #user-navigation
-  %ul.wat-cf{:class=>'up'}
+  %ul.wat-cf
     -if @project && !@project.new?
       %li
         = image_tag("web-app-theme/icons/search.png", :height => '12px')
