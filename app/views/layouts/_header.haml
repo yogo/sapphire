@@ -1,7 +1,7 @@
 %h1
-  %a{:href => "/"} Yogo Sapphire
+  %a{:href => "/"} YOGO SAPPHIRE
 #user-navigation
-  %ul.wat-cf
+  %ul.wat-cf{:class=>'up'}
     -if @project && !@project.new?
       %li
         = image_tag("web-app-theme/icons/search.png", :height => '12px')
@@ -15,9 +15,10 @@
         =link_to("Logout(#{current_user.first_name})", destroy_user_session_path, :method=> :delete)
 #main-navigation
   %ul.wat-cf
-    %li{:class => nav_helper[:my_project]}
-      = link_to("My Projects", projects_path)
-    %li{:class => nav_helper[:public_project] }
-      = link_to("Public Projects", projects_path(:public => true))
-    %li{:class => nav_helper[:controlled_vocabulary] }
-      = link_to("Controlled Vocabularies", manage_controlled_vocabularies_projects_path())
+    -if current_user
+      %li{:class => [nav_helper[:my_project],"nav_link"]}
+        = link_to("My Projects", projects_path)
+      %li{:class => [nav_helper[:public_project], "nav_link"] }
+        = link_to("Public Projects", projects_path(:public => true))
+      %li{:class => [nav_helper[:controlled_vocabulary], "nav_link"] }
+        = link_to("Controlled Vocabularies", manage_controlled_vocabularies_projects_path())
