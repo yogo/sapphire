@@ -50,20 +50,21 @@ class ProjectsController < ApplicationController
     end
     
     def destroy
-      @project = Yogo::Project.get(params[:id])
-      dtime = Time.now
-      @project.data_collections.each do |c|
-        c.deleted_at = dtime
-        c.save
-      end
-      @project.deleted_at = dtime
-      if @project.save
-       flash[:notice] = "Project was Deleted."
+      #@project = Yogo::Project.get(params[:id])
+      #dtime = Time.now
+      #@project.data_collections.each do |c|
+      #  c.deleted_at = dtime
+      #  c.save
+      #end
+      #@project.deleted_at = dtime
+      #if @project.save
+      # flash[:notice] = "Project was Deleted."
+      #  redirect_to projects_path()
+      #else
+      #  flash[:error] = "Project failed to Delete" + @project.errors.inspect
+        flash[:error] = "Project deletion is currently disabled.  We apoligize for the inconvience and will address this soon."
         redirect_to projects_path()
-      else
-        flash[:error] = "Project failed to Delete" + @project.errors.inspect
-        redirect_to projects_path()
-      end
+      #end
     end
     
     def manage_controlled_vocabularies
