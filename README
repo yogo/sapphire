@@ -1,1 +1,63 @@
-<html><head><title>Sapphire Documentation</title><style type="text/css">ol{margin:0;padding:0}.c12{max-width:468pt;background-color:#ffffff;padding:72pt 72pt 72pt 72pt}.c13{list-style-type:decimal;margin:0;padding:0}.c5{padding-left:0pt;margin-left:36pt}.c4{color:#000099;text-decoration:underline}.c1{color:#1155cc;text-decoration:underline}.c6{color:inherit;text-decoration:inherit}.c0{background-color:#fff2cc}.c2{direction:ltr}.c10{margin-left:18pt}.c9{margin-left:36pt}.c11{background-color:#ffe599}.c8{margin-left:72pt}.c7{margin-left:54pt}.c3{height:11pt}.title{padding-top:24pt;line-height:1.15;text-align:left;color:#000000;font-size:36pt;font-family:"Arial";font-weight:bold;padding-bottom:6pt}.subtitle{padding-top:18pt;line-height:1.15;text-align:left;color:#666666;font-style:italic;font-size:24pt;font-family:"Georgia";padding-bottom:4pt}li{color:#000000;font-size:11pt;font-family:"Arial"}p{color:#000000;font-size:11pt;margin:0;font-family:"Arial"}h1{padding-top:24pt;line-height:1.15;text-align:left;color:#000000;font-size:24pt;font-family:"Arial";font-weight:bold;padding-bottom:6pt}h2{padding-top:18pt;line-height:1.15;text-align:left;color:#000000;font-size:18pt;font-family:"Arial";font-weight:bold;padding-bottom:4pt}h3{padding-top:14pt;line-height:1.15;text-align:left;color:#000000;font-size:14pt;font-family:"Arial";font-weight:bold;padding-bottom:4pt}h4{padding-top:12pt;line-height:1.15;text-align:left;color:#000000;font-size:12pt;font-family:"Arial";font-weight:bold;padding-bottom:2pt}h5{padding-top:11pt;line-height:1.15;text-align:left;color:#000000;font-size:11pt;font-family:"Arial";font-weight:bold;padding-bottom:2pt}h6{padding-top:10pt;line-height:1.15;text-align:left;color:#000000;font-size:10pt;font-family:"Arial";font-weight:bold;padding-bottom:2pt}</style></head><body class="c12"><h5 class="c2"><a name="h.mbjc226pk3mq"></a><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></h5><p class="c2 c10"><span class="c1"><a class="c6" href="#h.al9sf35j01gx">Getting Started/Installation:</a></span></p><p class="c2 c9"><span class="c1"><a class="c6" href="#h.qdfew1bt1suv">Making a new project:</a></span></p><p class="c2 c9"><span class="c1"><a class="c6" href="#h.l4n4tuzeodpx">Extending a Yogo Project Model:</a></span></p><p class="c2 c8"><span class="c1"><a class="c6" href="#h.11m9kz96px3r">Making a Project a Repository Manage:</a></span></p><p class="c2 c9"><span class="c1"><a class="c6" href="#h.vsg07ojpv90u">Making a new model in a yogo collection:</a></span></p><p class="c2 c7"><span class="c1"><a class="c6" href="#h.8ltrxsvq15xw">Adding a new Collection (Model)</a></span></p><p class="c2 c7"><span class="c1"><a class="c6" href="#h.vhwsxxcejq7h">Adding a new property to the collection(model):</a></span></p><p class="c2 c7"><span class="c1"><a class="c6" href="#h.zdwgq82s3zp">Making the new table:</a></span></p><p class="c2 c3"><span></span></p><h2 class="c2"><a name="h.al9sf35j01gx"></a><span>Getting Started/Installation:</span></h2><ol class="c13" start="1"><li class="c5 c2"><span>Install git on your machine</span></li><li class="c5 c2"><span>We recommend using RVM you can find directions for install and use here: </span><span class="c4"><a class="c6" href="http://beginrescueend.com/">http://beginrescueend.com/</a></span><span>&nbsp;</span></li><li class="c5 c2"><span>Fetch yogo sapphire project from the github repository at </span><span class="c4"><a class="c6" href="https://github.com/yogo/sapphire">https://github.com/yogo/sapphire</a></span><span>&nbsp;using $ git clone git@github.com:yogo/sapphire.git</span></li><li class="c5 c2"><span>Then get into the sapphire directory created and if you are using rvm switch to ruby version 1.9.3 or greater and create an rvm gemset.</span></li><li class="c2 c5"><span>execute a bundle install - this will install all the gems</span></li><li class="c5 c2"><span>run rake db:migrate - this will setup the database with the correct initial static tables</span></li><li class="c5 c2"><span>now you have a base Rails stack applicaton that use the Yogo Framework that you can begin creating models and views for :)</span></li></ol><h3 class="c2"><a name="h.qdfew1bt1suv"></a><span>Making a new project:</span></h3><p class="c2 c3"><span></span></p><p class="c2"><span>project &nbsp; = Yogo::Project.create(:name=&gt;&rdquo;test&rdquo;)</span></p><p class="c2 c3"><span></span></p><h3 class="c2"><a name="h.l4n4tuzeodpx"></a><span>Extending a Yogo Project Model:</span></h3><p class="c2 c3"><span></span></p><p class="c2"><span>in lib/yogo the is a file stub called &ldquo;</span><span class="c11">project_ext</span><span>.rb</span><span>&rdquo; and you can add properties to that to extend your base Project Model- there are comments and examples in this file to help.</span></p><p class="c2 c3"><span></span></p><h5 class="c2"><a name="h.11m9kz96px3r"></a><span>Making a Project a Repository Manage:</span></h5><p class="c2 c3"><span></span></p><p class="c2"><span>This will allow a Yogo Project to become a new database and house all data related to it within it&rsquo;s own repository. &nbsp;This also allows the repository to be protected by the authorizations related to the project(if the appropriate functions and memberships have been added previously) </span><span class="c0">TODO - turn this block along with the associated models into a gem or something</span></p><p class="c2"><span class="c0">{</span></p><p class="c2"><span class="c0">has n, :memberships, :parent_key =&gt; [:id], :child_key =&gt; [:project_id], :model =&gt; &#39;Membership&#39;</span></p><p class="c2"><span class="c0">has n, :users, :through =&gt; :memberships</span></p><p class="c2"><span class="c0">has n, :roles, :through =&gt; :memberships</span></p><p class="c2 c3"><span class="c0"></span></p><p class="c2"><span class="c0">after :create, :give_current_user_membership</span></p><p class="c2"><span class="c0">def give_current_user_membership</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; unless User.current.nil?</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; &nbsp; Membership.create(:user =&gt; User.current, :project =&gt; self, :role =&gt; Role.first(:position =&gt; 1))</span></p><p class="c2"><span class="c0">&nbsp; &nbsp; end</span></p><p class="c2"><span class="c0">&nbsp; end</span></p><p class="c2"><span class="c0">}</span></p><p class="c2"><span>within the project model add:</span></p><p class="c2"><span>require &#39;yogo/datamapper/repository_manager&#39; </span></p><p class="c2"><span>include Yogo::DataMapper::RepositoryManager</span></p><h3 class="c2"><a name="h.vsg07ojpv90u"></a><span>Making a new model in a yogo collection:</span></h3><p class="c2 c3"><span></span></p><h4 class="c2"><a name="h.8ltrxsvq15xw"></a><span>Adding a new Collection (Model)</span></h4><p class="c2"><span class="c0">coll = Yogo::Collection::Asset.new</span></p><p class="c2"><span class="c0">project.data_collections &lt;&lt; coll</span></p><p class="c2 c3"><span class="c0"></span></p><p class="c2"><span class="c0">c = project.data_collections.first</span></p><p class="c2 c3"><span></span></p><h4 class="c2"><a name="h.vhwsxxcejq7h"></a><span>Adding a new property to the collection(model):</span></h4><p class="c2 c3"><span></span></p><p class="c2"><span class="c0">foo = c.shema.new</span></p><p class="c2"><span class="c0">foo.name = &nbsp;&ldquo;Color&rdquo;</span></p><p class="c2"><span class="c0">foo.type = Yogo::Collection::Property::String</span></p><p class="c2 c3"><span class="c0"></span></p><h4 class="c2"><a name="h.zdwgq82s3zp"></a><span>Making the new table:</span></h4><p class="c2"><span>the table is not created until a item is added. &nbsp;This is also how an new item is added.</span></p><p class="c2 c3"><span></span></p><p class="c2"><span class="c0">my_item = c.items.new</span></p><p class="c2"><span class="c0">my_item[&ldquo;Color&rdquo;] = &ldquo;blue&rdquo;</span></p><p class="c2"><span class="c0">my_item.save</span></p></body></html>
+Getting Started/Installation:
+
+
+Install git on your machine
+We recommend using RVM you can find directions for install and use here: http://beginrescueend.com/ 
+Fetch yogo sapphire project from the github repository at https://github.com/yogo/sapphire using $ git clone git@github.com:yogo/sapphire.git
+Then get into the sapphire directory created and if you are using rvm switch to ruby version 1.9.3 or greater and create an rvm gemset.
+execute a bundle install - this will install all the gems
+run rake db:migrate - this will setup the database with the correct initial static tables
+now you have a base Rails stack applicaton that use the Yogo Framework that you can begin creating models and views for :)
+Making a new project:
+
+
+project   = Yogo::Project.create(:name=>”test”)
+
+Extending a Yogo Project Model:
+
+
+in lib/yogo the is a file stub called “project_ext.rb” and you can add properties to that to extend your base Project Model- there are comments and examples in this file to help.
+
+Making a Project a Repository Manage:
+
+
+This will allow a Yogo Project to become a new database and house all data related to it within it’s own repository.  This also allows the repository to be protected by the authorizations related to the project(if the appropriate functions and memberships have been added previously) TODO - turn this block along with the associated models into a gem or something
+{
+has n, :memberships, :parent_key => [:id], :child_key => [:project_id], :model => 'Membership'
+has n, :users, :through => :memberships
+has n, :roles, :through => :memberships
+
+after :create, :give_current_user_membership
+def give_current_user_membership
+    unless User.current.nil?
+      Membership.create(:user => User.current, :project => self, :role => Role.first(:position => 1))
+    end
+  end
+}
+within the project model add:
+require 'yogo/datamapper/repository_manager' 
+include Yogo::DataMapper::RepositoryManager
+Making a new model in a yogo collection:
+
+
+Adding a new Collection (Model)
+
+coll = Yogo::Collection::Asset.new
+project.data_collections << coll
+
+c = project.data_collections.first
+
+Adding a new property to the collection(model):
+
+
+foo = c.shema.new
+foo.name =  “Color”
+foo.type = Yogo::Collection::Property::String
+
+Making the new table:
+
+the table is not created until a item is added.  This is also how an new item is added.
+
+my_item = c.items.new
+my_item[“Color”] = “blue”
+my_item.save
