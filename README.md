@@ -5,7 +5,8 @@ We recommend using RVM you can find directions for install and use here: http://
 2. Fetch yogo sapphire project from the github repository at https://github.com/yogo/sapphire using $ git clone git@github.com:yogo/sapphire.git
 3. Then get into the sapphire directory created and if you are using rvm switch to ruby version 1.9.3 or greater and create an rvm gemset.
 4. execute a bundle install - this will install all the gems
-5. run rake db:migrate - this will setup the database with the correct initial static tables
+5. configure your database.yml file and create your database user accordingly (with CREATE DATABASE rights)
+6. run rake db:setup and rake db:automigrate - this will setup the database with the correct initial static tables
 
 now you have a base Rails stack applicaton that uses the Yogo Framework that you can begin creating models and views for :)
 
