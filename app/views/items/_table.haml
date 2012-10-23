@@ -15,10 +15,10 @@
     %th File
     %th.actions &nbsp;
 
-  = form_for("item", @item, :url => project_collection_items_path(@project, @collection), :html => {"multipart" => true, "data-ajax"=> false, :class => 'form'}) do |f| 
+  = form_for("item", @item, :url => project_collection_items_path(@project, collection), :html => {"multipart" => true, "data-ajax"=> false, :class => 'form'}) do |f| 
     %tr
       %td &nbsp;
-      = render :partial => 'items/table_form', :locals => {:f => f, :collection => @collection}
+      = render :partial => 'items/table_form', :locals => {:f => f, :collection => collection}
       %td= f.submit("Save")
 
   - items.each do |i|
