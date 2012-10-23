@@ -29,6 +29,10 @@
   float: right;
 }
 
+#wrapper{
+  min-width: 1000px;
+}
+
 a.button:link, a.button:visited, a.button:hover, a.button:active, button.button {
   font-weight: normal;
 }

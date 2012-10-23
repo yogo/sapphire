@@ -4,4 +4,4 @@
   -elsif field.associated_schema
     .group= f.select(field.to_s, associated_field_value_options(field.associated_schema), :label => field.name, :include_blank => true)
   -else
-    .group= f.text_field(field.to_s, :label => field.name, :value=> params['filters'][field.to_s]) 
+    .group= f.text_field(field.to_s, :label => field.name, :value=> filters[field.to_s]) 
