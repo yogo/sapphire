@@ -57,7 +57,7 @@ OR
     new_property = project.data_collections.last.schema.create(:name => "Count", :type=>Yogo::Collection::Property::Integer)
 ### Making the new table
 
-The table is not created until a item is added.  This is also how an new item is added.
+The table is not created until a item is added.  This is also how a new item is added.
 
     my_item = c.items.new
     my_item[“Color”] = “blue”
