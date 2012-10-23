@@ -2,12 +2,23 @@
 
 1. Install git on your machine
 We recommend using RVM you can find directions for install and use here: http://beginrescueend.com/ 
-2. Fetch yogo sapphire project from the github repository at https://github.com/yogo/sapphire using $ git clone git@github.com:yogo/sapphire.git
+2. Fetch yogo sapphire project from the github repository at https://github.com/yogo/sapphire using **$ git clone git@github.com:yogo/sapphire.git**
 3. Then get into the sapphire directory created and if you are using rvm switch to ruby version 1.9.3 or greater and create an rvm gemset.
-4. execute a bundle install - this will install all the gems
-5. run rake db:migrate - this will setup the database with the correct initial static tables
+4. execute a **bundle install** - this will install all the gems
+5. configure your **database.yml** file and create your database user accordingly (with CREATE DATABASE rights)
+6. run **rake db:setup** and **rake db:automigrate** - this will setup the database with the correct initial static tables
 
 now you have a base Rails stack applicaton that uses the Yogo Framework that you can begin creating models and views for :)
+
+## Creating a new user:
+
+    user = User.new
+    user.email = "testing@test.com"
+    user.password = "password"
+    user.password_confrim = "password"
+    user.save
+
+you should now be able to login with this user
 
 ## Making a new project:
 
@@ -57,7 +68,7 @@ OR
     new_property = project.data_collections.last.schema.create(:name => "Count", :type=>Yogo::Collection::Property::Integer)
 ### Making the new table
 
-The table is not created until a item is added.  This is also how an new item is added.
+The table is not created until a item is added.  This is also how a new item is added.
 
     my_item = c.items.new
     my_item[“Color”] = “blue”
