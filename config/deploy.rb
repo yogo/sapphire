@@ -1,12 +1,15 @@
-$:.unshift(File.expand_path('./lib', ENV['rvm_path'])) # Add RVM's lib directory to the load path.
+#$:.unshift(File.expand_path('./lib', ENV['rvm_path'])) # Add RVM's lib directory to the load path.
 require "rvm/capistrano"                  # Load RVM's capistrano plugin.
 require "bundler/capistrano"
 
 set :rvm_ruby_string, 'ruby-1.9.2-p180@passenger'
 set :application, "sapphire"
+set :rvm_type, :system  
+set :bundle_cmd,      "/usr/local/rvm/gems/ruby-1.9.2-p180/bin/bundle"
 set :scm, :git
 set :repository,  "git://github.com/yogo/sapphire.git"
 set :branch, "server"
+set :shell, "/bin/bash"
 set :deploy_via, :remote_cache
 
 

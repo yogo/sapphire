@@ -10,8 +10,18 @@ class CollectionsController < ApplicationController
     @collection = @project.data_collections.get(params[:id])
     @item = @collection.items.new(params[:item])
     @filter_item = @collection.items.new
-    @items =  @collection.items(:order => :created_at.desc).all(@filters)
-
+    if params[:options] == "AND" || params[:options].nil? || @filters.empty?
+      @items =  @collection.items(:order => :created_at.desc).all(@filters)
+    else
+      @items = @collection.items(:id=>nil)
+      @filters.each do |k,v|
+        unless v.nil?
+          @items = @items + @collection.items(:order => :created_at.desc).all(k => v)
+        end
+      end
+      #@item = @items.all(:unique=>true)
+    end
+    
     # @schema_cv_hash={}
     # @collection.schema.each do |s|
     #   link_hash={}

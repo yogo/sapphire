@@ -27,10 +27,17 @@
     %h3 Filter Data
     .content 
       = form_for("filters", @filter_item, :url => project_collection_path(@project,@collection),  :html => {:class => 'form',:method=>:get}) do |f|  
-        = render :partial => 'filter', :locals => {:f => f, :collection => @collection}
+        = render :partial => 'filter', :locals => {:f => f, :collection => @collection, :filters => @filters}
         .group.navform.wat-cf
+          And
+          =radio_button_tag("options", "AND")
+          OR
+          =radio_button_tag("options", "OR")
+          -unless params["options"].nil?
+            :javascript
+              $('#options_#{params[:options]}').attr("checked", true)
           = f.submit("Filter", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Filter"))
-
+          -#= nav_button("Clear Filters", "web-app-theme/icons/arrow_undo.png",project_collection_path(@project,@collection))
 -if current_user.member_of?(@project)
   =# Project#upload_data form
   #collection_edit_form{:style => "display: none"}
@@ -80,7 +87,7 @@
   .content
     .inner
       - unless @filters.empty?
-        Filtered By: #{@filters.map{|k,v| @collection.schema.by_field_name(k.target.to_s).name + " : #{v}"}.join(', ')}
+        Filtered By: #{@filters.map{|k,v| @collection.schema.by_field_name(k.target.to_s).name + " : #{v}"}.join(' ' + params[:options] + ' ')}
       -unless current_user.memberships.all(:project_id=>@project.id).empty?
         = render :partial => 'items/table', :locals => {:items =>@items, :collection => @collection, :project=>@project}
       -else
