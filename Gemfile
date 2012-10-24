@@ -26,7 +26,7 @@ gem 'jquery-rails'
 gem 'dm-rails'
 gem 'haml'
 gem 'rubyzip'
-gem 'newrelic_rpm' #new relic monitoring
+#gem 'newrelic_rpm' #new relic monitoring
 group :development do
   # Deploy with Capistrano
   #gem 'capistrano'
