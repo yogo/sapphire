@@ -1,6 +1,6 @@
 - collection.schema.each do |field|
   -if field.controlled_vocabulary
-    .group= f.select(field.to_s, field_value_options(field.controlled_vocabulary), :label => field.name, :include_blank => true)
+    .group= f.select(field.to_s, field_value_options(field.controlled_vocabulary), :label => field.name, :include_blank => true,:value=> filters[field.to_s])
   -elsif field.associated_schema
     .group= f.select(field.to_s, associated_field_value_options(field.associated_schema), :label => field.name, :include_blank => true)
   -else
