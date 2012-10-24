@@ -36,6 +36,9 @@
           -unless params["options"].nil?
             :javascript
               $('#options_#{params[:options]}').attr("checked", true)
+          -else
+            :javascript
+              $('#options_AND').attr("checked", true)
           = f.submit("Filter", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Filter"))
           -#= nav_button("Clear Filters", "web-app-theme/icons/arrow_undo.png",project_collection_path(@project,@collection))
 -if current_user.member_of?(@project)
