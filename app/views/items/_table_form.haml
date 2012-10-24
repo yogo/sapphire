@@ -6,11 +6,11 @@
   -elsif field.type.to_s == "Yogo::Collection::Property::Date"
     %td= f.text_field(field.to_s, :id=> field.to_s, :label => '') 
     :javascript
-      $("##{field.to_s}").datepicker();
+      $("##{field.to_s}").datepicker({dateFormat:'yy-mm-dd'});
   -elsif field.type.to_s == "Yogo::Collection::Property::DateTime"
     %td= f.text_field(field.to_s, :id=> field.to_s, :label => '') 
     :javascript
-      $("##{field.to_s}").datetimepicker();
+      $("##{field.to_s}").datetimepicker({dateFormat:'yy-mm-dd'});
   
   -else
     %td= f.text_field(field.to_s, :label => '') 
