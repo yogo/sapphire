@@ -36,6 +36,9 @@
           -unless params["options"].nil?
             :javascript
               $('#options_#{params[:options]}').attr("checked", true)
+          -else
+            :javascript
+              $('#options_AND').attr("checked", true)
           = f.submit("Filter", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Filter"))
           -#= nav_button("Clear Filters", "web-app-theme/icons/arrow_undo.png",project_collection_path(@project,@collection))
 -if current_user.member_of?(@project)
@@ -74,7 +77,7 @@
         .inner
           %h3 Add New Column
           = form_for("schema", :url => project_collection_schemas_path(@project, @collection), :html => {:class => 'form'}) do |f|
-            = render :partial => 'schemas/form', :locals => {:f => f, :collection=>@collection}
+            = render :partial => 'schemas/form', :locals => {:f => f, :collection=>@collection, :edit=>nil}
             .group.navform.wat-cf
               = f.submit("Save", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"), :cancel_link => link_to("Cancel", '#', :class => "text_button_padding link_button", :onclick => "$('#collection_schema_form').toggle()"))
 
