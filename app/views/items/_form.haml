@@ -3,6 +3,14 @@
     .group= f.select(field.to_s, field_value_options(field.controlled_vocabulary), :label => field.name, :include_blank => true)
   -elsif field.associated_schema
     .group= f.select(field.to_s, associated_field_value_options(field.associated_schema), :label => field.name, :include_blank => true)
+  -elsif field.type.to_s == "Yogo::Collection::Property::Date"
+    .group= f.text_field(field.to_s, :id=> field.to_s, :label => field.name) 
+    :javascript
+      $("##{field.to_s}").datepicker();
+  -elsif field.type.to_s == "Yogo::Collection::Property::DateTime"
+    .group= f.text_field(field.to_s, :id=> field.to_s, :label => field.name) 
+    :javascript
+      $("##{field.to_s}").datetimepicker();
   -else
     .group= f.text_field(field.to_s, :label => field.name) 
 
