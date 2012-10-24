@@ -74,7 +74,7 @@
         .inner
           %h3 Add New Column
           = form_for("schema", :url => project_collection_schemas_path(@project, @collection), :html => {:class => 'form'}) do |f|
-            = render :partial => 'schemas/form', :locals => {:f => f, :collection=>@collection}
+            = render :partial => 'schemas/form', :locals => {:f => f, :collection=>@collection, :edit=>nil}
             .group.navform.wat-cf
               = f.submit("Save", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"), :cancel_link => link_to("Cancel", '#', :class => "text_button_padding link_button", :onclick => "$('#collection_schema_form').toggle()"))
 

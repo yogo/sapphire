@@ -2,8 +2,8 @@
   .group= f.select(:name, field_value_options(collection.controlled_vocabulary), :label => "Name")
 -else
   .group= f.text_field(:name,:label => "Name")
-  
-.group= f.select(:type, property_types_opts,:label => "Type")
+-if edit.nil?
+  .group= f.select(:type, property_types_opts,:label => "Type")
 
 .group= f.select(:controlled_vocabulary_id, controlled_vocabulary_opts.sort, :label => "Controlled Vocabulary", :include_blank => true)
 
