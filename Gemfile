@@ -21,11 +21,13 @@ end
 
 gem 'devise'
 gem 'dm-devise'
-
 gem 'jquery-rails'
 gem 'dm-rails'
 gem 'haml'
+gem 'sass'
+gem 'tilt'
 gem 'rubyzip'
+
 group :development do
   # Deploy with Capistrano
   #gem 'capistrano'
