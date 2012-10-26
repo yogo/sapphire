@@ -81,6 +81,13 @@
             .group.navform.wat-cf
               = f.submit("Save", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"), :cancel_link => link_to("Cancel", '#', :class => "text_button_padding link_button", :onclick => "$('#collection_schema_form').toggle()"))
 
+
+.block
+  .inner
+    .table_form
+      -unless current_user.memberships.all(:project_id=>@project.id).empty?
+        = render :partial => 'items/table_form', :locals => {:items =>@items, :collection => @collection, :project=>@project}
+%br
 .block
   .secondary-navigation
     .wat-cf
@@ -89,10 +96,11 @@
         .right-nav-button= nav_button("Add Column", "web-app-theme/icons/table_edit.png", project_collection_items_path(@project, @collection))
   .content
     .inner
-      - unless @filters.empty?
-        Filtered By: #{@filters.map{|k,v| @collection.schema.by_field_name(k.target.to_s).name + " : #{v}"}.join(' ' + params[:options] + ' ')}
-      -unless current_user.memberships.all(:project_id=>@project.id).empty?
-        = render :partial => 'items/table', :locals => {:items =>@items, :collection => @collection, :project=>@project}
-      -else
-        = render :partial => 'items/public_table', :locals => {:items => @items, :collection => @collection, :project=>@project}
+      .collection_table
+        - unless @filters.empty?
+          Filtered By: #{@filters.map{|k,v| @collection.schema.by_field_name(k.target.to_s).name + " : #{v}"}.join(' ' + params[:options] + ' ')}
+        -unless current_user.memberships.all(:project_id=>@project.id).empty?
+          = render :partial => 'items/table', :locals => {:items =>@items, :collection => @collection, :project=>@project}
+        -else
+          = render :partial => 'items/public_table', :locals => {:items => @items, :collection => @collection, :project=>@project}
 
