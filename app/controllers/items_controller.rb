@@ -1,6 +1,7 @@
 class ItemsController < ApplicationController
 
   before_filter :get_dependencies, :except => :controlled_vocabulary_term
+  after_filter :update_project_stats, :only => [:create, :delete]
   layout :choose_layout
   
 
@@ -133,5 +134,9 @@ class ItemsController < ApplicationController
       redirect_to projects_path()
       return
     end 
+  end
+  
+  def update_project_stats
+    @project.update_stats
   end
 end

@@ -17,7 +17,7 @@
           %li
             .counts
               .collection_count Data Collections: #{p.data_collections.count}
-              .data_items_count Data Items: #{p.data_collections.map{|c| c.items.count }.reduce(:+)}
+              .data_items_count Data Items: #{p.record_count}
             .left= image_tag("Yogo-tiny-trans.png")
             %dl
               %dt
