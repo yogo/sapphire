@@ -37,6 +37,15 @@ a.button:link, a.button:visited, a.button:hover, a.button:active, button.button 
   font-weight: normal;
 }
 
+.collection_table{
+  overflow: auto;
+
+}
+
+.table_form{
+  overflow: auto;
+}
+
 #sidebar ul.toolbar{
   margin-top: 5px;
 }
