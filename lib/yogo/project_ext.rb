@@ -2,7 +2,9 @@ require 'yogo/project'
 
 module Yogo
   class Project
-
+    
+    property :record_count, Integer
+    
     has n, :memberships, :model=>"Membership"
     alias :members :memberships
 
@@ -75,6 +77,14 @@ module Yogo
       end
     end
 
+    def update_stats
+      self.record_count = 0
+      self.data_collections.each do |col|
+        self.record_count += col.items.count
+      end
+      self.save
+    end
+    
     def public?
       !private?
     end
