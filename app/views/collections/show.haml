@@ -16,7 +16,7 @@
           %li= nav_button("Collection Settings", "web-app-theme/icons/table_gear.png", 
             "onclick = \"$('#collection_edit_form').toggle();\"")
           %li= nav_button("Upload Data", "web-app-theme/icons/application_get.png", 
-            "onclick = \"$('#collection_upload_form').toggle();\"")
+            "onclick = \"$('#upload_form').toggle();\"")
           %li= nav_button("Add Column", "web-app-theme/icons/table_add.png", 
             "onclick = \"$('#collection_schema_form').toggle();\"")
           -if @collection.private?
@@ -61,7 +61,7 @@
                 -if s.associated_schema
                   | Associated With #{s.associated_schema.data_collection.name}>#{s.associated_schema.name}
                 =link_to("delete", project_collection_schema_path(@project,@collection,s), :method=>:delete, "data-confirm"=>"Are you sure you wish to delete this Schema Column?")
-  #collection_upload_form{:style => "display: none"}
+  #upload_form{:style => "display: none"}
     .block
       .content
         .inner

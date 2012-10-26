@@ -6,11 +6,13 @@
       "web-app-theme/themes/default/style",
       "web-app-theme/override",
       "font-awesome",
-      "http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.0/themes/base/jquery-ui.css",
+      "jquery-ui.css",
       "application", 
       :cache => false
     = javascript_include_tag :defaults,
-      "https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js", 
+      "jquery-ui",
+      'jquery-ui-timepicker-addon',
+      "jquery-dataTables",
       :cache => false
     = csrf_meta_tag
   

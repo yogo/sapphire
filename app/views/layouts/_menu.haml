@@ -1,0 +1,59 @@
+%ul.memu
+  %li 
+    %a(href='#') System
+    %ul
+      %li= link_to('My Projects',     projects_path)
+      %li= link_to('Public Projects', projects_path(:public => true))
+      %li= link_to('New Project',     new_project_path)
+  %li
+    = link_to('Project', '#')
+    -if @project && current_user.member_of?(@project)
+      %ul
+        %li= link_to('Project Settings',  '#', :onclick => "$('#project_edit_form').toggle();")
+        %li= link_to('Project Members',   '#', :onclick => "$('#project_add_user').toggle();")
+        %li
+          -if @project && @project.private?
+            = link_to('Publish Project',   project_publish_path(@project), :method => 'post')
+          -else
+            = link_to('Unpublish Project', project_publish_path(@project), :method => 'post')
+    -else
+      %ul
+        %li.disabled= link_to('Project Settings', '#')
+        %li.disabled= link_to('Project Members',  '#')
+        %li.disabled= link_to('Publish Project',  '#')
+  %li 
+    %a{:href => '#'} Collection
+    -if @collection && current_user.member_of?(@project)
+      %ul
+        %li= link_to('Collection Settings', '#', :onclick => "$('#collection_edit_form').toggle();")
+        %li= link_to('Add Column',          '#', :onclick => "$('#collection_schema_form').toggle();")
+        %li
+          -if @collection && @collection.private?
+            = link_to('Publish Collection',  
+                      project_collection_publish_path(@project, @collection), :method => 'post')
+          -elsif @collection
+            = link_to('Unpublish Collection', 
+                      project_collection_publish_path(@project, @collection), :method => 'post')
+    -else
+      %ul
+        %li.disabled= link_to('Collection Settings', '#')
+        %li.disabled= link_to('Add Column',  '#')
+        %li.disabled= link_to('Publish Collection',  '#')
+
+  %li 
+    %a{:href => '#'} Data
+    %ul
+      -if @project && current_user.member_of?(@project)
+        %li= link_to('Upload Data', '#', :onclick => "$('#upload_form').toggle();")
+      -else
+        %li.disabled= link_to('Upload Data',  '#')
+      -if @collection
+        %li= link_to('Download Metadata', 
+                      project_collection_export_path( @project, @collection, :filters => params[:filters]))
+        %li= link_to('Download All Data', 
+                      project_collection_export_with_files_path( @project, @collection, :filters => params[:filters]))
+      -else
+        %li.disabled= link_to('Download Metadata',  '#')
+        %li.disabled= link_to('Download All Data',  '#')
+
+
