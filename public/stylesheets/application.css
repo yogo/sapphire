@@ -56,3 +56,8 @@ td.cv_error {
 .big-img img{
   width: 70px;
 }
+
+#menu-container{
+  height: 26px;
+  background-color: white;
+}
