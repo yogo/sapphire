@@ -18,7 +18,7 @@
           -else
             %li= nav_button("Unpublish Project",  "web-app-theme/icons/world_delete.png", project_publish_path(@project), "post")
           %li= nav_button("Upload Data", "web-app-theme/icons/application_get.png", 
-            "onclick = \"$('#project_upload_form').toggle();\"")
+            "onclick = \"$('#upload_form').toggle();\"")
 
 
 -if current_user.member_of?(@project)
@@ -32,7 +32,7 @@
           :cancel_link => link_to("Cancel", '#', :class => "text_button_padding link_button", 
             :onclick => "$('#project_edit_form').toggle()") }
   =# Project#upload_data form
-  #project_upload_form{:style => "display: none"}
+  #upload_form{:style => "display: none"}
     .block
       .content
         .inner
