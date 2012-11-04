@@ -85,7 +85,7 @@
 .block
   .inner
     .table_form
-      -unless current_user.memberships.all(:project_id=>@project.id).empty?
+      -if current_user.member_of?(@project)
         = render :partial => 'items/table_form', :locals => {:items =>@items, :collection => @collection, :project=>@project}
 %br
 .block
