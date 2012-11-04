@@ -1,3 +1,7 @@
+-# TODO: stuff these links in a helper method that will disable them based on
+-# various criteria (project membership, presence of a project/collection, etc)
+-# All of thise "if/elsif/else" nonsense is ridiculous.
+
 %ul.memu
   %li 
     %a(href='#') System
@@ -23,19 +27,25 @@
         %li.disabled= link_to('Publish Project',  '#')
   %li 
     %a{:href => '#'} Collection
-    -if @collection && current_user.member_of?(@project)
-      %ul
-        %li= link_to('Collection Settings', '#', :onclick => "$('#collection_edit_form').toggle();")
-        %li= link_to('Add Column',          '#', :onclick => "$('#collection_schema_form').toggle();")
-        %li
-          -if @collection && @collection.private?
-            = link_to('Publish Collection',  
-                      project_collection_publish_path(@project, @collection), :method => 'post')
-          -elsif @collection
-            = link_to('Unpublish Collection', 
-                      project_collection_publish_path(@project, @collection), :method => 'post')
-    -else
-      %ul
+    %ul
+      -if current_user.member_of?(@project)
+        %li= link_to('New Collection',      '#', :onclick => "$('#new_collection_form').toggle();")
+        -if @collection
+          %li= link_to('Collection Settings', '#', :onclick => "$('#collection_edit_form').toggle();")
+          %li= link_to('Add Column',          '#', :onclick => "$('#collection_schema_form').toggle();")
+          %li
+            -if @collection && @collection.private?
+              = link_to('Publish Collection',  
+                project_collection_publish_path(@project, @collection), :method => 'post')
+            -elsif @collection
+              = link_to('Unpublish Collection', 
+                project_collection_publish_path(@project, @collection), :method => 'post')
+        -else
+          %li.disabled= link_to('Collection Settings', '#')
+          %li.disabled= link_to('Add Column',  '#')
+          %li.disabled= link_to('Publish Collection',  '#')          
+      -else
+        %li.disabled= link_to('New Collection', '#')
         %li.disabled= link_to('Collection Settings', '#')
         %li.disabled= link_to('Add Column',  '#')
         %li.disabled= link_to('Publish Collection',  '#')
