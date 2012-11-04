@@ -7,7 +7,12 @@
       %th File
       %th.actions &nbsp;
   %tbody
-    = form_for("item", @item, :url => project_collection_items_path(@project, collection), :html => {"multipart" => true, "data-ajax"=> false, :class => 'form'}) do |f| 
+    :javascript
+      function formfocus() {
+        $('#item_#{collection.schema.first.to_s}')[0].focus(); 
+      }
+      window.onload = formfocus;
+    = form_for("item", @item, :url => project_collection_items_path(@project, collection), :html => {"multipart" => true, "data-ajax"=> false, :class => 'form', :id => 'createItemForm'}) do |f| 
       %tr
         %td &nbsp;
         - collection.schema.each do |field|
