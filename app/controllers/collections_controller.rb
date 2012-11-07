@@ -1,7 +1,7 @@
 class CollectionsController < ApplicationController
   before_filter :get_project
   before_filter :get_filters
-  after_filter :update_project_stats, :only => [:create, :create_collection_csv_string, :delete]
+
   def index
     @collections = @project.data_collections
   end
@@ -218,8 +218,5 @@ class CollectionsController < ApplicationController
       end
     end
   end
-  
-  def update_project_stats
-    @project.update_stats
-  end
+
 end
