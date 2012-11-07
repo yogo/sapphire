@@ -30,7 +30,7 @@
     %ul
       -if current_user.member_of?(@project)
         %li= link_to('New Collection',      '#', :onclick => "$('#new_collection_form').toggle();")
-        -if @collection
+        -if @collection && @collection.saved?
           %li= link_to('Collection Settings', '#', :onclick => "$('#collection_edit_form').toggle();")
           %li= link_to('Add Column',          '#', :onclick => "$('#collection_schema_form').toggle();")
           %li
@@ -57,7 +57,7 @@
         %li= link_to('Upload Data', '#', :onclick => "$('#upload_form').toggle();")
       -else
         %li.disabled= link_to('Upload Data',  '#')
-      -if @collection
+      -if @collection && @collection.saved?
         %li= link_to('Download Metadata', 
                       project_collection_export_path( @project, @collection, :filters => params[:filters]))
         %li= link_to('Download All Data', 
