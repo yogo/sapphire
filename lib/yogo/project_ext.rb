@@ -8,8 +8,6 @@ module Yogo
     has n, :memberships, :model=>"Membership"
     alias :members :memberships
 
-    after :save, :update_stats
-
     #make a new collection with schema from CSV file
     def collection_from_file(name, new_file, collection=nil)
       csv = CSV.read(new_file)
