@@ -37,6 +37,7 @@ class SchemasController < ApplicationController
       @schema = @collection.schema.get(params[:id])
       if @schema.update(params[:schema])
         # success
+        @schema.update_position
         redirect_to project_collection_path(@project,@collection)
       else
         # fail
@@ -95,6 +96,7 @@ class SchemasController < ApplicationController
           repository.adapter.execute(sql)
           sql = "CREATE TRIGGER field_#{@schema.id.to_s.gsub('-','_')} BEFORE INSERT OR UPDATE ON #{'"'+@collection.id.to_s.gsub('-','_')+'s"'} FOR EACH ROW EXECUTE PROCEDURE tsvector_update_trigger(field_#{@schema.id.to_s.gsub('-','_')}_search_index, 'pg_catalog.english', field_#{@schema.id.to_s.gsub('-','_')});"
           repository.adapter.execute(sql)
+          @schema.update_position
         end
         #redirect_to project_collection_path(@project,@collection)
         flash[:notice] = "Schema saved successfully!"
