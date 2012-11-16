@@ -85,8 +85,13 @@ class SchemasController < ApplicationController
       if params[:schema][:associated_schema_id].blank?
         params[:schema].delete(:associated_schema_id)
       end
+      
       @schema = @collection.schema.new(params[:schema])
+      if @schema.associated_schema_id  
+        @schema.type = Yogo::Collection::Property::Text #because JSON need to go here and it could get big
+      end
       if @schema.save
+        @schema.update_position
         if @schema.type == Yogo::Collection::Property::String || @schema.type == Yogo::Collection::Property::Text
           #lets have the table create
           @collection.items.new
@@ -96,7 +101,6 @@ class SchemasController < ApplicationController
           repository.adapter.execute(sql)
           sql = "CREATE TRIGGER field_#{@schema.id.to_s.gsub('-','_')} BEFORE INSERT OR UPDATE ON #{'"'+@collection.id.to_s.gsub('-','_')+'s"'} FOR EACH ROW EXECUTE PROCEDURE tsvector_update_trigger(field_#{@schema.id.to_s.gsub('-','_')}_search_index, 'pg_catalog.english', field_#{@schema.id.to_s.gsub('-','_')});"
           repository.adapter.execute(sql)
-          @schema.update_position
         end
         #redirect_to project_collection_path(@project,@collection)
         flash[:notice] = "Schema saved successfully!"
