@@ -9,6 +9,7 @@
       "application",
       :cache => false
     = javascript_include_tag :defaults,
+      "bootstrap",
       "jquery-ui",
       'jquery-ui-timepicker-addon',
       "jquery-dataTables",
@@ -16,6 +17,7 @@
     = csrf_meta_tag
   %body
     = render :partial => 'layouts/header'
+    = render :partial => 'layouts/alerts'
     .row
       .span3
     .row
