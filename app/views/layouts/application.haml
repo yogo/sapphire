@@ -2,29 +2,23 @@
 %html
   %head
     %title Yogo Sapphire
-    = stylesheet_link_tag "web-app-theme/base",
-      "web-app-theme/themes/default/style",
-      "web-app-theme/override",
+    = stylesheet_link_tag "bootstrap",
       "font-awesome",
       "datatable",
       "jquery-ui",
       "application",
-      "memu",
-      'http://fonts.googleapis.com/css?family=Monoton',
       :cache => false
     = javascript_include_tag :defaults,
+      "bootstrap",
       "jquery-ui",
       'jquery-ui-timepicker-addon',
       "jquery-dataTables",
       :cache => false
     = csrf_meta_tag
-  
   %body
     #container
       #header
         = render :partial => 'layouts/header'
-      #menu-container
-        = render :partial => 'layouts/menu'
       #wrapper.wat-cf
         .flash
           - flash.each do |type, message|
@@ -39,4 +33,4 @@
           .block
             %p
               Copyright &copy; #{Time.now.year} Yogo Sapphire.
-        
+

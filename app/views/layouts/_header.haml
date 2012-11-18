@@ -1,24 +1,83 @@
-%h1
-  %a{:href => root_path} YOGO SAPPHIRE
-#user-navigation
-  %ul.wat-cf{:class=>'up'}
-    -if @project && !@project.new?
-      %li
-        = image_tag("web-app-theme/icons/search.png", :height => '12px')
-        %a{:href => "#{project_search_path(@project)}"}= t("web-app-theme.profile", :default => "Search")
-    -if current_user
-      / %li
-      /   %a{:href => "#"}= t("web-app-theme.settings", :default => "Settings")
-      %li
-        %a{:href => edit_user_registration_path}= t("web-app-theme.profile", :default => "Profile")
-      %li
-        =link_to("Logout(#{current_user.first_name})", destroy_user_session_path, :method=> :delete)
-#main-navigation
-  %ul.wat-cf
-    -if current_user
-      %li{:class => [nav_helper[:my_project],"nav_link"]}
-        = link_to("My Projects", projects_path)
-      %li{:class => [nav_helper[:public_project], "nav_link"] }
-        = link_to("Public Projects", projects_path(:public => true))
-      %li{:class => [nav_helper[:controlled_vocabulary], "nav_link"] }
-        = link_to("Controlled Vocabularies", manage_controlled_vocabularies_projects_path())
+#header
+  .navbar.navbar-inverse.navbar-fixed-top
+    .navbar-inner
+      .container
+        = link_to(image_tag('Yogo-50x40px.png') + 'Sapphire', root_path, :class => 'brand')
+        .nav-collapse.collapse
+          %ul.nav
+            -if current_user
+              %li.dropdown
+                %a.dropdown-toggle(href='#' data-toggle='dropdown')
+                  System
+                  %b.caret
+                %ul.dropdown-menu
+                  %li= link_to('My Projects',     projects_path)
+                  %li= link_to('Public Projects', projects_path(:public => true))
+                  %li= link_to('New Project',     new_project_path)
+              %li.dropdown
+                %a.dropdown-toggle(href='#' data-toggle='dropdown')
+                  Project                  
+                  %b.caret
+                -if @project && current_user.member_of?(@project)
+                  %ul.dropdown-menu
+                    %li= link_to('Project Settings',  '#', :onclick => "$('#project_edit_form').toggle();")
+                    %li= link_to('Project Members',   '#', :onclick => "$('#project_add_user').toggle();")
+                    %li
+                      -if @project && @project.private?
+                        = link_to('Publish Project',   project_publish_path(@project), :method => 'post')
+                      -else
+                        = link_to('Unpublish Project', project_publish_path(@project), :method => 'post')
+                -else
+                  %ul.dropdown-menu
+                    %li.disabled= link_to('Project Settings', '#')
+                    %li.disabled= link_to('Project Members',  '#')
+                    %li.disabled= link_to('Publish Project',  '#')
+              %li.dropdown
+                %a.dropdown-toggle(href='#' data-toggle='dropdown') 
+                  Collection                  
+                  %b.caret
+                %ul.dropdown-menu
+                  -if current_user.member_of?(@project)
+                    %li= link_to('New Collection', new_project_collection_path(@project))
+                    -if @collection && @collection.saved?
+                      %li= link_to('Collection Settings', '#', :onclick => "$('#collection_edit_form').toggle();")
+                      %li= link_to('Add Column',          '#', :onclick => "$('#collection_schema_form').toggle();")
+                      %li
+                        -if @collection && @collection.private?
+                          = link_to('Publish Collection',  
+                            project_collection_publish_path(@project, @collection), :method => 'post')
+                        -elsif @collection
+                          = link_to('Unpublish Collection', 
+                            project_collection_publish_path(@project, @collection), :method => 'post')
+                    -else
+                      %li.disabled= link_to('Collection Settings', '#')
+                      %li.disabled= link_to('Add Column',  '#')
+                      %li.disabled= link_to('Publish Collection',  '#')          
+                  -else
+                    %li.disabled= link_to('New Collection', '#')
+                    %li.disabled= link_to('Collection Settings', '#')
+                    %li.disabled= link_to('Add Column',  '#')
+                    %li.disabled= link_to('Publish Collection',  '#')
+              %li.dropdown
+                %a.dropdown-toggle(href='#' data-toggle='dropdown')
+                  Data
+                  %b.caret
+                %ul.dropdown-menu
+                  -if @project && current_user.member_of?(@project)
+                    %li= link_to('Upload Data', '#', :onclick => "$('#upload_form').toggle();")
+                  -else
+                    %li.disabled= link_to('Upload Data',  '#')
+                  -if @collection && @collection.saved?
+                    %li= link_to('Download Metadata', 
+                                  project_collection_export_path( @project, @collection, :filters => params[:filters]))
+                    %li= link_to('Download All Data', 
+                                  project_collection_export_with_files_path( @project, @collection, :filters => params[:filters]))
+                  -else
+                    %li.disabled= link_to('Download Metadata',  '#')
+                    %li.disabled= link_to('Download All Data',  '#')
+          %ul.nav.pull-right
+            - if @project && !@project.new?
+              %li= link_to 'Search', project_search_path(@project)
+            - if current_user
+              %li= link_to 'Profile', edit_user_registration_path
+              %li= link_to("Logout (#{current_user.first_name})", destroy_user_session_path, :method=> :delete)

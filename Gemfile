@@ -36,7 +36,6 @@ group :development do
   gem 'ruby-debug19', :require => 'ruby-debug'
 
   #required for theme file generation
-  gem 'web-app-theme'
   gem 'hpricot'
   gem 'ruby_parser'
 end

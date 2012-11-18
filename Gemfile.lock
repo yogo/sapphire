@@ -270,7 +270,6 @@ GEM
     uuidtools (2.1.2)
     warden (1.0.6)
       rack (>= 1.0)
-    web-app-theme (0.7.0)
     yamler (0.1.0)
 
 PLATFORMS
@@ -295,7 +294,6 @@ DEPENDENCIES
   tilt
   turn
   uglifier
-  web-app-theme
   yogo-datamapper!
   yogo-framework!
   yogo-operation!
