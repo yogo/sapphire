@@ -16,21 +16,7 @@
       :cache => false
     = csrf_meta_tag
   %body
-    #container
-      #header
-        = render :partial => 'layouts/header'
-      #wrapper.wat-cf
-        .flash
-          - flash.each do |type, message|
-            %div{:class => "message #{type}"}
-              %p= message
-        #sidebar
-          = yield :sidebar
-        #main
-          = yield
-        %br{:clear => 'all'}
-        #footer
-          .block
-            %p
-              Copyright &copy; #{Time.now.year} Yogo Sapphire.
-
+    = render :partial => 'layouts/header'
+    = render :partial => 'layouts/alerts'
+    = yield
+    = render :partial => 'layouts/footer'
