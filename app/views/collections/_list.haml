@@ -1,10 +1,22 @@
 %table.table
-  - collections.each do |c|
+  %thead
     %tr
-      %td
-        %h4= link_to(c.name, project_collection_path(c.project_id,c))
-        Columns: #{c.schema.map(&:name)}
-      %td= c.description.blank? ? "No Description." : c.description
-      %td Data Items: #{c.items.count}
-      %td= link_to("delete", project_collection_path(c.project_id,c), :class => 'btn btn-warning btn-mini',
-                    :method=>:delete, "data-confirm"=>"Are you sure you wish to delete this Collection?")
+      %th Collection
+      %th Description
+      %th Columns
+      %th Data Items
+      %th &nbsp;
+  %tbody
+    - collections.each do |c|
+      %tr
+        %td
+          %h4= link_to(c.name, project_collection_path(c.project_id,c))
+          - if c.public?
+            %span.label.label-info Public
+          - else
+            %span.label.label-default Private
+        %td= c.description.blank? ? "No Description." : c.description
+        %td= c.schema.map(&:name)
+        %td= c.items.count
+        %td= link_to("delete", project_collection_path(c.project_id,c), :class => 'btn btn-warning btn-mini',
+                      :method=>:delete, "data-confirm"=>"Are you sure you wish to delete this Collection?")
