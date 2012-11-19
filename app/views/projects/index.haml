@@ -1,52 +1,26 @@
-%h1 Projects
+.row
+  .span1
+  .span10
+    .container
+      %h1 #{params[:public] ? 'Public' : 'My'} Projects
 
-.block
-  .secondary-navigation.button-navigation
-    .wat-cf
-      = nav_button("Create a Project", "web-app-theme/icons/database_add.png", new_project_path)
-
-  .content
-    .inner
-      %h3 
-        - if params[:public]
-          Public Projects
-        - else
-          My Projects
-      %ul.list.project-list
+      %table.table
         - @projects.each do |p|
-          %li
-            .counts
+          %tr
+            %td
+              %h4= link_to p.name, project_path(p)
+              - if p.public?
+                %span.label.label-info Public
+              - else
+                %span.label.label-default Private
+            %td
               .collection_count Data Collections: #{p.data_collections.count}
               .data_items_count Data Items: #{p.record_count}
-            .left= image_tag("Yogo-tiny-trans.png")
-            %dl
-              %dt
-                %h4.item 
-                  %a{:href => project_path(p)}= p.name
-              %dd
-                #{p.description.blank? ? "No Description." : p.description}
+            %td= p.description.blank? ? "No Description." : p.description
+            %td 
               - unless params[:public] 
-                %dd
-                  =link_to("delete", project_path(p), :method=>:delete, "data-confirm"=>"Are you sure you wish to delete this Project?")
+                = link_to("delete", project_path(p), 
+                  :class => 'btn btn-warning btn-mini',:method=>:delete, 
+                  "data-confirm"=>"Are you sure you wish to delete this Project?")
 
-              
--if @collections && !@collections.empty?
-  .block
-    .content
-      .inner
-        %h3 Public Collections
-        %ul.list.collection-list
-          - @collections.each do |c|
-            %li
-              .counts
-                .data_items_count Data Items: #{c.items.count}
-              .left.big-img= image_tag("web-app-theme/icons/table.png")
-              %dl
-                %dt
-                  %h4.item 
-                    %a{:href => project_collection_path(c.project,c)}= c.name
-                %dd
-                  Schema: #{c.schema.map(&:name)}
-                  %br
-                  #{c.description.blank? ? "No Description." : c.description}
                 

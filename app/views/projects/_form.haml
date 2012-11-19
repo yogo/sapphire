@@ -1,7 +1,5 @@
-.group
-  = f.text_field(:name)
-.group
-  = f.text_area(:description)
-.group 
-  Project is Private:
-  =f.check_box(:private, :label=>"Private Project")
+= f.text_field(:name, :label => false, :placeholder => 'Project Name')
+= f.text_area(:description, :rows => 5, :label => false, :placeholder => 'Project Description')
+%label.checkbox
+  =f.check_box(:private) 
+  Project is Private

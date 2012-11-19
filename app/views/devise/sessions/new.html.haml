@@ -1,12 +1,15 @@
-.container
-  = form_for(resource, :as => resource_name, :url => session_path(resource_name), :html=>{:class=> 'form-signin'}) do |f|
-    %h2.form-signin-heading Sign in
-    = f.email_field :email, :class => 'text_field', :placeholder => 'Email Address'
-    = f.password_field :password, :class => 'text_field', :placeholder => 'Password'
-    - if devise_mapping.rememberable?
-      %label.checkbox
-        = f.check_box :remember_me
-        Remember me
-    %button.btn.btn-large.btn-primary{:type => 'submit'} Sign In
-    .devise-links
-      = render :partial => "devise/shared/links"
+.row
+  .container
+    = form_for(resource, :as => resource_name, 
+      :url => session_path(resource_name), 
+      :html=>{:class=> 'form-box'}) do |f|
+      %h2.form-signin-heading Sign in
+      = f.email_field :email, :class => 'text_field', :placeholder => 'Email Address'
+      = f.password_field :password, :class => 'text_field', :placeholder => 'Password'
+      - if devise_mapping.rememberable?
+        %label.checkbox
+          = f.check_box :remember_me
+          Remember me
+      %button.btn.btn-large.btn-primary{:type => 'submit'} Sign In
+      .devise-links
+        = render :partial => "devise/shared/links"
