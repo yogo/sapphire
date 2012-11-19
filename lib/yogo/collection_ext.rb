@@ -9,6 +9,10 @@ module Yogo
       def update_stats
         self.project.update_stats
       end
+
+      def public?
+        !private?
+      end
     end
   end
 end
