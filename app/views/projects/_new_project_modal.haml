@@ -1,0 +1,11 @@
+-# Project#edit form
+#new_project_form.modal.hide.fade
+  .modal-header
+    %button.close(data-dismiss="modal") x
+    %h3 Create Project
+  = form_for(project, :url => projects_path, :html => {:class => 'form-box'}) do |f|
+    .modal-body
+      = render :partial => 'form', :locals => {:f => f}
+    .modal-footer
+      %button.btn.btn-primary{:type => 'submit'} Save
+      %a.btn.btn-mini(data-dismiss="modal") Close
