@@ -1,106 +1,32 @@
-%h1 
-  = @collection.private? ? image_tag("web-app-theme/icons/lock.png", :title => 'Private Data Collection') :  image_tag("web-app-theme/icons/world.png", :title => 'Public Data Collection')
-  = @collection.name
+.row
+  .span12
+    %h1
+      - if @collection.private?
+        %span.label.label-default Private
+      - else
+        %span.label.label-info Public
+      = @collection.name
 
+    -if current_user.member_of?(@project)
+      = render(:partial => 'modals', :locals => {:project => @project})
+      = render(:partial => 'filter', 
+              :locals => {:filter_item => @filter_item, :collection => @collection, 
+                          :project => @project, :filters => @filters})
+      = render(:partial => 'items/table_form', :locals => {:items =>@items, 
+                :collection => @collection, :project=>@project})
 
-- content_for(:sidebar) do
-  .block
-    %h3 Toolbar
-    .content
-      %ul.toolbar
-        %li= nav_button("Back to Project", "web-app-theme/icons/arrow_undo.png", project_path(@project))
-        %li= nav_button("Download Metadata", "web-app-theme/icons/table_go.png", project_collection_export_path(@project,@collection, :filters => params[:filters]))
-        %li= nav_button("Download All Data", "web-app-theme/icons/package_go.png", project_collection_export_with_files_path(@project,@collection, :filters => params[:filters]))
-
-        -if current_user.member_of?(@project)
-          %li= nav_button("Collection Settings", "web-app-theme/icons/table_gear.png", 
-            "onclick = \"$('#collection_edit_form').toggle();\"")
-          %li= nav_button("Upload Data", "web-app-theme/icons/application_get.png", 
-            "onclick = \"$('#upload_form').toggle();\"")
-          %li= nav_button("Add Column", "web-app-theme/icons/table_add.png", 
-            "onclick = \"$('#collection_schema_form').toggle();\"")
-          -if @collection.private?
-            %li= nav_button("Publish Collection",  "web-app-theme/icons/world_add.png", project_collection_publish_path(@project,@collection), "post")
+      .container
+        = link_to('Filter',  '#edit-filters', 'data-toggle' => 'modal')
+        .collection_table
+          - unless @filters.empty?
+            Filtered By: #{@filters.map{|k,v| @collection.schema.by_field_name(k.target.to_s).name + " : #{v}"}.join(' ' + params[:options] + ' ')}
+          -if current_user.member_of?(@project)
+            = render  :partial => 'items/table', 
+                      :locals => {:items =>@items, :collection => @collection, :project=>@project}
           -else
-            %li= nav_button("Unpublish Collection",  "web-app-theme/icons/world_delete.png", project_collection_publish_path(@project,@collection), "post")
-
-    %h3 Filter Data
-    .content 
-      = form_for("filters", @filter_item, :url => project_collection_path(@project,@collection),  :html => {:class => 'form',:method=>:get}) do |f|  
-        = render :partial => 'filter', :locals => {:f => f, :collection => @collection, :filters => @filters}
-        .group.navform.wat-cf
-          And
-          =radio_button_tag("options", "AND")
-          OR
-          =radio_button_tag("options", "OR")
-          -unless params["options"].nil?
-            :javascript
-              $('#options_#{params[:options]}').attr("checked", true)
-          -else
-            :javascript
-              $('#options_AND').attr("checked", true)
-          = f.submit("Filter", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Filter"))
-          -#= nav_button("Clear Filters", "web-app-theme/icons/arrow_undo.png",project_collection_path(@project,@collection))
--if current_user.member_of?(@project)
-  =# Project#upload_data form
-  #collection_edit_form{:style => "display: none"}
-    .block
-      .content
-        .inner
-          %h4 Collection Settings
-          = form_for("collection",@collection, :url => project_collection_path(@project, @collection), :html => {:class => 'form', :method=> :put}) do |f|
-            = render :partial => 'form', :locals => {:f => f}
-            .group.navform.wat-cf
-              = f.submit("Save", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"), :cancel_link => link_to("Cancel", '#', :class => "text_button_padding link_button", :onclick => "$('#collection_edit_form').toggle()"))
-          %h4 Collection Schema
-          - @collection.schema.each do |s|
-            %li 
-              .item 
-                =link_to(image_tag("web-app-theme/icons/table_edit.png", :border=>"0", :height=>"16px"), edit_project_collection_schema_path(@project,@collection,s)) 
-                #{s.name} (#{s.type.to_s.split('::').last})
-                -if s.associated_schema
-                  | Associated With #{s.associated_schema.data_collection.name}>#{s.associated_schema.name}
-                =link_to("delete", project_collection_schema_path(@project,@collection,s), :method=>:delete, "data-confirm"=>"Are you sure you wish to delete this Schema Column?")
-  #upload_form{:style => "display: none"}
-    .block
-      .content
-        .inner
-          %h4 Upload Data
-          = render  :partial => 'projects/upload_form', 
-                    :locals => {:project => @project,:collection_id => @collection.id,
-                        :cancel_link => link_to("Cancel", '#', 
-                          :class => "text_button_padding link_button", 
-                          :onclick => "$('#collection_upload_form').toggle()")}
-  #collection_schema_form{:style => "display: none"}
-    .block
-      .content
-        .inner
-          %h3 Add New Column
-          = form_for("schema", :url => project_collection_schemas_path(@project, @collection), :html => {:class => 'form'}) do |f|
-            = render :partial => 'schemas/form', :locals => {:f => f, :collection=>@collection, :edit=>nil}
-            .group.navform.wat-cf
-              = f.submit("Save", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"), :cancel_link => link_to("Cancel", '#', :class => "text_button_padding link_button", :onclick => "$('#collection_schema_form').toggle()"))
+            = render  :partial => 'items/public_table', 
+                      :locals => {:items => @items, :collection => @collection, :project=>@project}
 
 
-.block
-  .inner
-    .table_form
-      -if current_user.member_of?(@project)
-        = render :partial => 'items/table_form', :locals => {:items =>@items, :collection => @collection, :project=>@project}
-%br
-.block
-  .secondary-navigation
-    .wat-cf
-      -if false
-        .right-nav-button= nav_button("Add Item", "web-app-theme/icons/add.png", project_collection_items_path(@project, @collection))
-        .right-nav-button= nav_button("Add Column", "web-app-theme/icons/table_edit.png", project_collection_items_path(@project, @collection))
-  .content
-    .inner
-      .collection_table
-        - unless @filters.empty?
-          Filtered By: #{@filters.map{|k,v| @collection.schema.by_field_name(k.target.to_s).name + " : #{v}"}.join(' ' + params[:options] + ' ')}
-        -unless current_user.memberships.all(:project_id=>@project.id).empty?
-          = render :partial => 'items/table', :locals => {:items =>@items, :collection => @collection, :project=>@project}
-        -else
-          = render :partial => 'items/public_table', :locals => {:items => @items, :collection => @collection, :project=>@project}
+
 
