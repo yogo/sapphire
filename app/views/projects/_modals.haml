@@ -24,7 +24,8 @@
   .modal-header
     %button.close(data-dismiss="modal") x
     %h3 Add New Collection
-  = form_for("collection", :url => project_collections_path(@project), :html => {:class => 'modal-form'}) do |f|
+  = form_for(project.data_collections.new, :url => project_collections_path(project), 
+            :html => {:class => 'modal-form'}) do |f|
     .modal-body
       = render :partial => 'collections/form', :locals => {:f => f}
     .modal-footer
