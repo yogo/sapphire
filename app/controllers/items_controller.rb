@@ -118,12 +118,11 @@ class ItemsController < ApplicationController
   
   private
   def choose_layout
-    if action_name == 'controlled_vocabulary_term' || 
-       action_name == 'show' || 
-       action_name == 'association_edit'
-      return 'controlled_vocabulary'
+    case action_name
+    when 'controlled_vocabulary_term', 'show', 'association_edit'
+      'blank'
     else
-      return 'application'
+      'application'
     end
   end
   
