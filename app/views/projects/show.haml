@@ -10,8 +10,8 @@
 
   .tabbable
     %ul.nav.nav-tabs
-      %li.active= link_to("Data Collections", "#dc-tab", 'data-toggle' => 'tab')
-      %li= link_to("Controlled Vocabularies", "#cv-tab", 'data-toggle' => 'tab')
+      %li.active= link_to("Data Collections (#{@collections.count})", "#dc-tab", 'data-toggle' => 'tab')
+      %li= link_to("Controlled Vocabularies (#{@cv_collections.count})", "#cv-tab", 'data-toggle' => 'tab')
     .tab-content
       #dc-tab.tab-pane.active
         = render(:partial => "collections/list", :locals=>{:collections => @collections})
