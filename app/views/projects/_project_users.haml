@@ -1,26 +1,19 @@
+= form_for("add_user", :url => project_associate_user_path(project), :html => {:class => 'form-inline'}) do |f|
+  .modal-body
+    = f.select(:user_id,options_for_select(users_for_select(project)))
+    %button.btn.btn-primary Add User
 
-%h3 Current Project Members:
-= form_for("add_user", :url => project_associate_user_path(project), :html => {:class => 'form'}) do |f|
-  .group{:style => 'float: left; margin-right: 5px;'}
-    = f.select(:user_id,options_for_select(users_for_select(project)), :label => "")
-  .navform.wat-cf
-    = f.submit("Add User to Project", :submit_image => image_tag("web-app-theme/icons/user_add.png", :alt => "Save"), :cancel_link => cancel_link)
-
-%table.table
-  %tr
-    %th Last Name
-    %th First Name
-    %th Email
-    %th Remove User
-  -project.members.users(:order => [:last_name]).each do |user|
-    %tr{:class => cycle('odd','even')}
-      %td
-        =user.last_name
-      %td
-        =user.first_name
-      %td
-        =user.email
-      %td 
-        -if project.members.users(:order => [:last_name]).count > 1
-          = nav_button("Remove User", "web-app-theme/icons/arrow_undo.png", project_remove_user_path(@project, :user_id=>user.id), "put")
-  %br{:clear => 'all'}
+%table.table.table-striped
+  %thead
+    %tr
+      %th Last Name
+      %th First Name
+      %th Email
+      %th &nbsp;
+  %tbody
+    -project.members.users(:order => [:last_name]).each do |user|
+      %tr
+        %td= user.last_name
+        %td= user.first_name
+        %td= user.email
+        %td= link_to("remove", project_remove_user_path(@project, :user_id=>user.id), :class => 'btn btn-warning btn-mini', :method => :put, "data-confirm"=>"Are you sure you wish to remove this user from the project?")

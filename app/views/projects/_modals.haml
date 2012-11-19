@@ -1,0 +1,31 @@
+-# Project#edit form
+#project_edit_form.modal.hide.fade
+  .modal-header
+    %button.close(data-dismiss="modal") x
+    %h3 Project Settings
+  = render :partial => 'edit_form', :locals => {:project => project}
+
+-# Project#upload_data form
+#upload_form.modal.hide.fade
+  .modal-header
+    %button.close(data-dismiss="modal") x
+    %h3 Upload Data
+  = render :partial => 'upload_form', :locals => {:project => project, :collection_id => nil}
+
+-# Project#project_users form
+#project_users.modal.hide.fade
+  .modal-header
+    %button.close(data-dismiss="modal") x
+    %h3 Project Users
+  = render :partial => 'project_users', :locals => {:project => project}
+
+-# Collection#new form
+#new_collection_form.modal.hide.fade
+  .modal-header
+    %h3 Add New Collection
+  = form_for("collection", :url => project_collections_path(@project), :html => {:class => 'modal-form'}) do |f|
+    .modal-body
+      = render :partial => 'collections/form', :locals => {:f => f}
+    .modal-footer
+      %button.btn.btn-primary Save Changes
+      %a.btn.btn-mini(data-dismiss="modal") Close
