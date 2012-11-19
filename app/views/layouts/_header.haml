@@ -8,30 +8,23 @@
             -if current_user
               %li.dropdown
                 %a.dropdown-toggle(href='#' data-toggle='dropdown')
-                  System
-                  %b.caret
-                %ul.dropdown-menu
-                  %li= link_to('My Projects',     projects_path)
-                  %li= link_to('Public Projects', projects_path(:public => true))
-                  %li= link_to('New Project',   '#new_project_form',     'data-toggle' => 'modal')
-              %li.dropdown
-                %a.dropdown-toggle(href='#' data-toggle='dropdown')
                   Project                  
                   %b.caret
-                -if @project && current_user.member_of?(@project)
                   %ul.dropdown-menu
-                    %li= link_to('Project Settings',  '#project_edit_form', 'data-toggle' => 'modal')
-                    %li= link_to('Project Members',   '#project_users',     'data-toggle' => 'modal')
-                    %li
-                      -if @project && @project.private?
-                        = link_to('Publish Project',   project_publish_path(@project), :method => 'post')
-                      -else
-                        = link_to('Unpublish Project', project_publish_path(@project), :method => 'post')
-                -else
-                  %ul.dropdown-menu
-                    %li.disabled= link_to('Project Settings', '#')
-                    %li.disabled= link_to('Project Members',  '#')
-                    %li.disabled= link_to('Publish Project',  '#')
+                    %li= link_to('All Projects', projects_path)
+                    %li= link_to('New Project', '#new_project_form', 'data-toggle' => 'modal')
+                    -if @project && current_user.member_of?(@project)
+                      %li= link_to('Project Settings',  '#project_edit_form', 'data-toggle' => 'modal')
+                      %li= link_to('Project Members',   '#project_users',     'data-toggle' => 'modal')
+                      %li
+                        -if @project && @project.private?
+                          = link_to('Publish Project',   project_publish_path(@project), :method => 'post')
+                        -else
+                          = link_to('Unpublish Project', project_publish_path(@project), :method => 'post')
+                    -else
+                      %li.disabled= link_to('Project Settings', '#')
+                      %li.disabled= link_to('Project Members',  '#')
+                      %li.disabled= link_to('Publish Project',  '#')
               %li.dropdown
                 %a.dropdown-toggle(href='#' data-toggle='dropdown') 
                   Collection                  

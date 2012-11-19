@@ -1,23 +1,18 @@
 = render :partial => 'new_project_modal', :locals => {:project => Yogo::Project.new}
 
 .row
-  %h1 #{params[:public] ? 'Public' : 'My'} Projects
+  %h1 All Projects
 
-  %table.table
-    - @projects.each do |p|
-      %tr
-        %td
-          %h4= link_to p.name, project_path(p)
-          - if p.public?
-            %span.label.label-info Public
-          - else
-            %span.label.label-default Private
-        %td
-          .collection_count Data Collections: #{p.data_collections.count}
-          .data_items_count Data Items: #{p.record_count}
-        %td= p.description.blank? ? "No Description." : p.description
-        %td 
-          - unless params[:public] 
-            = link_to("delete", project_path(p), 
-              :class => 'btn btn-warning btn-mini',:method=>:delete, 
-              "data-confirm"=>"Are you sure you wish to delete this Project?")
+  .tabbable
+    %ul.nav.nav-tabs
+      %li.active= link_to("My Projects (#{@projects.count})", "#myproj-tab", 'data-toggle' => 'tab')
+      %li= link_to("Public Projects (#{@public_projects.count})", "#pubproj-tab", 'data-toggle' => 'tab')
+    .tab-content
+      #myproj-tab.tab-pane.active
+        = render(:partial => 'projects/list', :locals => {:projects => @projects})
+      #pubproj-tab.tab-pane
+        = render(:partial => 'projects/list', :locals => {:projects => @public_projects})
+
+
+
+
