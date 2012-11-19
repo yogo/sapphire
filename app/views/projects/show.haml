@@ -1,24 +1,20 @@
 .row
-  .span1
-  .span10
-    .container
-      %h1
-        - if @project.public?
-          %span.label.label-info Public
-        - else
-          %span.label.label-default Private
-        = @project.name
-      -if current_user.member_of?(@project)
-        = render(:partial => 'modals', :locals => {:project => @project})
+  %h1
+    - if @project.public?
+      %span.label.label-info Public
+    - else
+      %span.label.label-default Private
+    = @project.name
+  -if current_user.member_of?(@project)
+    = render(:partial => 'modals', :locals => {:project => @project})
 
-      .tabbable
-        %ul.nav.nav-tabs
-          %li.active= link_to("Data Collections", "#dc-tab", 'data-toggle' => 'tab')
-          %li= link_to("Controlled Vocabularies", "#cv-tab", 'data-toggle' => 'tab')
-        .tab-content
-          #dc-tab.tab-pane.active
-            = render(:partial => "collections/list", :locals=>{:collections => @collections})
-          -unless @cv_collections.empty?
-            #cv-tab.tab-pane
-              = render(:partial => "collections/list", :locals=>{:collections => @cv_collections})
-            
+  .tabbable
+    %ul.nav.nav-tabs
+      %li.active= link_to("Data Collections", "#dc-tab", 'data-toggle' => 'tab')
+      %li= link_to("Controlled Vocabularies", "#cv-tab", 'data-toggle' => 'tab')
+    .tab-content
+      #dc-tab.tab-pane.active
+        = render(:partial => "collections/list", :locals=>{:collections => @collections})
+      -unless @cv_collections.empty?
+        #cv-tab.tab-pane
+          = render(:partial => "collections/list", :locals=>{:collections => @cv_collections})

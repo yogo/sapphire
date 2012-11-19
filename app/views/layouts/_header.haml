@@ -13,7 +13,7 @@
                 %ul.dropdown-menu
                   %li= link_to('My Projects',     projects_path)
                   %li= link_to('Public Projects', projects_path(:public => true))
-                  %li= link_to('New Project',     new_project_path)
+                  %li= link_to('New Project',   '#new_project_form',     'data-toggle' => 'modal')
               %li.dropdown
                 %a.dropdown-toggle(href='#' data-toggle='dropdown')
                   Project                  

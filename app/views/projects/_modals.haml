@@ -22,6 +22,7 @@
 -# Collection#new form
 #new_collection_form.modal.hide.fade
   .modal-header
+    %button.close(data-dismiss="modal") x
     %h3 Add New Collection
   = form_for("collection", :url => project_collections_path(@project), :html => {:class => 'modal-form'}) do |f|
     .modal-body
@@ -29,3 +30,5 @@
     .modal-footer
       %button.btn.btn-primary Save Changes
       %a.btn.btn-mini(data-dismiss="modal") Close
+
+= render :partial => 'new_project_modal', :locals => {:project => Yogo::Project.new}
