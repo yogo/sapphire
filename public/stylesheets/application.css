@@ -88,6 +88,11 @@ input[type="file"] {
   margin: 0;
 }
 
+.modal.wide{
+  width: 960px;
+  margin-left: -480px;
+}
+
 /*#content{
   padding: 10px 10px 10px 10px;
 }
