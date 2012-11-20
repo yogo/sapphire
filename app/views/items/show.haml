@@ -1,35 +1,24 @@
-%h2
-  Project:#{link_to(@project.name, project_path(@project))} > Collection:#{link_to(@collection.name, project_collection_path(@project,@collection))} 
-%br
-%h3
-  Item:#{@item.id}
-%table.table
-  %tr
-    %th Attribute
-    %th Value
-  %tr{:class => cycle('odd','even')}
-    %td Created At
-    %td=@item.created_at
-  %tr{:class => cycle('odd','even')}
-    %td Updated At
-    %td= @item.updated_at
+%h2= @collection.name + " Data Row"
+
+%p.muted Data ID:#{@item.id}
+
+%dl.dl-horizontal
+  %dt Created At
+  %dd= @item.created_at
+  %dt Updated At
+  %dd= @item.updated_at
   -@collection.schema.each do |field|
-    %tr{:class => cycle('odd','even')}
-      %td=field.name
-      -if field.associated_schema     
-        %td
-          -unless @item[field.name].nil?
-            =field.associated_schema.data_collection.items.get(@item[field.name])[field.associated_schema.name]
-            ="(#{@item[field.name]})"
-      -else
-        %td= @item[field.name]
-  %tr{:class => cycle('odd','even')}
-    %td File
-    %td
-      %a{:href => @item.file.to_s}= @item.original_filename
+    %dt= field.name
+    %dd 
+      - if field.associated_schema && !@item[field.name].blank?
+        =JSON.parse(@item[field.name])['item']['display']
+      - else
+        = @item[field.name]
+  %dt File
+  %dd
+    %a{:href => @item.file.to_s}= @item.original_filename
+
+%hr
       
-.block
-  .content
-    .inner
-      %h3 Previous Versions
-      = render :partial => 'version_table', :locals => {:items => @item.versions, :collection => @collection, :item => @item, :project=> @project}
+%h3 Previous Versions
+= render :partial => 'version_table', :locals => {:items => @item.versions, :collection => @collection, :item => @item, :project=> @project}

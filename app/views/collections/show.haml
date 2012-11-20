@@ -1,10 +1,10 @@
 .row
   %h1
+    = @collection.name
     - if @collection.private?
       %span.label.label-default Private
     - else
       %span.label.label-info Public
-    = @collection.name
 
   -if current_user.member_of?(@project)
     = render(:partial => 'modals')
@@ -14,18 +14,17 @@
     = render(:partial => 'items/inline_form', :locals => {:items =>@items, 
               :collection => @collection, :project=>@project})
 
-  .container
-    %h3 
-      Data Grid
-      %a.btn(href='#edit-filters' data-toggle='modal') Filter
-      - unless @filters.empty?
-        =link_to 'Clear Filter', project_collection_path(@project, @collection), :class => 'btn'
-    .collection_table
-      - unless @filters.empty?
-        Filtered By: #{@filters.map{|k,v| @collection.schema.by_field_name(k.target.to_s).name + " : #{v}"}.join(' ' + params[:options] + ' ')}
-      -if current_user.member_of?(@project)
-        = render  :partial => 'items/table', 
-                  :locals => {:items =>@items, :collection => @collection, :project=>@project}
-      -else
-        = render  :partial => 'items/public_table', 
-                  :locals => {:items => @items, :collection => @collection, :project=>@project}
+  %h3 
+    Data Grid
+    %a.btn.pull-right(href='#edit-filters' data-toggle='modal') Filter
+    - unless @filters.empty?
+      =link_to 'Clear Filter', project_collection_path(@project, @collection), :class => 'btn'
+  .collection_table
+    - unless @filters.empty?
+      Filtered By: #{@filters.map{|k,v| @collection.schema.by_field_name(k.target.to_s).name + " : #{v}"}.join(' ' + params[:options] + ' ')}
+    -if current_user.member_of?(@project)
+      = render  :partial => 'items/table', 
+                :locals => {:items =>@items, :collection => @collection, :project=>@project}
+    -else
+      = render  :partial => 'items/public_table', 
+                :locals => {:items => @items, :collection => @collection, :project=>@project}

@@ -3,7 +3,7 @@
   .modal-header
     %button.close(data-dismiss="modal") x
     %h3 Create Project
-  = form_for(@project, :url => projects_path, :html => {:class => 'modal-form'}) do |f|
+  = form_for(project, :url => projects_path, :html => {:class => 'modal-form'}) do |f|
     .modal-body
       = render :partial => 'form', :locals => {:f => f}
     .modal-footer

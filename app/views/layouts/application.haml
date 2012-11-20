@@ -6,7 +6,7 @@
       Always force latest IE rendering engine (even in intranet) &amp; Chrome Frame
       Remove this if you use the .htaccess
     %meta{'http-equiv' => 'X-UA-Compatible', :content => 'IE=edge,chrome=1'}
-    %meta{:name => "viewport", :content => "width=device-width; initial-scale=1.0; maximum-scale=1.0;"}
+    %meta{:name => "viewport", :content => "width=device-width, initial-scale=1.0, maximum-scale=1.0"}
     %link{:href => "/favicon.ico", :rel => "shortcut icon"}/
     %title Yogo 
     = stylesheet_link_tag :all
@@ -23,6 +23,7 @@
   %body
     .container
       = render :partial => 'layouts/header'
+      = render :partial => 'layouts/breadcrumbs'
       = render :partial => 'layouts/alerts'
       = yield
       = render :partial => 'layouts/footer'

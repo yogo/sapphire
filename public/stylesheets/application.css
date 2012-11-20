@@ -8,8 +8,7 @@
 
 
 body {
-  padding-top: 70px;
-  padding-bottom: 40px;
+  padding-top: 40px;
   background-color: #f5f5f5;
 }
 
@@ -61,7 +60,7 @@ input[type="file"] {
 
 .quick-add,
 .collection_table {
-  padding: 10px;
+  padding: 10px 10px 20px 10px;
   background-color: #fff;
   border: 1px solid #e5e5e5;
   -webkit-border-radius: 5px;
