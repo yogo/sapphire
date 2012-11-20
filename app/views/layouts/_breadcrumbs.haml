@@ -1,0 +1,15 @@
+%ul.breadcrumb
+  %li
+    = link_to 'All Projects', root_path
+    - if @project
+      %span.divider /
+
+  - if @project
+    %li
+      = link_to @project.name, project_path(@project)
+      - if @collection
+        %span.divider /
+
+    - if @collection
+      %li
+        = link_to @collection.name, project_collection_path(@project, @collection)
