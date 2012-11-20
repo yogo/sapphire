@@ -1,6 +1,6 @@
-= form_for("add_user", :url => project_associate_user_path(project), :html => {:class => 'form-inline'}) do |f|
+= form_for("add_user", :url => project_associate_user_path(@project), :html => {:class => 'form-inline'}) do |f|
   .modal-body
-    = f.select(:user_id,options_for_select(users_for_select(project)))
+    = f.select(:user_id,options_for_select(users_for_select(@project)))
     %button.btn.btn-primary Add User
 
 %table.table.table-striped
@@ -11,9 +11,15 @@
       %th Email
       %th &nbsp;
   %tbody
-    -project.members.users(:order => [:last_name]).each do |user|
+    -@project.members.users(:order => [:last_name]).each do |user|
       %tr
         %td= user.last_name
         %td= user.first_name
         %td= user.email
-        %td= link_to("remove", project_remove_user_path(@project, :user_id=>user.id), :class => 'btn btn-warning btn-mini', :method => :put, "data-confirm"=>"Are you sure you wish to remove this user from the project?")
+        - if @project.members.count == 1
+          %td
+            %a.btn.btn-mini(href='#' disabled) remove
+        - else
+          %td= link_to("remove", project_remove_user_path(@project, :user_id=>user.id), 
+                      :class => 'btn btn-warning btn-mini', :method => :put, 
+                      "data-confirm"=>"Are you sure you wish to remove this user from the project?")

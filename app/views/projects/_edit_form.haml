@@ -1,4 +1,4 @@
-= form_for(project, :url => project_path, :html => {:class => 'modal-form', :method=> :put}) do |f|
+= form_for(@project, :url => project_path, :html => {:class => 'modal-form', :method=> :put}) do |f|
   .modal-body
     = render :partial => 'form', :locals => {:f => f}
   .modal-footer
