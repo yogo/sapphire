@@ -33,8 +33,8 @@
                   -if current_user.member_of?(@project)
                     %li= link_to('New Collection', '#new_collection_form', 'data-toggle' => 'modal')
                     -if @collection && @collection.saved?
-                      %li= link_to('Collection Settings', '#', :onclick => "$('#collection_edit_form').toggle();")
-                      %li= link_to('Add Column',          '#', :onclick => "$('#collection_schema_form').toggle();")
+                      %li= link_to('Collection Settings',  '#collection_edit_form', 'data-toggle' => 'modal')
+                      %li= link_to('Add Column',  '#collection_schema_form', 'data-toggle' => 'modal')
                       %li
                         -if @collection && @collection.private?
                           = link_to('Publish Collection',  

@@ -1,7 +1,12 @@
-= form_for('upload', :url => project_upload_path(project), :html => {"multipart" => true, "data-ajax"=> false, :class => 'modal-form'}) do |f|
+= form_for('upload', :url => project_upload_path(@project), :html => {"multipart" => true, "data-ajax"=> false, :class => 'modal-form'}) do |f|
   .modal-body
     %label Upload Into:
-    = select("upload","collection", project.data_collections.all.collect{|d| [d.name, d.id]}, {:required=>true,:include_blank => 'A New Collection',:selected => collection_id})
+    - if @collection
+      %input(type='text' placeholder='#{@collection.name}' disabled)
+      %input(type='hidden' id='upload_collection' name='upload[collection]' value='#{@collection.id}')
+    - else
+      = select("upload","collection", @project.data_collections.all.collect{|d| [d.name, d.id]}, 
+            {:required=>true,:include_blank => 'A New Collection'})
     = f.file_field :file
   .modal-footer
     %button.btn.btn-primary Upload File

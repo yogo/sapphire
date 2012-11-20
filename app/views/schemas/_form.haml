@@ -1,12 +1,20 @@
--if collection.controlled_vocabulary
-  .group= f.select(:name, field_value_options(collection.controlled_vocabulary), :label => "Name")
--else
-  .group= f.text_field(:name,:label => "Name")
--if edit.nil?
-  .group= f.select(:type, property_types_opts,:label => "Type")
+%label Name
+- if @collection.controlled_vocabulary
+  = f.select(:name, field_value_options(@collection.controlled_vocabulary))
+- else
+  = f.text_field(:name)
 
-.group= f.text_field(:position,:label => "Position")
+%label Type
+- if @schema
+  %input(type='text' placeholder='#{@schema.type.to_s.split('::').last}' disabled)
+- else
+  = f.select(:type, property_types_opts)
 
-.group= f.select(:controlled_vocabulary_id, controlled_vocabulary_opts.sort, :label => "Controlled Vocabulary", :include_blank => true)
+%label Position
+= f.text_field(:position)
 
-.group= f.select(:associated_schema_id, association_opts.sort, :label => "Associations", :include_blank => true)
+%label Controlled Vocabulary
+= f.select(:controlled_vocabulary_id, controlled_vocabulary_opts.sort, :include_blank => true)
+
+%label Association
+= f.select(:associated_schema_id, association_opts.sort, :include_blank => true)
