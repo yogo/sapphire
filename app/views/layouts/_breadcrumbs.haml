@@ -1,15 +1,51 @@
 %ul.breadcrumb
-  %li
-    = link_to 'All Projects', root_path
-    - if @project
-      %span.divider /
+  - if current_user
+    %li.dropdown
+      %a.dropdown-toggle(href='#' data-toggle='dropdown') 
+        Projects
+        %b.caret
+      %ul.dropdown-menu
+        %li= link_to('All Projects', projects_path)
+        %li= link_to('New Project', '#new_project_form', 'data-toggle' => 'modal')
+      - if @project
+        %span.divider / 
 
   - if @project
-    %li
-      = link_to @project.name, project_path(@project)
+    %li.dropdown
+      %a.dropdown-toggle(href='#' data-toggle='dropdown') 
+        = @project.name
+        %b.caret
+      %ul.dropdown-menu
+        %li= link_to @project.name, project_path(@project)
+        %hr
+        -if @project && current_user.member_of?(@project)
+          %li= link_to('Project Settings',    '#project_edit_form',   'data-toggle' => 'modal')
+          %li= link_to('Project Members',     '#project_users',       'data-toggle' => 'modal')
+          %li= link_to('New Collection',      '#new_collection_form', 'data-toggle' => 'modal')
+          %li= link_to('Upload Project Data', '#upload_form',         'data-toggle' => 'modal')
+          -#%li
+          -#  -if @project && @project.private?
+          -#    = link_to('Publish Project',   project_publish_path(@project), :method => 'post')
+          -#  -else
+          -#    = link_to('Unpublish Project', project_publish_path(@project), :method => 'post')
       - if @collection
         %span.divider /
 
     - if @collection
-      %li
-        = link_to @collection.name, project_collection_path(@project, @collection)
+      %li.dropdown
+        %a.dropdown-toggle(href='#' data-toggle='dropdown') 
+          = @collection.name
+          %b.caret
+        %ul.dropdown-menu
+          %li= link_to @collection.name, project_collection_path(@project, @collection)
+          %hr
+          -if @project && current_user.member_of?(@project)
+            %li= link_to('Collection Settings',    '#collection_edit_form',   'data-toggle' => 'modal')
+            %li= link_to('Add Column',             '#collection_schema_form', 'data-toggle' => 'modal')
+            %li= link_to('Upload Collection Data', '#upload_form',            'data-toggle' => 'modal')
+            -if @collection && @collection.saved?
+              %li= link_to('Download Metadata', 
+                      project_collection_export_path( @project, @collection, :filters => params[:filters]))
+              %li= link_to('Download All Data', 
+                      project_collection_export_with_files_path( @project, @collection, :filters => params[:filters]))
+
