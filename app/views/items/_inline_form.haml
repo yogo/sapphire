@@ -16,6 +16,12 @@
         = f.text_field(field.to_s, :id=> field.to_s, :placeholder => field.name, :class => 'input-medium') 
         :javascript
           $("##{field.to_s}").datetimepicker({dateFormat:'yy-mm-dd'});
+      -elsif field.type.to_s == "Yogo::Collection::Property::Text"
+        = f.text_field(field.to_s, :id=> field.to_s, :placeholder => field.name, :class => 'input-large', :rows => 4) 
+      -elsif field.type.to_s == "Yogo::Collection::Property::Boolean"
+        %label 
+          = f.check_box(field.to_s, :id=> field.to_s, :class => 'input-medium') 
+          = field.name
       -else
         = f.text_field(field.to_s, :placeholder => field.name, :class => 'input-medium') 
     = f.file_field(:file, :class => 'input-medium')
