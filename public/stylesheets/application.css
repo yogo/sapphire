@@ -94,6 +94,10 @@ div.collection_table  {
 
 .collection_table table thead tr th.column{
   min-width: 90px;
+
+.modal.wide{
+  width: 960px;
+  margin-left: -480px;
 }
 
 /*#content{

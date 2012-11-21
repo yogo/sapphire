@@ -1,7 +1,7 @@
 %row
   %h1 Edit #{@collection.name} Item
 
-  = form_for("item", @item, :url => project_collection_item_path(@project, @collection, @item), :html=>{:method=>"put", :class => 'form'}) do |f| 
+  = form_for("item", @item, :url => project_collection_item_path(@project, @collection, @item), :html=>{:method=>"put", :class => 'form', :ajax=>false}) do |f| 
     = render :partial => 'form', :locals => {:f => f, :collection => @collection}
     %button.btn.btn-primary Save Changes
     = link_to("Cancel", project_collection_path(@project, @collection), :class => "btn btn-mini")

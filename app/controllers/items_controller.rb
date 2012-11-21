@@ -49,10 +49,10 @@ class ItemsController < ApplicationController
     #   end
     # end
     if @item.update(params[:item])
+      update_associated_fields(@item, @collection, @project)
       respond_to do |format|
         format.html do
           flash[:notice] = "Item Updated Successfully!"
-          update_associated_fields(@item, @collection, @project)
           redirect_to project_collection_path(@project, @collection)   
         end
         #format.json { render json: @item.to_json, status: :updated}
