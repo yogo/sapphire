@@ -38,8 +38,16 @@ class ItemsController < ApplicationController
      end
   end
   
+  # TODO: move the nullification of the fields into a before :save
   def update
     @item = @collection.items.get(params[:id])
+    params[:item].each {|k, v| params[:item][k] = v.blank? ? nil : v }
+    # @collection.schema.each do |field|
+    #   if params[:item][field.to_s].blank?
+    #     @item[field.name]=nil
+    #     params[:item][field.to_s].delete
+    #   end
+    # end
     if @item.update(params[:item])
       respond_to do |format|
         format.html do
@@ -53,7 +61,7 @@ class ItemsController < ApplicationController
     else
       respond_to do |format|
         format.html do
-          flash[:error] = "Item failed to save!"
+          flash[:error] = ["Item failed to save!", @item.errors.full_messages].flatten.join(' ')
           render :edit
         end
         format.json { render json: @item.to_json, status: :error}
