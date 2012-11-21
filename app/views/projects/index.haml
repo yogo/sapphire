@@ -1,8 +1,6 @@
 = render :partial => 'new_project_modal', :locals => {:project => Yogo::Project.new}
 
 .row
-  %h1 All Projects
-
   .tabbable
     %ul.nav.nav-tabs
       %li.active= link_to("My Projects (#{@projects.count})", "#myproj-tab", 'data-toggle' => 'tab')
