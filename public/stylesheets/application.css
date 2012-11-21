@@ -88,6 +88,14 @@ input[type="file"] {
   margin: 0;
 }
 
+div.collection_table  {
+  overflow: auto;
+}
+
+.collection_table table thead tr th.column{
+  min-width: 90px;
+}
+
 /*#content{
   padding: 10px 10px 10px 10px;
 }
