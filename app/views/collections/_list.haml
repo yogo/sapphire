@@ -1,16 +1,22 @@
-%ul.list.collection-list
-  - collections.each do |c|
-    %li
-      .counts
-        .data_items_count Data Items: #{c.items.count}
-      .left.big-img= image_tag("web-app-theme/icons/table.png")
-      %dl.item
-        %dt
-          %h4 
-            %a{:href => project_collection_path(c.project_id,c)}= c.name
-        %dd
-          Schema: #{c.schema.map(&:name)}
-          %br
-          #{c.description.blank? ? "No Description." : c.description}
-          %dd
-            =link_to("delete", project_collection_path(c.project_id,c), :method=>:delete, "data-confirm"=>"Are you sure you wish to delete this Collection?")
+%table.table
+  %thead
+    %tr
+      %th Collection
+      %th Description
+      %th Columns
+      %th Data Items
+      %th &nbsp;
+  %tbody
+    - collections.each do |c|
+      %tr
+        %td
+          %h4= link_to(c.name, project_collection_path(c.project_id,c))
+          - if c.public?
+            %span.label.label-info Public
+          - else
+            %span.label.label-default Private
+        %td= c.description.blank? ? "No Description." : c.description
+        %td= c.schema.map(&:name)
+        %td= c.items.count
+        %td= link_to("delete", project_collection_path(c.project_id,c), :class => 'btn btn-warning btn-mini',
+                      :method=>:delete, "data-confirm"=>"Are you sure you wish to delete this Collection?")

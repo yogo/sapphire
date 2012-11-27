@@ -1,17 +1,15 @@
-.block
-  %h2 Sign in
-  .content.login
-    = form_for(resource, :as => resource_name, :url => session_path(resource_name), :html=>{:class=> 'form'}) do |f|
-      .group
-        = f.label "Email", :class => 'label'
-        = f.email_field :email, :class => 'text_field'
-      .group
-        = f.label "Password", :class => 'label'
-        = f.password_field :password, :class => 'text_field'
+.row
+  .container
+    = form_for(resource, :as => resource_name, 
+      :url => session_path(resource_name), 
+      :html=>{:class=> 'form-box'}) do |f|
+      %h2.form-signin-heading Sign in
+      = f.email_field :email, :class => 'text_field', :placeholder => 'Email Address'
+      = f.password_field :password, :class => 'text_field', :placeholder => 'Password'
       - if devise_mapping.rememberable?
-        .group
+        %label.checkbox
           = f.check_box :remember_me
-          = f.label :remember_me 
-      .group.navform.wat-cf
-        = f.submit("Sign in", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Sign in"))
-    = render :partial => "devise/shared/links"
+          Remember me
+      %button.btn.btn-large.btn-primary{:type => 'submit'} Sign In
+      .devise-links
+        = render :partial => "devise/shared/links"

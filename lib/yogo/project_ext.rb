@@ -2,9 +2,12 @@ require 'yogo/project'
 
 module Yogo
   class Project
-
+    
+    property :record_count, Integer
+    
     has n, :memberships, :model=>"Membership"
     alias :members :memberships
+    alias :collections :data_collections
 
     #make a new collection with schema from CSV file
     def collection_from_file(name, new_file, collection=nil)
@@ -75,6 +78,14 @@ module Yogo
       end
     end
 
+    def update_stats
+      self.record_count = 0
+      self.data_collections.each do |col|
+        self.record_count += col.items.count
+      end
+      self.save
+    end
+    
     def public?
       !private?
     end

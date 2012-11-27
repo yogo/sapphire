@@ -1,0 +1,20 @@
+%table.table
+  - projects.each do |p|
+    %tr
+      %td
+        %h4= link_to p.name, project_path(p)
+        - if p.public?
+          %span.label.label-info Public
+        - else
+          %span.label.label-default Private
+      %td
+        .collection_count Data Collections: #{p.data_collections.count}
+        .data_items_count Data Items: #{p.record_count}
+      %td
+        %p= p.description.blank? ? "No Description." : p.description
+        %p= "Members: " + p.members.map{|m| m.user.first_name }.join(', ')
+      %td 
+        - if current_user.member_of?(p)
+          = link_to("delete", project_path(p), 
+            :class => 'btn btn-warning btn-mini',:method=>:delete, 
+            "data-confirm"=>"Are you sure you wish to delete this Project?")

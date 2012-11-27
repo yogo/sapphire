@@ -1,0 +1,10 @@
+-# There are four alert styles: default, alert-success, alert-info, alert-error
+-# Default is a yellow allert message (you don't need to add an alert-type class)
+-# alert-success: green
+-# alert-info: blue
+-# alert-error: red
+-# see here for more info: http://twitter.github.com/bootstrap/javascript.html#alerts
+- flash.each do |type, message|
+  .alert.fade.in{:class => alert_type(type) }
+    %button.close(type="button" data-dismiss="alert") &times;
+    %strong= message

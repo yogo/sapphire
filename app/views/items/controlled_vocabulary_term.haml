@@ -1,22 +1,17 @@
-%h3
-  Term Meta Data:
-%table.table
-  %tr
-    %th 
-      %b Attribute
-    %th 
-      %b Value
-  %tr{:class => cycle('odd','even')}
-    %td Created At
-    %td=@item.created_at
-  %tr{:class => cycle('odd','even')}
-    %td Updated At
-    %td= @item.updated_at
+%p.muted Data ID:#{@item.id}
+
+%dl.dl-horizontal
+  %dt Created At
+  %dd= @item.created_at
+  %dt Updated At
+  %dd= @item.updated_at
   -@collection.schema.each do |field|
-    %tr{:class => cycle('odd','even')}
-      %td=field.name
-      %td= @item[field.name]
-  %tr{:class => cycle('odd','even')}
-    %td File
-    %td
-      %a{:href => @item.file.to_s}= @item.original_filename
+    %dt= field.name
+    %dd 
+      - if field.associated_schema && !@item[field.name].blank?
+        =JSON.parse(@item[field.name])['item']['display']
+      - else
+        = @item[field.name]
+  %dt File
+  %dd
+    %a{:href => @item.file.to_s}= @item.original_filename

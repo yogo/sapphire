@@ -2,15 +2,8 @@ class ProjectsController < ApplicationController
     before_filter :verify_project, :only =>[:show, :edit, :update, :upload, :process_upload, :search, :search_results]
     
     def index
-      if params[:public]
-        my_projects = current_user.memberships.projects
-        @projects = Yogo::Project.all(:private => false) - my_projects
-        @collections = Yogo::Collection::Data.all(:private=>false) - my_projects.data_collections
-        @nav_public_project = true
-      else
         @projects = current_user.memberships.projects
-        @nav_my_project = true
-      end
+        @public_projects = Yogo::Project.all(:private => false) - current_user.memberships.projects
     end
 
     def show

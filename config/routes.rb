@@ -4,9 +4,9 @@ Sapphire::Application.routes.draw do
 
   resources :projects do 
     get :search
-    get :s, :action=> :search_results
+    get :s, :action => :search_results
     get :upload
-    post :upload, :action=>:process_upload
+    post :upload, :action => :process_upload
     get :add_user
     put :remove_user
     post :associate_user
@@ -17,7 +17,7 @@ Sapphire::Application.routes.draw do
     resources :collections do
       get :upload
       post :publish
-      post :upload, :controller => :projects, :action=>:process_upload
+      post :upload, :controller => :projects, :action => :process_upload
       get :export
       get :export_with_files
       get :cv

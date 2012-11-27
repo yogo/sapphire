@@ -1,3 +1,14 @@
+:javascript
+  $(document).ready(function() {
+  var item_table = $('#collection_items_table').dataTable({
+            "bPaginate": true,
+            "bLengthChange": true,
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": false,
+            "bAutoWidth": true
+        });
+  } );
 -@schema_cv_hash={}
 -collection.schema.each do |s|
   -link_hash={}
@@ -7,46 +18,77 @@
       -link_hash = link_hash.merge({i[s.name] => @schema_cv_hash[s.id].items.first("field_#{s.controlled_vocabulary_id.to_s.gsub('-','_')}".to_sym=>i[s.name])})
     -@schema_cv_hash[s.name]=link_hash
     
-%table.table
-  %tr
-    %th.actions &nbsp;
-    - collection.schema.each do |s|
-      %th= s.name
-    %th File
-    %th.actions &nbsp;
+-# Item Modal
+#history-modal.modal.hide.fade.wide
+  .modal-header
+    %button.close(data-dismiss="modal") x
+    %h3 Data History
+    .modal-body
+    .modal-footer
 
-  = form_for("item", @item, :url => project_collection_items_path(@project, collection), :html => {"multipart" => true, "data-ajax"=> false, :class => 'form'}) do |f| 
+-# CV Modal
+#cv-modal.modal.hide.fade
+  .modal-header
+    %button.close(data-dismiss="modal") x
+    %h3 CV Term Metadata
+    .modal-body
+    .modal-footer
+
+-# Assoc Modal
+#assoc-modal.modal.hide.fade
+  .modal-header
+    %button.close(data-dismiss="modal") x
+    %h3 Associated Data
+    .modal-body
+    .modal-footer
+
+-# Assoc Modal
+#edit-assoc-modal.modal.hide.fade
+  .modal-header
+    %button.close(data-dismiss="modal") x
+    %h3 Edit Associated Data
+    .modal-body
+    .modal-footer
+ 
+%table#collection_items_table.table.table-condensed.table-striped
+  %thead
     %tr
-      %td &nbsp;
-      = render :partial => 'items/table_form', :locals => {:f => f, :collection => collection}
-      %td= f.submit("Save")
-
-  - items.each do |i|
-    %tr{:class => cycle('odd','even')}
-      %td
-        = link_to(image_tag("web-app-theme/icons/time_go.png"), '#', :onClick=>"return showDialog('#{project_collection_item_path(params[:project_id],collection,i)}')")
-        = link_to(image_tag("web-app-theme/icons/pencil.png"), edit_project_collection_item_path(params[:project_id],collection,i))
-        = link_to(image_tag("web-app-theme/icons/delete.png"), project_collection_item_path(params[:project_id],collection,i), :method=>:delete, "data-confirm"=>"Are you sure you wish to delete this Item?")
+      %th &nbsp; 
       - collection.schema.each do |s|
-        -if s.controlled_vocabulary_id  
-          -if @schema_cv_hash[s.name][i[s.name]]
+        %th.column= s.name
+      %th File
+  %tbody
+    - items.each do |i|
+      %tr
+        %td
+          %a.icon-time(href='#{project_collection_item_path(params[:project_id],collection,i)}' data-toggle='modal' data-target='#history-modal')
+          %a.icon-edit(href='#{edit_project_collection_item_path(params[:project_id],collection,i)}')
+          = link_to("", project_path(p), :class => 'icon-remove-circle',:method=>:delete, 
+                    "data-confirm"=>"Are you sure you wish to delete this Data Row?")
+        - collection.schema.each do |s|
+          -if s.controlled_vocabulary_id  
+            -if @schema_cv_hash[s.name][i[s.name]]
+              %td
+                %a(href='#{project_collection_item_controlled_vocabulary_term_path(@schema_cv_hash[s.id].project_id,@schema_cv_hash[s.id],@schema_cv_hash[s.name][i[s.name]])}' data-toggle='modal' data-target='#cv-modal')= i[s.name]
+            -else
+              %td{:class =>'cv_error'}= i[s.name]
+          -elsif s.associated_schema     
             %td
-              %a{:href=>"#", :onClick=>"return showDialog('#{project_collection_item_controlled_vocabulary_term_path(@schema_cv_hash[s.id].project_id,@schema_cv_hash[s.id],@schema_cv_hash[s.name][i[s.name]])}')"}
-                = i[s.name]
+              -unless i[s.name].nil?
+                -json_string = JSON.parse(i[s.name])
+                %a.icon-edit(href='#{project_collection_item_association_edit_path(json_string['project']['id'],json_string['collection']['id'],json_string['item']['id'])}' data-toggle='modal' data-target='#edit-assoc-modal')
+                %a(href='#{project_collection_item_controlled_vocabulary_term_path(json_string['project']['id'],json_string['collection']['id'],json_string['item']['id'])}' data-toggle='modal' data-target='#assoc-modal')= json_string['item']['display']
           -else
-            %td{:class =>'cv_error'}= i[s.name]
-        -elsif s.associated_schema     
-          %td
-            -unless i[s.name].nil?
-              %a{:href=>"#", :onClick=>"return showDialog('#{project_collection_item_controlled_vocabulary_term_path(s.associated_schema.data_collection.project_id,s.associated_schema.data_collection.id,i[s.name])}')"}
-                =s.associated_schema.data_collection.items.get(i[s.name])[s.associated_schema.name]
-              %a{:href=>"#", :onClick=>"return showDialog('#{project_collection_item_association_edit_path(s.associated_schema.data_collection.project_id,s.associated_schema.data_collection.id,i[s.name])}')"}
-                =image_tag("web-app-theme/icons/table_edit.png")
-        -else
-          %td= i[s.name]
-      %td
-        %a{:href => i.file.to_s}= i.original_filename
-      %td
+            %td
+              - if i[s.name].to_s.length > 42
+                = i[s.name][0..42]
+                %a.btn-info.btn-mini(href='#' data-placement='right' data-content="#{i[s.name].gsub('"', '\"')}" rel='popover' data-original-title='#{s.name}')
+                  = '...'
+              - else
+                = i[s.name]
+        %td
+          %a{:href => i.file.to_s}= i.original_filename
+        
         
 :javascript
   function showDialog(url){
@@ -56,7 +98,8 @@
   }
 
   $(document).ready(function() {
-     $("#CV_info").dialog({
+    $('[rel=popover]').popover();
+    $("#CV_info").dialog({
              autoOpen: false,
              modal: true,
              height: 500,

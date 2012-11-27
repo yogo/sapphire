@@ -1,10 +1,9 @@
-.group= f.text_field(:name, :label => "Name")
-
-.group= f.text_area(:description, :label => "Description")
-
-.group= f.select(:category, collection_category_options, :label => "Category")
-
-.group= f.select(:controlled_vocabulary_id, controlled_vocabulary_opts, :label => "Restrict Column Names To This Controlled Vocabulary", :include_blank => true)
-.group 
-  Collection is Private:
-  =f.check_box(:private, :label=>"Private Project")
+%label Name
+= f.text_field(:name, :placeholder => 'Collection Name')
+%label Description
+= f.text_area(:description, :rows => 5, :placeholder => 'Collection Description')
+%label Category
+= f.select(:category, collection_category_options)
+%label.checkbox
+  =f.check_box(:private) 
+  Collection is Private

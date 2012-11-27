@@ -1,0 +1,62 @@
+.navbar
+  .navbar-inner
+    %ul.nav
+      - if current_user
+        %li.dropdown
+          %a.dropdown-toggle(href='#' data-toggle='dropdown') 
+            Projects
+            %b.caret
+          %ul.dropdown-menu(role='menu')
+            %li= link_to('All Projects', projects_path)
+            %li= link_to('New Project', '#new_project_form', 'data-toggle' => 'modal')
+      - if @project
+        %li.divider-vertical
+
+      - if @project
+        %li.dropdown
+          %a.dropdown-toggle(href='#' data-toggle='dropdown') 
+            = @project.name
+            %b.caret
+          %ul.dropdown-menu(role='menu')
+            %li= link_to @project.name, project_path(@project)
+            %li.dropdown-submenu 
+              %a(href='#' data-toggle='dropdown' tablindex='-1') Data Collections
+              %ul.dropdown-menu
+                - @project.collections.each do |coll|
+                  - next if coll.new?
+                  %li= link_to coll.name, project_collection_path(@project, coll)
+            %li.divider
+            -if @project && current_user.member_of?(@project)
+              %li= link_to('Project Settings',    '#project_edit_form',   'data-toggle' => 'modal')
+              %li= link_to('Project Members',     '#project_users',       'data-toggle' => 'modal')
+              %li= link_to('New Collection',      '#new_collection_form', 'data-toggle' => 'modal')
+              %li= link_to('Upload Project Data', '#upload_form',         'data-toggle' => 'modal')
+              -#%li
+              -#  -if @project && @project.private?
+              -#    = link_to('Publish Project',   project_publish_path(@project), :method => 'post')
+              -#  -else
+              -#    = link_to('Unpublish Project', project_publish_path(@project), :method => 'post')
+      - if @collection
+        %li.divider-vertical 
+
+        - if @collection
+          %li.dropdown
+            %a.dropdown-toggle(href='#' data-toggle='dropdown') 
+              = @collection.name
+              %b.caret
+            %ul.dropdown-menu(role='menu')
+              %li= link_to @collection.name, project_collection_path(@project, @collection)
+              %li.divider
+              -if @project && current_user.member_of?(@project)
+                %li= link_to('Collection Settings',    '#collection_edit_form',   'data-toggle' => 'modal')
+                %li= link_to('Add Column',             '#collection_schema_form', 'data-toggle' => 'modal')
+                %li= link_to('Upload Collection Data', '#upload_form',            'data-toggle' => 'modal')
+                %li= link_to('Filter',                 '#edit-filters',           'data-toggle' => 'modal')
+                - if @filters && !@filters.empty?
+                  %li=link_to('Clear Filter', project_collection_path(@project, @collection))
+                -if @collection && @collection.saved?
+                  %li= link_to('Download Metadata', 
+                          project_collection_export_path( @project, @collection, :filters => params[:filters]))
+                  %li= link_to('Download All Data', 
+                          project_collection_export_with_files_path( @project, @collection, :filters => params[:filters]))
+

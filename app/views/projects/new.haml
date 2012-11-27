@@ -1,15 +1,7 @@
-%h1 Create Project
-
-.block
-  .secondary-navigation.button-navigation
-    .wat-cf
-      = nav_button("Back to Projects", "web-app-theme/icons/arrow_undo.png", projects_path)
-  
-  .content
-    .inner
-      = form_for(@project, :url => projects_path, :html => {:class => 'form'}) do |f|
-        = render :partial => 'form', :locals => {:f => f}
-        .group.navform.wat-cf
-          = f.submit("Save", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"), :cancel_link => link_to("Cancel", projects_path, :class => "text_button_padding link_button"))
-          
-          
+.row
+  .container
+    = form_for(@project, :url => projects_path, :html => {:class => 'form-box'}) do |f|
+      %legend Create Project
+      = render :partial => 'form', :locals => {:f => f}
+      %button.btn.btn-primary{:type => 'submit'} Save
+      = link_to("Cancel", projects_path, :class => 'btn btn-mini')

@@ -22,4 +22,14 @@ module ApplicationHelper
     end
     nav
   end
+
+  def alert_type(t)
+    case t
+    when :notice, :info                   then 'alert-info'
+    when :error, :warning, :fail, :alert  then 'alert-error'
+    when :success                         then 'alert-success'
+    else ''
+    end
+  end
+
 end

@@ -1,6 +1,8 @@
 class ItemsController < ApplicationController
 
   before_filter :get_dependencies, :except => :controlled_vocabulary_term
+  after_filter :update_project_stats, :only => [:create, :delete]
+  #after_filter :update_associated_fields, :only =>[:update]
   layout :choose_layout
   
 
@@ -36,9 +38,18 @@ class ItemsController < ApplicationController
      end
   end
   
+  # TODO: move the nullification of the fields into a before :save
   def update
     @item = @collection.items.get(params[:id])
+    params[:item].each {|k, v| params[:item][k] = v.blank? ? nil : v }
+    # @collection.schema.each do |field|
+    #   if params[:item][field.to_s].blank?
+    #     @item[field.name]=nil
+    #     params[:item][field.to_s].delete
+    #   end
+    # end
     if @item.update(params[:item])
+      update_associated_fields(@item, @collection, @project)
       respond_to do |format|
         format.html do
           flash[:notice] = "Item Updated Successfully!"
@@ -50,7 +61,7 @@ class ItemsController < ApplicationController
     else
       respond_to do |format|
         format.html do
-          flash[:error] = "Item failed to save!"
+          flash[:error] = ["Item failed to save!", @item.errors.full_messages].flatten.join(' ')
           render :edit
         end
         format.json { render json: @item.to_json, status: :error}
@@ -115,12 +126,11 @@ class ItemsController < ApplicationController
   
   private
   def choose_layout
-    if action_name == 'controlled_vocabulary_term' || 
-       action_name == 'show' || 
-       action_name == 'association_edit'
-      return 'controlled_vocabulary'
+    case action_name
+    when 'controlled_vocabulary_term', 'show', 'association_edit'
+      'blank'
     else
-      return 'application'
+      'application'
     end
   end
   
@@ -133,5 +143,22 @@ class ItemsController < ApplicationController
       redirect_to projects_path()
       return
     end 
+  end
+  
+  def update_project_stats
+    @project.update_stats
+  end
+  
+  def update_associated_fields(item, collection, project)
+    collection.schema.all.each do |schema|
+      associated_columns = Yogo::Project.all.data_collections.schemas.all(:associated_schema_id=>schema.id)
+      associated_columns.each do |col|
+        field_name = "field_"+col.id.to_s.gsub("-","_")
+        col.data_collection.items.all(field_name.to_sym.like => '%{"project":{"id": "'+project.id+'"}, "collection":{"id": "'+collection.id+'"},"item":{"id": "'+item.id.to_s+'",%').each do |i|
+          i[col.name] = '{"project":{"id": "'+project.id+'"}, "collection":{"id": "'+collection.id+'"},"item":{"id": "'+item.id.to_s+'", "display": "'+item[schema.name]+'"}}'
+          i.save
+        end
+      end
+    end
   end
 end

@@ -21,12 +21,13 @@ end
 
 gem 'devise'
 gem 'dm-devise'
-
 gem 'jquery-rails'
 gem 'dm-rails'
 gem 'haml'
+gem 'sass'
+gem 'tilt'
 gem 'rubyzip'
-#gem 'newrelic_rpm' #new relic monitoring
+
 group :development do
   # Deploy with Capistrano
   #gem 'capistrano'
@@ -35,7 +36,6 @@ group :development do
   gem 'ruby-debug19', :require => 'ruby-debug'
 
   #required for theme file generation
-  gem 'web-app-theme'
   gem 'hpricot'
   gem 'ruby_parser'
 end

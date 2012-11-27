@@ -1,0 +1,34 @@
+.quick-add
+  %strong Quick Add
+  = form_for("item", @item, :url => project_collection_items_path(@project, collection), :html => {"multipart" => true, "data-ajax"=> false, :class => 'form-inline', :id => 'createItemForm'}) do |f| 
+    - collection.schema.each do |field|
+      -if field.controlled_vocabulary
+        = f.select(field.to_s, field_value_options(field.controlled_vocabulary), 
+                  {:include_blank => field.name}, {:class => 'input-medium'})
+      -elsif field.associated_schema
+        = f.select(field.to_s, associated_field_value_options(field.associated_schema), 
+                  {:include_blank => field.name}, {:class => 'input-medium'})
+      -elsif field.type.to_s == "Yogo::Collection::Property::Date"
+        = f.text_field(field.to_s, :id=> field.to_s, :placeholder => field.name, :class => 'input-medium') 
+        :javascript
+          $("##{field.to_s}").datepicker({dateFormat:'yy-mm-dd'});
+      -elsif field.type.to_s == "Yogo::Collection::Property::DateTime"
+        = f.text_field(field.to_s, :id=> field.to_s, :placeholder => field.name, :class => 'input-medium') 
+        :javascript
+          $("##{field.to_s}").datetimepicker({dateFormat:'yy-mm-dd'});
+      -elsif field.type.to_s == "Yogo::Collection::Property::Text"
+        = f.text_field(field.to_s, :id=> field.to_s, :placeholder => field.name, :class => 'input-large', :rows => 4) 
+      -elsif field.type.to_s == "Yogo::Collection::Property::Boolean"
+        %label 
+          = f.check_box(field.to_s, :id=> field.to_s, :class => 'input-medium') 
+          = field.name
+      -else
+        = f.text_field(field.to_s, :placeholder => field.name, :class => 'input-medium') 
+    = f.file_field(:file, :class => 'input-medium')
+    %button.btn-small.btn-primary Save
+
+  :javascript
+    function formfocus() {
+      $('#item_#{collection.schema.first.to_s}')[0].focus(); 
+    }
+    window.onload = formfocus;

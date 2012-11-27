@@ -1,52 +1,16 @@
-%h1 Projects
+= render :partial => 'new_project_modal', :locals => {:project => Yogo::Project.new}
 
-.block
-  .secondary-navigation.button-navigation
-    .wat-cf
-      = nav_button("Create a Project", "web-app-theme/icons/database_add.png", new_project_path)
+.row
+  .tabbable
+    %ul.nav.nav-tabs
+      %li.active= link_to("My Projects (#{@projects.count})", "#myproj-tab", 'data-toggle' => 'tab')
+      %li= link_to("Public Projects (#{@public_projects.count})", "#pubproj-tab", 'data-toggle' => 'tab')
+    .tab-content
+      #myproj-tab.tab-pane.active
+        = render(:partial => 'projects/list', :locals => {:projects => @projects})
+      #pubproj-tab.tab-pane
+        = render(:partial => 'projects/list', :locals => {:projects => @public_projects})
 
-  .content
-    .inner
-      %h3 
-        - if params[:public]
-          Public Projects
-        - else
-          My Projects
-      %ul.list.project-list
-        - @projects.each do |p|
-          %li
-            .counts
-              .collection_count Data Collections: #{p.data_collections.count}
-              .data_items_count Data Items: #{p.data_collections.map{|c| c.items.count }.reduce(:+)}
-            .left= image_tag("Yogo-tiny-trans.png")
-            %dl
-              %dt
-                %h4.item 
-                  %a{:href => project_path(p)}= p.name
-              %dd
-                #{p.description.blank? ? "No Description." : p.description}
-              - unless params[:public] 
-                %dd
-                  =link_to("delete", project_path(p), :method=>:delete, "data-confirm"=>"Are you sure you wish to delete this Project?")
 
-              
--if @collections && !@collections.empty?
-  .block
-    .content
-      .inner
-        %h3 Public Collections
-        %ul.list.collection-list
-          - @collections.each do |c|
-            %li
-              .counts
-                .data_items_count Data Items: #{c.items.count}
-              .left.big-img= image_tag("web-app-theme/icons/table.png")
-              %dl
-                %dt
-                  %h4.item 
-                    %a{:href => project_collection_path(c.project,c)}= c.name
-                %dd
-                  Schema: #{c.schema.map(&:name)}
-                  %br
-                  #{c.description.blank? ? "No Description." : c.description}
-                
+
+

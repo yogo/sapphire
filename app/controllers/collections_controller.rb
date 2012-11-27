@@ -46,7 +46,7 @@ class CollectionsController < ApplicationController
   def update
     @collection = @project.data_collections.get(params[:id])
     if params[:collection][:controlled_vocabulary_id].blank?
-      params[:collection][:controlled_vocabulary_id]=nil
+      params[:collection][:controlled_vocabulary_id] = nil
     end
     if @collection.update(params[:collection])
       flash[:notice] = "Collection updated!"
@@ -66,20 +66,19 @@ class CollectionsController < ApplicationController
   end
   
   def create
-    @collection = @project.data_collections.new()
-    if params[:collection][:controlled_vocabulary_id].blank?
-      params[:collection][:controlled_vocabulary_id]=nil
-    end
-    @collection = @project.data_collections.new(params[:collection])
-    @collection.project = @project
+    @collection = @project.data_collections.new(params[:yogo_collection_data])
     @collection.type = Yogo::Collection::Asset
     if @collection.save
       flash[:notice] = "Collection created!"
-      redirect_to project_path(@project)
+      if @collection.category == "Controlled Vocabulary"
+        #create term and description columns
+        @collection.schema.create(:name=>"Term", :type=>Yogo::Collection::Property::Text, :position=>0)
+        @collection.schema.create(:name=>"Description", :type=>Yogo::Collection::Property::Text, :position=>1)
+      end  
     else
-      flash[:error] = "Collection failed to save!"
-      render :controller=>"projects", :action=>"index"
+      flash[:error] = "Collection failed to save! " + @collection.errors.full_messages.join(', ')
     end
+    redirect_to project_path(@project)
   end
   
   def destroy
@@ -218,4 +217,5 @@ class CollectionsController < ApplicationController
       end
     end
   end
+
 end

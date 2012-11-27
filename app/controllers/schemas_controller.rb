@@ -24,12 +24,12 @@ class SchemasController < ApplicationController
       elsif !@schema.associated_schema_id.nil?  && @schema.associated_schema_id !=params[:schema][:associated_schema_id]  
         if Yogo::Collection::Property.get(params[:schema][:associated_schema_id]).data_collection_id == @schema.associated_schema.data_collection_id
           #do nothing because the existing UIDs will still work we have just changed the display column
-          flash[:notice] = "Schema was Updated with different column from existing Association."
+          flash[:notice] = "Column was Updated with different column from existing Association."
         else
           @schema.deleted_at = Time.now
           @schema.save
           @schema = @collection.schema.create(params[:schema])
-          flash[:notice] = "Schema was Updated with new Association."
+          flash[:notice] = "Column was Updated with new Association."
           redirect_to project_collection_path(@project,@collection)
           return
         end
@@ -37,6 +37,7 @@ class SchemasController < ApplicationController
       @schema = @collection.schema.get(params[:id])
       if @schema.update(params[:schema])
         # success
+        @schema.update_position
         redirect_to project_collection_path(@project,@collection)
       else
         # fail
@@ -53,10 +54,10 @@ class SchemasController < ApplicationController
        att.delete(:original_uid)
        att.delete(:id)
        if @schema.update(att)
-         flash[:notice] = "Schema Restored Successfully!"
+         flash[:notice] = "Column Restored Successfully!"
          redirect_to edit_project_collection_schema_path(@project, @collection, @schema)
        else
-         flash[:error] = "Schema failed to restore!"
+         flash[:error] = "Column failed to restore!"
          render :edit
        end
     end
@@ -69,10 +70,10 @@ class SchemasController < ApplicationController
       @schema = @collection.schema.get(params[:id])
       @schema.deleted_at = Time.now
       if @schema.save
-       flash[:notice] = "Schema was Deleted."
+       flash[:notice] = "Column was Deleted."
         redirect_to project_collection_path(@project,@collection)
       else
-        flash[:error] = "Schema failed to Delete"
+        flash[:error] = "Column failed to Delete"
         redirect_to project_collection_path(@project,@collection)
       end
     end
@@ -84,8 +85,14 @@ class SchemasController < ApplicationController
       if params[:schema][:associated_schema_id].blank?
         params[:schema].delete(:associated_schema_id)
       end
+      
       @schema = @collection.schema.new(params[:schema])
+      @schema.position = @collection.schema.count if @schema.position.blank?
+      if @schema.associated_schema_id  
+        @schema.type = Yogo::Collection::Property::Text #because JSON need to go here and it could get big
+      end
       if @schema.save
+        @schema.update_position
         if @schema.type == Yogo::Collection::Property::String || @schema.type == Yogo::Collection::Property::Text
           #lets have the table create
           @collection.items.new
@@ -96,13 +103,11 @@ class SchemasController < ApplicationController
           sql = "CREATE TRIGGER field_#{@schema.id.to_s.gsub('-','_')} BEFORE INSERT OR UPDATE ON #{'"'+@collection.id.to_s.gsub('-','_')+'s"'} FOR EACH ROW EXECUTE PROCEDURE tsvector_update_trigger(field_#{@schema.id.to_s.gsub('-','_')}_search_index, 'pg_catalog.english', field_#{@schema.id.to_s.gsub('-','_')});"
           repository.adapter.execute(sql)
         end
-        #redirect_to project_collection_path(@project,@collection)
-        flash[:notice] = "Schema saved successfully!"
-        redirect_to :back
+        flash[:notice] = "Column saved successfully!"
       else
-        flash[:error] = "Schema failed to save!"
+        flash[:error] = "Column failed to save! (#{@schema.errors.full_messages.join(', ')})"
       end
-
+      redirect_to project_collection_path(@project,@collection)
     end
     
     private

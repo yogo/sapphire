@@ -1,7 +1,28 @@
-- collection.schema.each do |field|
-  -if field.controlled_vocabulary
-    .group= f.select(field.to_s, field_value_options(field.controlled_vocabulary), :label => field.name, :include_blank => true,:value=> filters[field.to_s])
-  -elsif field.associated_schema
-    .group= f.select(field.to_s, associated_field_value_options(field.associated_schema), :label => field.name, :include_blank => true)
-  -else
-    .group= f.text_field(field.to_s, :label => field.name, :value=> filters[field.to_s]) 
+#edit-filters.modal.hide.fade
+  .modal-header
+    %button.close(data-dismiss="modal") x
+    %h3 Filter Data
+  = form_for("filters", filter_item, :url => project_collection_path(project, collection),  
+            :html => {:class => 'modal-form',:method=>:get}) do |f|  
+    - collection.schema.each do |field|
+      %label=field.name
+      -if field.controlled_vocabulary
+        = f.select(field.to_s, field_value_options(field.controlled_vocabulary),  :include_blank => true,:selected=> params[:filters].nil? ? "" : params[:filters][field.to_s].nil? ? "": params[:filters][field.to_s])
+      -elsif field.associated_schema
+        = f.select(field.to_s, associated_field_value_options(field.associated_schema),  :include_blank => true,:selected=> params[:filters].nil? ? "" :params[:filters][field.to_s].nil? ? "": params[:filters][field.to_s])
+      -else
+        = f.text_field(field.to_s, :value=> params[:filters].nil? ? "" :params[:filters][field.to_s].nil? ? "": params[:filters].nil? ? "" : params[:filters][field.to_s]) 
+    %p
+      And
+      =radio_button_tag("options", "AND")
+      OR
+      =radio_button_tag("options", "OR")
+      -unless params["options"].nil?
+        :javascript
+          $('#options_#{params[:options]}').attr("checked", true)
+      -else
+        :javascript
+          $('#options_AND').attr("checked", true)
+    .modal-footer
+      %button.btn.btn-primary Filter
+      %a.btn.btn-mini(data-dismiss="modal") Close
