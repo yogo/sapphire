@@ -1,18 +1,10 @@
-%h1 #{@project.name} > #{@collection.name} > Edit #{@schema.name}
+%h1 Edit #{@schema.name}
 
-.block
-  .secondary-navigation.button-navigation
-    .wat-cf
-      = nav_button("Back to Collection", "web-app-theme/icons/arrow_undo.png", project_collection_path(@project, @collection))
-  .content
-    .inner
-      = form_for("schema", @schema, :url => project_collection_schema_path(@project, @collection, @schema), :html => {:class => 'form', :method=>"put"}) do |f|
-        = render :partial => 'form', :locals => {:f => f, :collection=>@collection, :edit=>true}
-        .group.navform.wat-cf
-          = f.submit("Save", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"), :cancel_link => link_to("Cancel", project_collection_path(@project, @collection), :class => "text_button_padding link_button"))
-          
-.block
-  .content
-    .innner
-      %h3 History
-      =render :partial=> "version_table", :locals =>{:versions=>@versions, :schema=>@schema, :project=>@project, :collection=>@collection}
+= form_for("schema", @schema, :url => project_collection_schema_path(@project, @collection, @schema), :html => {:class => 'form', :method=>"put"}) do |f|
+= render :partial => 'form', :locals => {:f => f, :collection=>@collection, :edit=>true}
+.group.navform.wat-cf
+%button.btn.btn-primary Save Changes
+%a.btn.btn-mini(href = "#{project_collection_path(@project, @collection)}"data-dismiss="modal") Cancel
+
+%h3 History
+=render :partial=> "version_table", :locals =>{:versions=>@versions, :schema=>@schema, :project=>@project, :collection=>@collection}

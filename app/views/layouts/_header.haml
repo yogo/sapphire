@@ -1,76 +1,81 @@
-#header
-  .navbar.navbar-inverse.navbar-fixed-top
-    .navbar-inner
-      .container
-        = link_to(image_tag('Yogo-50x40px-wh.png') + ' Sapphire', root_path, :class => 'brand')
-        .nav-collapse.collapse
-          %ul.nav
-            -if current_user
-              %li.dropdown
-                %a.dropdown-toggle(href='#' data-toggle='dropdown')
-                  Project                  
-                  %b.caret
-                  %ul.dropdown-menu
-                    %li= link_to('All Projects', projects_path)
-                    %li= link_to('New Project', '#new_project_form', 'data-toggle' => 'modal')
-                    -if @project && current_user.member_of?(@project)
-                      %li= link_to('Project Settings',  '#project_edit_form', 'data-toggle' => 'modal')
-                      %li= link_to('Project Members',   '#project_users',     'data-toggle' => 'modal')
-                      %li
-                        -if @project && @project.private?
-                          = link_to('Publish Project',   project_publish_path(@project), :method => 'post')
-                        -else
-                          = link_to('Unpublish Project', project_publish_path(@project), :method => 'post')
-                    -else
-                      %li.disabled= link_to('Project Settings', '#')
-                      %li.disabled= link_to('Project Members',  '#')
-                      %li.disabled= link_to('Publish Project',  '#')
-              %li.dropdown
-                %a.dropdown-toggle(href='#' data-toggle='dropdown') 
-                  Collection                  
-                  %b.caret
+#header.navbar.navbar-fixed-top
+  .navbar-inner
+    .container
+      = link_to(image_tag('Yogo-50x40px-wh.png') + ' Sapphire', root_path, :class => 'brand')
+      %ul.nav
+        - if current_user
+          %li.dropdown
+            %a.dropdown-toggle(href='#' data-toggle='dropdown') 
+              System
+              %b.caret
+            %ul.dropdown-menu(role='menu')
+              %li.dropdown-submenu
+                %a(href="#" data-toggle='dropdown') Projects
                 %ul.dropdown-menu
-                  -if current_user.member_of?(@project)
-                    %li= link_to('New Collection', '#new_collection_form', 'data-toggle' => 'modal')
-                    -if @collection && @collection.saved?
-                      %li= link_to('Collection Settings',  '#collection_edit_form', 'data-toggle' => 'modal')
-                      %li= link_to('Add Column',  '#collection_schema_form', 'data-toggle' => 'modal')
-                      %li
-                        -if @collection && @collection.private?
-                          = link_to('Publish Collection',  
-                            project_collection_publish_path(@project, @collection), :method => 'post')
-                        -elsif @collection
-                          = link_to('Unpublish Collection', 
-                            project_collection_publish_path(@project, @collection), :method => 'post')
-                    -else
-                      %li.disabled= link_to('Collection Settings', '#')
-                      %li.disabled= link_to('Add Column',  '#')
-                      %li.disabled= link_to('Publish Collection',  '#')          
-                  -else
-                    %li.disabled= link_to('New Collection', '#')
-                    %li.disabled= link_to('Collection Settings', '#')
-                    %li.disabled= link_to('Add Column',  '#')
-                    %li.disabled= link_to('Publish Collection',  '#')
-              %li.dropdown
-                %a.dropdown-toggle(href='#' data-toggle='dropdown')
-                  Data
-                  %b.caret
+                  %li= link_to 'All Projects', root_path
+                  %li.divider
+                  - current_user.memberships.projects.each do |p|
+                    - next if p.new?
+                    %li= link_to p.name, project_path(p)
+              %li= link_to('New Project', '#new_project_form', 'data-toggle' => 'modal')
+        - if @project
+          %li.divider-vertical
+
+        - if @project
+          %li.dropdown
+            %a.dropdown-toggle(href='#' data-toggle='dropdown') 
+              = @project.name
+              %b.caret
+            %ul.dropdown-menu(role='menu')
+              %li= link_to @project.name, project_path(@project)
+              %li.dropdown-submenu 
+                %a(href='#' data-toggle='dropdown') Data Collections
                 %ul.dropdown-menu
-                  -if @project && current_user.member_of?(@project)
-                    %li= link_to('Upload Data', '#upload_form', 'data-toggle' => 'modal')
-                  -else
-                    %li.disabled= link_to('Upload Data',  '#')
+                  %li= link_to 'All Data Collections', project_path(@project)
+                  %li.divider
+                  - @project.collections.each do |c|
+                    - next if c.new?
+                    %li= link_to c.name, project_collection_path(@project, c)
+              %li.divider
+              -if @project && current_user.member_of?(@project)
+                %li= link_to('Project Settings',    '#project_edit_form',   'data-toggle' => 'modal')
+                %li= link_to('Project Members',     '#project_users',       'data-toggle' => 'modal')
+                %li= link_to('New Collection',      '#new_collection_form', 'data-toggle' => 'modal')
+                %li= link_to('Upload Project Data', '#upload_form',         'data-toggle' => 'modal')
+                -#%li
+                -#  -if @project && @project.private?
+                -#    = link_to('Publish Project',   project_publish_path(@project), :method => 'post')
+                -#  -else
+                -#    = link_to('Unpublish Project', project_publish_path(@project), :method => 'post')
+        - if @collection
+          %li.divider-vertical 
+
+          - if @collection
+            %li.dropdown
+              %a.dropdown-toggle(href='#' data-toggle='dropdown') 
+                = @collection.name
+                %b.caret
+              %ul.dropdown-menu(role='menu')
+                %li= link_to @collection.name, project_collection_path(@project, @collection)
+                %li.divider
+                -if @project && current_user.member_of?(@project)
+                  %li= link_to('Collection Settings',    '#collection_edit_form',   'data-toggle' => 'modal')
+                  %li= link_to('Add Column',             '#collection_schema_form', 'data-toggle' => 'modal')
+                  %li= link_to('Upload Collection Data', '#upload_form',            'data-toggle' => 'modal')
+                  %li= link_to('Filter',                 '#edit-filters',           'data-toggle' => 'modal')
+                  - if @filters && !@filters.empty?
+                    %li=link_to('Clear Filter', project_collection_path(@project, @collection))
                   -if @collection && @collection.saved?
                     %li= link_to('Download Metadata', 
-                                  project_collection_export_path( @project, @collection, :filters => params[:filters]))
+                            project_collection_export_path( @project, @collection, :filters => params[:filters]))
                     %li= link_to('Download All Data', 
-                                  project_collection_export_with_files_path( @project, @collection, :filters => params[:filters]))
-                  -else
-                    %li.disabled= link_to('Download Metadata',  '#')
-                    %li.disabled= link_to('Download All Data',  '#')
-          %ul.nav.pull-right
-            - if @project && !@project.new?
-              %li= link_to 'Search', project_search_path(@project)
-            - if current_user
-              %li= link_to 'Profile', edit_user_registration_path
-              %li= link_to("Logout (#{current_user.first_name})", destroy_user_session_path, :method=> :delete)
+                            project_collection_export_with_files_path( @project, @collection, :filters => params[:filters]))
+      %ul.nav.pull-right
+        - if @project && !@project.new?
+          %li= link_to 'Search', project_search_path(@project)
+        - if current_user
+          %li= link_to 'Profile', edit_user_registration_path
+          %li= link_to("Logout (#{current_user.first_name})", destroy_user_session_path, :method=> :delete)
+
+
+
