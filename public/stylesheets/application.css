@@ -94,10 +94,21 @@ div.collection_table  {
 
 .collection_table table thead tr th.column{
   min-width: 90px;
+}
 
 .modal.wide{
   width: 960px;
   margin-left: -480px;
+}
+
+.grid-header-button {
+  font-size: 12px;
+  line-height: 12px;
+  height: 12px;
+}
+
+th.action-column{
+  width: 100px;
 }
 
 /*#content{
