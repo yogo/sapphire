@@ -24,25 +24,23 @@ class SchemasController < ApplicationController
       elsif !@schema.associated_schema_id.nil?  && @schema.associated_schema_id !=params[:schema][:associated_schema_id]  
         if Yogo::Collection::Property.get(params[:schema][:associated_schema_id]).data_collection_id == @schema.associated_schema.data_collection_id
           #do nothing because the existing UIDs will still work we have just changed the display column
-          flash[:notice] = "Column was Updated with different column from existing Association."
+          flash[:notice] = "Column was Updated with different display column from existing Association."
         else
           @schema.deleted_at = Time.now
           @schema.save
           @schema = @collection.schema.create(params[:schema])
           flash[:notice] = "Column was Updated with new Association."
-          redirect_to project_collection_path(@project,@collection)
-          return
         end
       end
       @schema = @collection.schema.get(params[:id])
       if @schema.update(params[:schema])
-        # success
+        flash[:notice] = "Column updated!"
         @schema.update_position
-        redirect_to project_collection_path(@project,@collection)
       else
-        # fail
-        render :edit
+        flash[:error] = "Column failed to update! Errors: " + @schema.errors.full_messages.join(', ')
       end
+
+      redirect_to :back
     end
     
     #expects the delete_at datetime in params[:deleted_at]
@@ -57,7 +55,7 @@ class SchemasController < ApplicationController
          flash[:notice] = "Column Restored Successfully!"
          redirect_to edit_project_collection_schema_path(@project, @collection, @schema)
        else
-         flash[:error] = "Column failed to restore!"
+         flash[:error] = "Column failed to restore! Errors: " + @schema.errors.full_messages.join(', ')
          render :edit
        end
     end
@@ -71,11 +69,10 @@ class SchemasController < ApplicationController
       @schema.deleted_at = Time.now
       if @schema.save
        flash[:notice] = "Column was Deleted."
-        redirect_to project_collection_path(@project,@collection)
       else
-        flash[:error] = "Column failed to Delete"
-        redirect_to project_collection_path(@project,@collection)
+        flash[:error] = "Column failed to Delete Errors: " + @schema.errors.full_messages.join(', ')
       end
+      redirect_to :back
     end
     
     def create
@@ -105,7 +102,7 @@ class SchemasController < ApplicationController
         end
         flash[:notice] = "Column saved successfully!"
       else
-        flash[:error] = "Column failed to save! (#{@schema.errors.full_messages.join(', ')})"
+        flash[:error] = "Column failed to save! Errors: " + @schema.errors.full_messages.join(', ')
       end
       redirect_to project_collection_path(@project,@collection)
     end

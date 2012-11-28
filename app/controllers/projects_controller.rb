@@ -20,11 +20,11 @@ class ProjectsController < ApplicationController
       @project = Yogo::Project.get(params[:id])
       if @project.update(params[:yogo_project])
         flash[:notice] = "Project updated!"
-        redirect_to project_path(@project)
       else
-        flash[:error] = "Project failed to save!"
-        render :new
+        flash[:error] = "Project failed to save! Errors: " + @project.errors.full_messages.join(', ')
+
       end
+      redirect_to :back
     end
     
     def new
@@ -35,11 +35,11 @@ class ProjectsController < ApplicationController
       @project = Yogo::Project.new(params[:yogo_project])
       if @project.save
         current_user.memberships.create(:project_id => @project.id)
-        redirect_to project_path(@project)
+        flash[:notice] = 'New Project created!'
       else
-        flash[:error] = "Project failed to save!"
-        render :new
+        flash[:error] = "Project failed to save! Errors: " + @project.errors.full_messages.join(', ')
       end
+      redirect_to :back
     end
     
     def destroy
@@ -124,8 +124,6 @@ class ProjectsController < ApplicationController
       redirect_to project_collection_path(@project.id, @data_collection.id)
     end
     
-    
-    
     def search
       @project = Yogo::Project.get(params[:project_id])
     end
@@ -160,11 +158,10 @@ class ProjectsController < ApplicationController
       @user = User.get(params[:user_id].to_i)
       if @user.memberships.first(:project_id=> @project.id).destroy
         flash[:notice] = "#{@user.first_name} #{@user.last_name} has been removed from this project."
-        redirect_to project_path(@project)
       else
-        flash[:error] = "Failed to add user!"
-        render :add_user
+        flash[:error] = "Failed to add user! Errors: " + @user.errors.full_messages.join(', ')
       end
+      redirect_to :back
     end
     
     def associate_user
@@ -172,11 +169,10 @@ class ProjectsController < ApplicationController
       @user = User.get(params[:add_user][:user_id].to_i) if params[:add_user]
       if @user && @user.memberships.first_or_create(:project_id=> @project.id)
         flash[:notice] = "#{@user.first_name} #{@user.last_name} has been add to this project."
-        redirect_to project_path(@project)
       else
-        flash[:error] = "Failed to add user!"
-        render :add_user
+        flash[:error] = "Failed to add user! Errors: " + @user.errors.full_messages.join(', ')
       end
+      redirect_to :back
     end
     
     private

@@ -19,20 +19,7 @@ class CollectionsController < ApplicationController
           @items = @items + @collection.items(:order => :created_at.desc).all(k => v)
         end
       end
-      #@item = @items.all(:unique=>true)
     end
-    
-    # @schema_cv_hash={}
-    # @collection.schema.each do |s|
-    #   link_hash={}
-    #   if s.controlled_vocabulary_id
-    #     @schema_cv_hash[s.id] = Yogo::Collection::Property.get(s.controlled_vocabulary_id).data_collection
-    #     s.data_collection.items.each do |i|
-    #       link_hash = link_hash.merge({i[s.name] => @schema_cv_hash[s.id].items.first("field_#{s.controlled_vocabulary_id.to_s.gsub('-','_')}".to_sym=>i[s.name])})
-    #     end
-    #     @schema_cv_hash[s.name]=link_hash
-    #   end
-    # end
   end
 
   def edit
@@ -45,20 +32,12 @@ class CollectionsController < ApplicationController
   
   def update
     @collection = @project.data_collections.get(params[:id])
-    if params[:collection][:controlled_vocabulary_id].blank?
-      params[:collection][:controlled_vocabulary_id] = nil
-    end
-    if @collection.update(params[:collection])
+    if @collection.update(params[:yogo_collection_asset])
       flash[:notice] = "Collection updated!"
-      if params[:redirect_path]
-        redirect_to params[:redirect_path]
-      else
-        redirect_to project_collection_path(@project,@collection)
-      end
     else
-      flash[:error] = "Collection failed to update!"
-      render edit
+      flash[:error] = "Collection failed to update! Errors: " + @collection.errors.full_messages.join(', ')
     end
+    redirect_to project_collection_path(@project, @collection)
   end
   
   def new
@@ -69,16 +48,16 @@ class CollectionsController < ApplicationController
     @collection = @project.data_collections.new(params[:yogo_collection_data])
     @collection.type = Yogo::Collection::Asset
     if @collection.save
-      flash[:notice] = "Collection created!"
+      flash[:notice] = "Collection \"#{@collection.name}\" created!"
       if @collection.category == "Controlled Vocabulary"
         #create term and description columns
         @collection.schema.create(:name=>"Term", :type=>Yogo::Collection::Property::Text, :position=>0)
         @collection.schema.create(:name=>"Description", :type=>Yogo::Collection::Property::Text, :position=>1)
       end  
     else
-      flash[:error] = "Collection failed to save! " + @collection.errors.full_messages.join(', ')
+      flash[:error] = "Collection failed to save! Errors: " + @collection.errors.full_messages.join(', ')
     end
-    redirect_to project_path(@project)
+    redirect_to project_collection_path(@project, @collection)
   end
   
   def destroy
@@ -88,7 +67,7 @@ class CollectionsController < ApplicationController
      flash[:notice] = "Collection was Deleted."
       redirect_to project_path(@project)
     else
-      flash[:error] = "Collection failed to Delete"+@collection.errors.inspect
+      flash[:error] = "Collection failed to Delete! Errors: " + @collection.errors.full_messages.join(', ')
       redirect_to project_path(@project)
     end
   end
@@ -103,7 +82,7 @@ class CollectionsController < ApplicationController
         flash[:notice] = "Collection successfully changed publicaction status."
         redirect_to project_collection_path(@project,@collection)
       else
-        flash[:error] = "Collection failed to change publication status!"
+        flash[:error] = "Collection failed to change publication status! Errors: " + @collection.errors.full_messages.join(', ')
         render :index
       end
     else
@@ -133,14 +112,9 @@ class CollectionsController < ApplicationController
       new_file = "tmp/downloads/#{@collection.name}.csv"
       File.open(new_file, "wb"){ |f| f.write(csv_string)}
       z.add("#{@collection.name}.csv",new_file)
-      #z.get_output_stream("#{@collection.name}.csv") { |f| f.puts IO.read(new_file) }
-      #z.mkdir("#{@collection.name}")
       z.close()
     end
-    send_file("tmp/downloads/"+filename,
-      :type => 'application/zip')#,
-      #:x_sendfile=>true
-      #:filename => filename)
+    send_file("tmp/downloads/"+filename, :type => 'application/zip')
   end
    
   def upload
