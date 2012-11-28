@@ -6,7 +6,7 @@
         - if current_user
           %li.dropdown
             %a.dropdown-toggle(href='#' data-toggle='dropdown') 
-              System
+              Project
               %b.caret
             %ul.dropdown-menu(role='menu')
               %li.dropdown-submenu
@@ -72,7 +72,7 @@
                             project_collection_export_with_files_path( @project, @collection, :filters => params[:filters]))
       %ul.nav.pull-right
         - if @project && !@project.new?
-          %li= link_to 'Search', project_search_path(@project)
+          %li= link_to('Search', '#project_search_form', 'data-toggle' => 'modal')
         - if current_user
           %li= link_to 'Profile', edit_user_registration_path
           %li= link_to("Logout (#{current_user.first_name})", destroy_user_session_path, :method=> :delete)
