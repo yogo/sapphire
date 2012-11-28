@@ -5,8 +5,6 @@
     - else
       %span.label.label-default Private
     = @project.name
-  -if current_user.member_of?(@project)
-    = render(:partial => 'modals', :locals => {:project => @project})
 
   .tabbable
     %ul.nav.nav-tabs
