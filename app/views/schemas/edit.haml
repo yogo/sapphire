@@ -1,10 +1,9 @@
 %h1 Edit #{@schema.name}
 
-= form_for("schema", @schema, :url => project_collection_schema_path(@project, @collection, @schema), :html => {:class => 'form', :method=>"put"}) do |f|
-= render :partial => 'form', :locals => {:f => f, :collection=>@collection, :edit=>true}
-.group.navform.wat-cf
-%button.btn.btn-primary Save Changes
-%a.btn.btn-mini(href = "#{project_collection_path(@project, @collection)}"data-dismiss="modal") Cancel
+= form_for("schema", @schema, :url => project_collection_schema_path(@project, @collection, @schema), :html => {:class => 'form', :method=>"put"}) do |f| 
+  = render :partial => 'schemas/form', :locals => {:f => f, :collection=>@collection, :edit=>true}
+  %button.btn.btn-primary Save Changes
+  %a.btn.btn-mini(href = "#{project_collection_path(@project, @collection)}"data-dismiss="modal") Cancel
 
 %h3 History
 =render :partial=> "version_table", :locals =>{:versions=>@versions, :schema=>@schema, :project=>@project, :collection=>@collection}
