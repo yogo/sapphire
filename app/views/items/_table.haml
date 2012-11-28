@@ -1,13 +1,6 @@
 :javascript
   $(document).ready(function() {
-  var item_table = $('#collection_items_table').dataTable({
-            "bPaginate": true,
-            "bLengthChange": true,
-            "bFilter": true,
-            "bSort": true,
-            "bInfo": false,
-            "bAutoWidth": true
-        });
+    $('.data-table').dataTable();
   } );
 -@schema_cv_hash={}
 -collection.schema.each do |s|
@@ -50,20 +43,34 @@
     .modal-body
     .modal-footer
  
-%table#collection_items_table.table.table-condensed.table-striped
+-# Schema Edit Modal
+#edit-schema-modal.modal.hide.fade.wide
+  .modal-header
+    %button.close(data-dismiss="modal") x
+    %h3 Edit Column
+    .modal-body
+    .modal-footer
+
+%table.data-table.table.table-condensed.table-striped
   %thead
     %tr
-      %th &nbsp; 
+      %th.action-column
+        %a.btn.grid-header-button(href='#collection_schema_form' data-toggle='modal' title='Add Column') 
+          %i.icon-plus
+        %a.btn.grid-header-button(href='#edit-filters' data-toggle='modal' title='Filter Data Grid') 
+          %i.icon-filter
       - collection.schema.each do |s|
-        %th.column= s.name
+        %th.column
+          %a.icon-edit(href='#{edit_project_collection_schema_path(@project,@collection,s)}' data-toggle='modal' data-target='#edit-schema-modal')
+          = s.name
       %th File
   %tbody
     - items.each do |i|
       %tr
         %td
-          %a.icon-time(href='#{project_collection_item_path(params[:project_id],collection,i)}' data-toggle='modal' data-target='#history-modal')
-          %a.icon-edit(href='#{edit_project_collection_item_path(params[:project_id],collection,i)}')
-          = link_to("", project_path(p), :class => 'icon-remove-circle',:method=>:delete, 
+          %a.icon-time(href='#{project_collection_item_path(project,collection,i)}' data-toggle='modal' data-target='#history-modal')
+          %a.icon-edit(href='#{edit_project_collection_item_path(project,collection,i)}')
+          = link_to("", project_collection_item_path(project,collection,i), :class => 'icon-remove-circle',:method=>:delete, 
                     "data-confirm"=>"Are you sure you wish to delete this Data Row?")
         - collection.schema.each do |s|
           -if s.controlled_vocabulary_id  
@@ -74,10 +81,9 @@
               %td{:class =>'cv_error'}= i[s.name]
           -elsif s.associated_schema     
             %td
-              -unless i[s.name].nil?
-                -json_string = JSON.parse(i[s.name])
-                %a.icon-edit(href='#{project_collection_item_association_edit_path(json_string['project']['id'],json_string['collection']['id'],json_string['item']['id'])}' data-toggle='modal' data-target='#edit-assoc-modal')
-                %a(href='#{project_collection_item_controlled_vocabulary_term_path(json_string['project']['id'],json_string['collection']['id'],json_string['item']['id'])}' data-toggle='modal' data-target='#assoc-modal')= json_string['item']['display']
+              -json_string = JSON.parse(i[s.name])
+              %a.icon-edit(href='#{project_collection_item_association_edit_path(json_string['project']['id'],json_string['collection']['id'],json_string['item']['id'])}' data-toggle='modal' data-target='#edit-assoc-modal')
+              %a(href='#{project_collection_item_controlled_vocabulary_term_path(json_string['project']['id'],json_string['collection']['id'],json_string['item']['id'])}' data-toggle='modal' data-target='#assoc-modal')= json_string['item']['display']
           -else
             %td
               - if i[s.name].to_s.length > 42
@@ -88,23 +94,3 @@
                 = i[s.name]
         %td
           %a{:href => i.file.to_s}= i.original_filename
-        
-        
-:javascript
-  function showDialog(url){
-     $("#CV_info").html('<iframe id="modalIframeId" width="100%" height="100%" marginWidth="0" marginHeight="0" frameBorder="0" overflow="visible"/>').dialog("open");
-     $("#modalIframeId").attr("src",url);
-     return false;
-  }
-
-  $(document).ready(function() {
-    $('[rel=popover]').popover();
-    $("#CV_info").dialog({
-             autoOpen: false,
-             modal: true,
-             height: 500,
-             width: 950
-         });
-  });
-  
-#CV_info
