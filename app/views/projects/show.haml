@@ -12,7 +12,15 @@
       %li= link_to("Controlled Vocabularies (#{@cv_collections.count})", "#cv-tab", 'data-toggle' => 'tab')
     .tab-content
       #dc-tab.tab-pane.active
-        = render(:partial => "collections/list", :locals=>{:collections => @collections})
-      -unless @cv_collections.empty?
-        #cv-tab.tab-pane
+        - if @collections.count > 0
+          = render(:partial => "collections/list", :locals=>{:collections => @collections})
+        - else 
+          .span5
+          %a.span2.btn.btn-primary(href='#new_collection_form' data-toggle='modal') 
+            No Data Collections...
+            %br/
+            Create a Collection!
+          .span5
+      #cv-tab.tab-pane
+        -unless @cv_collections.empty?
           = render(:partial => "collections/list", :locals=>{:collections => @cv_collections})
