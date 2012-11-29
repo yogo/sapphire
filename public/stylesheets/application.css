@@ -16,12 +16,6 @@ body {
   margin: -20px 0;
 }
 
-/*Fenix
-Rokkitt:400,700
-Sanchez
-Montserrat
-Raleway:400,300,200,500,700*/
-
 /* Set the fixed height of the footer here */
 #footer {
   height: 60px;
@@ -111,58 +105,6 @@ th.action-column{
   width: 100px;
 }
 
-/*#content{
-  padding: 10px 10px 10px 10px;
+.dataTables_length select {
+  width: 60px;
 }
-
-.form{
-  width: 300px;
-}
-
-.counts {
-  float: right;
-  text-align: right;
-}
-
-.form {
-  width: 100%;
-}
-
-.secondary-navigation.button-navigation {
- padding: 5px;
-}
-
-.secondary-navigation.button-navigation a{
-  text-decoration: none;
-}
-
-.secondary-navigation ul li span.link, .secondary-navigation ul li span.link:hover {
-  text-decoration: none;
-  color: #111;
-  cursor: pointer;
-  display: block;
-  padding: 10px 15px;
-}
-
-
-body, #container {
-  min-height: 700px;
-}
-
-td.cv_error {
-  color:red;
-}
-
-.right-nav-button{
-  float: right;
-  margin-top: 5px;
-}
-
-.big-img img{
-  width: 70px;
-}
-
-#menu-container{
-  height: 26px;
-  background-color: white;
-}*/
