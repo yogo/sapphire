@@ -127,7 +127,7 @@ class ItemsController < ApplicationController
   private
   def choose_layout
     case action_name
-    when 'controlled_vocabulary_term', 'show', 'association_edit'
+    when 'controlled_vocabulary_term', 'show', 'association_edit', 'edit'
       'blank'
     else
       'application'

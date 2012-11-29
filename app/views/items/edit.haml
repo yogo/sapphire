@@ -1,9 +1,5 @@
-.modal-header
-  %h1 Edit #{@collection.name} Item
-
-= form_for("item", @item, :url => project_collection_item_path(@project, @collection, @item), :html=>{:method=>"put", :class => 'form', :ajax=>false}) do |f| 
-  .modal-body
-    = render :partial => 'form', :locals => {:f => f, :collection => @collection}
+= form_for("item", @item, :url => project_collection_item_path(@project, @collection, @item), :html=>{:method=>"put", :class => 'form-box', :ajax=>false}) do |f| 
+  = render :partial => 'items/form', :locals => {:f => f, :collection => @collection}
   .modal-footer
     %button.btn.btn-primary Save Changes
     = link_to("Cancel", project_collection_path(@project, @collection), :class => "btn btn-mini")
