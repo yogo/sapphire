@@ -1,11 +1,11 @@
 -# Check into this: http://jschr.github.com/bootstrap-modal/
 .row
-  %h1
-    = @collection.name
-    - if @collection.private?
-      %span.label.label-default Private
-    - else
-      %span.label.label-info Public
+  / %h1
+  /   = @collection.name
+  /   - if @collection.private?
+  /     %span.label.label-default Private
+  /   - else
+  /     %span.label.label-info Public
 
   -if current_user.member_of?(@project) && @collection.schema.count > 0
     = render(:partial => 'collections/filter', 
