@@ -1,6 +1,5 @@
 class SchemasController < ApplicationController
     before_filter :get_dependencies  
-    layout :choose_layout
 
     def index
       @schema = @collection.schema
@@ -109,16 +108,6 @@ class SchemasController < ApplicationController
     end
     
   private
-
-    def choose_layout
-      case action_name
-      when 'show', 'new', 'edit'
-        'blank'
-      else
-        'application'
-      end
-    end
-
     def get_dependencies
       @project = Yogo::Project.get(params[:project_id])
       @collection = @project.data_collections.get(params[:collection_id])      

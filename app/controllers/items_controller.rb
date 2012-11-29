@@ -2,9 +2,6 @@ class ItemsController < ApplicationController
 
   before_filter :get_dependencies, :except => :controlled_vocabulary_term
   after_filter :update_project_stats, :only => [:create, :delete]
-  #after_filter :update_associated_fields, :only =>[:update]
-  layout :choose_layout
-  
 
   def index
     if params[:item]
@@ -121,15 +118,7 @@ class ItemsController < ApplicationController
   end
   
   private
-  def choose_layout
-    case action_name
-    when 'controlled_vocabulary_term', 'show', 'association_edit', 'edit'
-      'blank'
-    else
-      'application'
-    end
-  end
-  
+
   def get_dependencies
     if !current_user.memberships(:project_id => params[:project_id]).empty? || Yogo::Project.get(params[:project_id]).private == false || Yogo::Collection::Data.get(params[:collection_id]).private == false
       @project = Yogo::Project.get(params[:project_id])
