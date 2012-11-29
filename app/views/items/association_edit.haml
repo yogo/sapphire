@@ -1,4 +1,0 @@
-= form_for("item", @item, :url => project_collection_item_path(@project, @collection, @item),:remote=>true, :html=>{:method=>"put", :class => 'modal-form'}) do |f| 
-  = render :partial => 'form', :locals => {:f => f, :collection => @collection}
-  %button.btn.btn-primary Save Changes
-  %a.btn.btn-mini(data-dismiss="modal") Close

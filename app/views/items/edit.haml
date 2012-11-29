@@ -2,5 +2,5 @@
   = render :partial => 'items/form', :locals => {:f => f, :collection => @collection}
   .modal-footer
     %button.btn.btn-primary Save Changes
-    = link_to("Cancel", project_collection_path(@project, @collection), :class => "btn btn-mini")
+    %a.btn(data-dismiss="modal") Close
 

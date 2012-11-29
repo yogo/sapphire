@@ -24,7 +24,6 @@ Sapphire::Application.routes.draw do
       get :edit_cv
       resources :items do
         put :restore
-        get :association_edit
         get :controlled_vocabulary_term
       end
       resources :schemas do

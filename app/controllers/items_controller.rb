@@ -78,10 +78,6 @@ class ItemsController < ApplicationController
     @item = @collection.items.get(params[:id])
   end
 
-  def association_edit
-    @item = @collection.items.get(params[:item_id])
-  end
-  
   def new
   end
   
