@@ -1,28 +1,9 @@
-%h1 #{@project.name} > #{@collection.name} > Data
-
-.block
-  .secondary-navigation.button-navigation
-    .wat-cf
-      = nav_button("Back to Project", "web-app-theme/icons/arrow_undo.png", project_path(@project))
-      = nav_button("Back to Collection", "web-app-theme/icons/arrow_undo.png", project_collection_path(@project, @collection))
-  -unless current_user.memberships.all(:project_id=>@project.id).empty?
-    .content
-      .inner
-        %h3 New #{@collection.name}
-        = form_for("item", @item, :url => project_collection_items_path, :html => {"multipart" => true, "data-ajax"=> false, :class => 'form'}) do |f| 
-          = render :partial => 'form', :locals => {:f => f, :collection => @collection}
-          .group.navform.wat-cf
-            = f.submit("Save", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"))
-
-.block
-  .secondary-navigation.button-navigation
-    .wat-cf
-      -if @collection.schema.count > 0
-        = nav_button("Download Items", "web-app-theme/icons/application_put.png", project_collection_export_path(@project,@collection))
-  .content
-    .inner
-      %h3 All #{@collection.name.pluralize}
-      -unless current_user.memberships.all(:project_id=>@project.id).empty?
-        = render :partial => 'table', :locals => {:items => @collection.items(:order => :created_at.desc), :collection => @collection, :project=>@project}
-      -else
-        = render :partial => 'public_table', :locals => {:items => @collection.items(:order => :created_at.desc), :collection => @collection, :project=>@project}
+.row
+  .collection_table
+  - if @collection.schema.count > 0
+    -if current_user.member_of?(@project)
+      = render  :partial => 'items/table', 
+                :locals => {:items =>@items, :collection => @collection, :project=>@project}
+    -else
+      = render  :partial => 'items/public_table', 
+                :locals => {:items => @items, :collection => @collection, :project=>@project}

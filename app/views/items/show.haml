@@ -1,24 +1,5 @@
 %h2= @collection.name + " Data Row"
 
-%p.muted Data ID:#{@item.id}
+%p.muted Data Row ID:#{@item.id}
 
-%dl.dl-horizontal
-  %dt Created At
-  %dd= @item.created_at
-  %dt Updated At
-  %dd= @item.updated_at
-  -@collection.schema.each do |field|
-    %dt= field.name
-    %dd 
-      - if field.associated_schema && !@item[field.name].blank?
-        =JSON.parse(@item[field.name])['item']['display']
-      - else
-        = @item[field.name]
-  %dt File
-  %dd
-    %a{:href => @item.file.to_s}= @item.original_filename
-
-%hr
-      
-%h3 Previous Versions
-= render :partial => 'version_table', :locals => {:items => @item.versions, :collection => @collection, :item => @item, :project=> @project}
+= render :partial => 'items/version_table', :locals => {:item => @item, :collection => @collection, :item => @item, :project=> @project}

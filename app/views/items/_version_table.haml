@@ -1,28 +1,80 @@
-- schema_hash = {}
-- collection.schema.each do |s|
-  - schema_hash[s] = s.name
-%table.table
-  %tr
-    %th Restore
-    %th Created At
-    %th Updated At
-    %th System Provenance
-    %th User Provenance
-    - collection.schema.each do |s|
-      %th= s.name
-    %th File
-  - items.each do |i|
-    %tr{:class => cycle('odd','even')}
-      %td= link_to image_tag("web-app-theme/icons/table_go.png", :border=>"0", :height=>"32px"), project_collection_item_restore_path(project,collection,item, :deleted_at=>i.deleted_at), :method=>:put,"data-confirm"=>"Are you sure you wish to restore this Item?"
-      %td= i.deleted_at.strftime("%B %d, %Y %I:%M:%S %p")
-      %td= i.updated_at.strftime("%B %d, %Y %I:%M:%S %p")
-      %td
-        - display_str =i.updated_comment
-        - schema_hash.keys.each do |k|
-          -display_str = display_str.gsub(k.to_s,schema_hash[k])
-        =display_str
-      %td= i.provenance_comment
+-@schema_cv_hash={}
+-collection.schema.each do |s|
+  -link_hash={}
+  -if s.controlled_vocabulary_id
+  -@schema_cv_hash[s.id] =Yogo::Collection::Property.get(s.controlled_vocabulary_id).data_collection
+    -s.data_collection.items.each do |i|
+      -link_hash = link_hash.merge({i[s.name] => @schema_cv_hash[s.id].items.first("field_#{s.controlled_vocabulary_id.to_s.gsub('-','_')}".to_sym=>i[s.name])})
+    -@schema_cv_hash[s.name]=link_hash
+
+-# CV Modal
+#cv-modal.modal.hide.fade
+  .modal-header
+    %button.close(data-dismiss="modal") x
+    %h3 CV Term Metadata
+    .modal-body
+    .modal-footer
+
+-# Assoc Modal
+#assoc-modal.modal.hide.fade
+  .modal-header
+    %button.close(data-dismiss="modal") x
+    %h3 Associated Data
+    .modal-body
+    .modal-footer
+
+%table.table.table-condensed.table-striped
+  %thead
+    %tr
+      %th Restore
+      %th Version Date
+      %th Changelog
       - collection.schema.each do |s|
-        %td= i[s.name]
+        %th= s.name
+      %th File
+  %tbody
+    %tr
+      %td &nbsp;
+      %td= item.updated_at.strftime("%B %d, %Y %I:%M:%S %p")
+      %td Current Version
+      - collection.schema.each do |s|
+        -if s.controlled_vocabulary_id  
+          -if @schema_cv_hash[s.name][item[s.name]]
+            %td
+              %a(href='#{project_collection_item_controlled_vocabulary_term_path(@schema_cv_hash[s.id].project_id,@schema_cv_hash[s.id],@schema_cv_hash[s.name][item[s.name]])}' data-toggle='modal' data-target='#cv-modal')= item[s.name]
+          -else
+            %td.danger= item[s.name]
+        -elsif s.associated_schema     
+          %td
+            -json_string = JSON.parse(item[s.name])
+            %a(href='#{project_collection_item_controlled_vocabulary_term_path(json_string['project']['id'],json_string['collection']['id'],json_string['item']['id'])}' data-toggle='modal' data-target='#assoc-modal')= json_string['item']['display']
+        -else
+          %td= item[s.name]
       %td
-        %a{:href => i.file.to_s}= i.original_filename
+        %a{:href => item.file.to_s}= item.original_filename
+
+    - item.versions.reverse.each do |i|
+      %tr
+        %td
+          = link_to("<i class='icon-upload-alt'></i>".html_safe, 
+            project_collection_item_restore_path(project,collection,item, :deleted_at=>i.deleted_at), 
+              :class => 'btn btn-mini', :method=>:put, 
+              "data-confirm"=>"Are you sure you wish to restore this version?")
+        %td= i.updated_at.strftime("%B %d, %Y %I:%M:%S %p")
+        %td= collection.schema.inject(i.updated_comment) { |c, s| c.gsub(s.to_s, s.name) }
+        - collection.schema.each do |s|
+          -if s.controlled_vocabulary_id  
+            -if @schema_cv_hash[s.name][i[s.name]]
+              %td
+                %a(href='#{project_collection_item_controlled_vocabulary_term_path(@schema_cv_hash[s.id].project_id,@schema_cv_hash[s.id],@schema_cv_hash[s.name][i[s.name]])}' data-toggle='modal' data-target='#cv-modal')= i[s.name]
+            -else
+              %td.danger= i[s.name]
+          -elsif s.associated_schema     
+            %td
+              -json_string = JSON.parse(i[s.name])
+              %a(href='#{project_collection_item_controlled_vocabulary_term_path(json_string['project']['id'],json_string['collection']['id'],json_string['item']['id'])}' data-toggle='modal' data-target='#assoc-modal')= json_string['item']['display']
+          -else
+            %td= i[s.name]
+        %td
+          %a{:href => i.file.to_s}= i.original_filename
+

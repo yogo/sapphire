@@ -1,14 +1,5 @@
-%h1 Create New #{@collection.name} Item
-
-.block
-  .secondary-navigation.button-navigation
-    .wat-cf
-      = nav_button("Back to Collection", "web-app-theme/icons/arrow_undo.png", project_collection_path(@project, @collection))
-  .content
-    .inner
-      %h3 New #{@collection.name}
-      = form_for("item", :url => project_collection_items_path(@project, @collection), :html => {"multipart" => true, "data-ajax"=> false, :class => 'form'}) do |f| 
-        = render :partial => 'form', :locals => {:f => f, :collection => @collection}
-        .group.navform.wat-cf
-          = f.submit("Save", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"), :cancel_link => link_to("Cancel", project_collection_path(@project, @collection), :class => "text_button_padding link_button"))
-
+= form_for("item", :url => project_collection_items_path(@project, @collection), :html => {"multipart" => true, "data-ajax"=> false, :class => 'form-box'}) do |f| 
+  = render :partial => 'items/form', :locals => {:f => f, :collection => @collection}
+  .modal-footer
+    %button.btn.btn-primary Save Changes
+    %a.btn(data-dismiss="modal") Close

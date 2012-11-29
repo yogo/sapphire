@@ -78,7 +78,7 @@
               %td
                 %a(href='#{project_collection_item_controlled_vocabulary_term_path(@schema_cv_hash[s.id].project_id,@schema_cv_hash[s.id],@schema_cv_hash[s.name][i[s.name]])}' data-toggle='modal' data-target='#cv-modal')= i[s.name]
             -else
-              %td{:class =>'cv_error'}= i[s.name]
+              %td.danger= i[s.name]
           -elsif s.associated_schema     
             %td
               -json_string = JSON.parse(i[s.name])
