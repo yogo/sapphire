@@ -1,12 +1,6 @@
-%h1 #{@project.name} > #{@collection.name} > New Schema
-
-.block
-  .secondary-navigation.button-navigation
-    .wat-cf
-      = nav_button("Back to Collection", "web-app-theme/icons/arrow_undo.png", project_collection_path(@project, @collection))
-  .content
-    .inner
-      = form_for("schema", :url => project_collection_schemas_path(@project, @collection), :html => {:class => 'form'}) do |f|
-        = render :partial => 'form', :locals => {:f => f}
-        .group.navform.wat-cf
-          = f.submit("Save", :submit_image => image_tag("web-app-theme/icons/tick.png", :alt => "Save"), :cancel_link => link_to("Cancel", project_collection_path(@project, @collection), :class => "text_button_padding link_button"))
+= form_for("schema", :url => project_collection_schemas_path(@project, @collection), 
+  :html => {:class => 'form-box'}) do |f|
+  = render :partial => 'schemas/form', :locals => {:f => f}
+  .modal-footer
+    %button.btn.btn-primary Save Changes
+    %a.btn(data-dismiss="modal") Close

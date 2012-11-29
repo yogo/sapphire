@@ -1,9 +1,10 @@
 = form_for("schema", @schema, 
   :url => project_collection_schema_path(@project, @collection, @schema), 
-  :html => {:class => 'form', :method=>"put"}) do |f| 
+  :html => {:class => 'form-box', :method=>"put"}) do |f| 
   = render :partial => 'schemas/form', :locals => {:f => f, :collection=>@collection, :edit=>true}
-  %button.btn.btn-primary Save Changes
-  %a.btn(data-dismiss="modal") Close
+  .modal-footer
+    %button.btn.btn-primary Save Changes
+    %a.btn(data-dismiss="modal") Close
 
 %h3 History
 =render :partial=> "version_table", :locals =>{:versions=>@versions, :schema=>@schema, :project=>@project, :collection=>@collection}
