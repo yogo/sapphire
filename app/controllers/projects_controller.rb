@@ -36,10 +36,11 @@ class ProjectsController < ApplicationController
       if @project.save
         current_user.memberships.create(:project_id => @project.id)
         flash[:notice] = 'New Project created!'
+        redirect_to project_path(@project)
       else
         flash[:error] = "Project failed to save! Errors: " + @project.errors.full_messages.join(', ')
+        redirect_to :back
       end
-      redirect_to :back
     end
     
     def destroy
