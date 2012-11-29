@@ -54,10 +54,11 @@ class CollectionsController < ApplicationController
         @collection.schema.create(:name=>"Term", :type=>Yogo::Collection::Property::Text, :position=>0)
         @collection.schema.create(:name=>"Description", :type=>Yogo::Collection::Property::Text, :position=>1)
       end  
+      redirect_to project_collection_path(@project, @collection)
     else
       flash[:error] = "Collection failed to save! Errors: " + @collection.errors.full_messages.join(', ')
+      redirect_to :back
     end
-    redirect_to project_collection_path(@project, @collection)
   end
   
   def destroy
