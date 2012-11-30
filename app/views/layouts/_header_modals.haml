@@ -58,7 +58,7 @@
     = form_for(:search, :url => project_s_path(@project), :html => {:class => 'form', :method => :get}) do |f|
       .modal-body
         %label Search Terms
-        = f.text_field(:terms)
+        = f.text_field(:terms, :class => 'span6')
       .modal-footer
         %button.btn.btn-primary Search
         %a.btn.btn-mini(data-dismiss="modal") Close

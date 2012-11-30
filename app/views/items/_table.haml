@@ -39,7 +39,7 @@
             $('th a.#{s.id.to_s}').on('click', function(){
               $('body').modalmanager('loading');
               setTimeout(function(){
-                $modal.load('#{edit_project_collection_schema_path(@project,@collection,s)}', '', function(){
+                $modal.load('#{edit_project_collection_schema_path(project,collection,s)}', '', function(){
                   $modal.modal();
                 });
               }, 1000);
