@@ -2,13 +2,21 @@
 %html
   %head
     %title Yogo Sapphire
-    = stylesheet_link_tag :all
+    = stylesheet_link_tag 'datatable',
+    'jquery-ui',
+    'font-awesome',
+    'bootstrap',
+    'bootstrap-responsive',
+    'bootstrap-modal',
+    'application'
     / HTML5 shim, for IE6-8 support of HTML5 elements
     /[if lt IE 9]
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     = javascript_include_tag 'jquery',
       'jquery_ujs',
       'bootstrap',
+      'bootstrap-modal',
+      'bootstrap-modalmanager',
       'jquery-ui',
       'jquery-ui-timepicker-addon',
       'jquery-dataTables',

@@ -7,16 +7,24 @@
     %meta{:name => "viewport", :content => "width=device-width, initial-scale=1.0, maximum-scale=1.0"}
     %link{:href => "/favicon.ico", :rel => "shortcut icon"}/
     %title Yogo 
-    = stylesheet_link_tag :all
+    = stylesheet_link_tag 'datatable',
+    'jquery-ui',
+    'font-awesome',
+    'bootstrap',
+    'bootstrap-responsive',
+    'bootstrap-modal',
+    'application'
     / HTML5 shim, for IE6-8 support of HTML5 elements
     /[if lt IE 9]
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     = javascript_include_tag 'jquery',
-      'jquery_ujs',
-      'bootstrap',
       'jquery-ui',
       'jquery-ui-timepicker-addon',
       'jquery-dataTables',
+      'jquery_ujs',
+      'bootstrap',
+      'bootstrap-modalmanager',
+      'bootstrap-modal',
       :cache => false
     = csrf_meta_tag
   %body
