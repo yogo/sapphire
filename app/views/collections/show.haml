@@ -20,6 +20,7 @@
         %strong Data Grid
       - unless @filters.empty?
         Filtered By: #{@filters.map{|k,v| @collection.schema.by_field_name(k.target.to_s).name + " : #{v}"}.join(' ' + params[:options] + ' ')}
+        %a.btn-small(href='#{project_collection_path(@project, @collection)}') Clear Filters
       -if current_user.member_of?(@project)
         = render  :partial => 'items/table', 
                   :locals => {:items =>@items, :collection => @collection, :project=>@project}
