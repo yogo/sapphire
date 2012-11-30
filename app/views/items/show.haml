@@ -1,5 +1,7 @@
-%h2= @collection.name + " Data Row"
-
-%p.muted Data Row ID:#{@item.id}
-
-= render :partial => 'items/version_table', :locals => {:item => @item, :collection => @collection, :item => @item, :project=> @project}
+.modal-header
+  %h3 #{@collection.name} Data Row
+  %p.muted Data Row ID:#{@item.id}
+.modal-body
+  = render :partial => 'items/version_table', :locals => {:item => @item, :collection => @collection, :item => @item, :project=> @project}
+.modal-footer
+  %a.btn(data-dismiss="modal") Close

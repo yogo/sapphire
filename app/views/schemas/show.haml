@@ -1,11 +1,7 @@
-%h1 #{@project.name} > #{@collection.name} > #{@schema.name}
-
-.block
-  .secondary-navigation.button-navigation
-    .wat-cf
-      = nav_button("Back to Collection", "web-app-theme/icons/arrow_undo.png", project_collection_path(@project, @collection))
-      = nav_button("Edit Schema", "web-app-theme/icons/application_edit.png", edit_project_collection_schema_path(@project, @collection, @schema))
-  .content
-    .inner
-      %h3 Schema
-      Type: #{@schema.type}
+.modal-header
+  %h3 #{@collection.name} Column: #{@schema.name}
+  %p.muted Column ID:#{@schema.id}
+.modal-body
+  =render :partial=> "schemas/version_table", :locals =>{:schema=>@schema, :project=>@project, :collection=>@collection}
+.modal-footer
+  %a.btn(data-dismiss="modal") Close
