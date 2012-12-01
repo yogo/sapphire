@@ -28,7 +28,6 @@ class ProjectsController < ApplicationController
     end
     
     def new
-      @project = Yogo::Project.new
     end
     
     def create
