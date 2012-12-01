@@ -1,9 +1,9 @@
 .row
   .tabbable
-    %ul.nav.nav-tabs
+    %ul.nav.nav-pills
       %li.active= link_to("My Projects (#{@projects.count})", "#myproj-tab", 'data-toggle' => 'tab')
       %li= link_to("Public Projects (#{@public_projects.count})", "#pubproj-tab", 'data-toggle' => 'tab')
-    .tab-content
+    .tab-content.content-box
       #myproj-tab.tab-pane.active
         - if @projects.count > 0
           = render(:partial => 'projects/list', :locals => {:projects => @projects})
