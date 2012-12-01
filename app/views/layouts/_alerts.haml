@@ -8,3 +8,7 @@
   .alert.fade.in{:class => alert_type(type) }
     %button.close(type="button" data-dismiss="alert") &times;
     %strong= message
+
+:javascript
+  $('.alert .alert-info').delay(3 * 1000).fadeOut();
+  // Note: keep the errors on the screen to be cleared manually!
