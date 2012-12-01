@@ -28,16 +28,8 @@
           %a.icon-edit(href='' data-toggle='modal' class='#{s.id.to_s}')
           = s.name
           :javascript
-            var $modal = $('#ajax-modal');
-            // CV Show
-            $('th a.#{s.id.to_s}').on('click', function(){
-              $('body').modalmanager('loading');
-              setTimeout(function(){
-                $modal.load('#{edit_project_collection_schema_path(project,collection,s)}', '', function(){
-                  $modal.modal();
-                });
-              }, 1000);
-            });
+            //Schemas#edit (Edit Column Icon Link)
+            #{ajax_modal_js("th a.#{s.id.to_s}", edit_project_collection_schema_path(project,collection,s))}
       %th File
   %tbody
     - items.each do |i|
@@ -48,27 +40,10 @@
           = link_to("", project_collection_item_path(project,collection,i), :class => 'icon-remove-circle',:method=>:delete, 
                     "data-confirm"=>"Are you sure you wish to delete this Data Row?")
           :javascript
-            var $modal = $('#ajax-modal');
-            var $fwmodal = $('#ajax-modal-fw');
-            // Item Show
-            $('.#{i.id.to_s} a.item-show').on('click', function(){
-              $('body').modalmanager('loading');
-              setTimeout(function(){
-                $fwmodal.load('#{project_collection_item_path(project,collection,i)}', '', function(){
-                  $fwmodal.modal();
-                });
-              }, 1000);
-            });
-
-            // Item Edit
-            $('.#{i.id.to_s} a.item-edit').on('click', function(){
-              $('body').modalmanager('loading');
-              setTimeout(function(){
-                $modal.load('#{edit_project_collection_item_path(project,collection,i)}', '', function(){
-                  $modal.modal();
-                });
-              }, 1000);
-            });
+            //Items#show (Data Row History Icon Link)
+            #{ajax_modal_js(".#{i.id.to_s} a.item-show", project_collection_item_path(project,collection,i), true)}
+            //Items#edit (Data Row Edit Icon Link)
+            #{ajax_modal_js(".#{i.id.to_s} a.item-edit", edit_project_collection_item_path(project,collection,i))}
 
         - collection.schema.each do |s|
           -if s.controlled_vocabulary_id  
@@ -76,16 +51,8 @@
               %td
                 %a.item-cv(href='#' data-toggle='modal' class='#{s.id.to_s}')= i[s.name]
                 :javascript
-                  var $modal = $('#ajax-modal-fw');
-                  // CV Show
-                  $('.#{i.id.to_s} a.cv.#{s.id.to_s}').on('click', function(){
-                    $('body').modalmanager('loading');
-                    setTimeout(function(){
-                      $modal.load('#{project_collection_item_path(@schema_cv_hash[s.id].project_id,@schema_cv_hash[s.id],@schema_cv_hash[s.name][i[s.name]])}', '', function(){
-                        $modal.modal();
-                      });
-                    }, 1000);
-                  });
+                  //Items#Show (Controlled Vocabulary Link)
+                  #{ajax_modal_js(".#{i.id.to_s} a.item-cv.#{s.id.to_s}", project_collection_item_path(@schema_cv_hash[s.id].project_id,@schema_cv_hash[s.id],@schema_cv_hash[s.name][i[s.name]]), true)}
             -else
               %td.danger= i[s.name]
           -elsif s.associated_schema     
@@ -94,26 +61,10 @@
               %a.icon-edit.as-edit(href='' data-toggle='modal' class='#{s.id.to_s}')
               %a.as-show(href='' data-toggle='modal' class='#{s.id.to_s}')= json_string['item']['display']
               :javascript
-                var $modal = $('#ajax-modal');
-                var $fwmodal = $('#ajax-modal-fw');
-                // Item Show
-                $('.#{i.id.to_s} a.as-show.#{s.id.to_s}').on('click', function(){
-                  $('body').modalmanager('loading');
-                  setTimeout(function(){
-                    $fwmodal.load('#{project_collection_item_path(json_string['project']['id'],json_string['collection']['id'],json_string['item']['id'])}', '', function(){
-                      $fwmodal.modal();
-                    });
-                  }, 1000);
-                });
-                // Item Edit
-                $('.#{i.id.to_s} a.as-edit.#{s.id.to_s}').on('click', function(){
-                  $('body').modalmanager('loading');
-                  setTimeout(function(){
-                    $modal.load('#{edit_project_collection_item_path(json_string['project']['id'],json_string['collection']['id'],json_string['item']['id'])}', '', function(){
-                      $modal.modal();
-                    });
-                  }, 1000);
-                });
+                //Items#show (Association Item Show Link)
+                #{ajax_modal_js(".#{i.id.to_s} a.as-show.#{s.id.to_s}", project_collection_item_path(json_string['project']['id'],json_string['collection']['id'],json_string['item']['id']), true)}
+                //Items#edit (Association Item Edit Icon Link)
+                #{ajax_modal_js(".#{i.id.to_s} a.as-edit.#{s.id.to_s}", edit_project_collection_item_path(json_string['project']['id'],json_string['collection']['id'],json_string['item']['id']))}
           -else
             %td
               - if i[s.name].to_s.length > 42

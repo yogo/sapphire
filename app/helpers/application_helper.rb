@@ -32,4 +32,20 @@ module ApplicationHelper
     end
   end
 
+  def ajax_modal_js(target, path, full_width=nil)
+    m = full_width ? 'fwmodal' : 'modal'
+    <<-MODAL
+      var $modal = $('#ajax-modal');
+      var $fwmodal = $('#ajax-modal-fw');
+      $('#{target}').on('click', function(){
+        $('body').modalmanager('loading');
+        setTimeout(function(){
+          $#{m}.load('#{path}', '', function(){
+            $#{m}.modal();
+          });
+        }, 1000);
+      });
+    MODAL
+  end
+
 end
