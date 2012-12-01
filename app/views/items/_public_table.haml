@@ -11,38 +11,6 @@
       -link_hash = link_hash.merge({i[s.name] => @schema_cv_hash[s.id].items.first("field_#{s.controlled_vocabulary_id.to_s.gsub('-','_')}".to_sym=>i[s.name])})
     -@schema_cv_hash[s.name]=link_hash
     
--# History Item Modal
-#history-modal.modal.hide.fade.wide
-  .modal-header
-    %button.close(data-dismiss="modal") x
-    %h3 Data History
-    .modal-body
-    .modal-footer
-
--# CV Modal
-#cv-modal.modal.hide.fade
-  .modal-header
-    %button.close(data-dismiss="modal") x
-    %h3 CV Term Metadata
-    .modal-body
-    .modal-footer
-
--# Assoc Modal
-#assoc-modal.modal.hide.fade
-  .modal-header
-    %button.close(data-dismiss="modal") x
-    %h3 Associated Data
-    .modal-body
-    .modal-footer
-
--# Schema Edit Modal
-#edit-schema-modal.modal.hide.fade.wide
-  .modal-header
-    %button.close(data-dismiss="modal") x
-    %h3 Edit Column
-    .modal-body
-    .modal-footer
-
 %table.data-table.table.table-condensed.table-striped
   %thead
     %tr
@@ -51,25 +19,38 @@
           %i.icon-filter
       - collection.schema.each do |s|
         %th.column
-          %a.icon-info-sign(href='#{project_collection_schema_path(@project,@collection,s)}' data-toggle='modal' data-target='#edit-schema-modal')
+          %a.icon-info-sign(href='#' data-toggle='modal' class='#{s.id.to_s}')
           = s.name
+          :javascript
+            //Schemas#show (Edit Column Icon Link)
+            #{ajax_modal_js("th a.#{s.id.to_s}", project_collection_schema_path(@project,@collection,s))}
+
       %th File
   %tbody
     - items.each do |i|
-      %tr
+      %tr(class='#{i.id.to_s}')
         %td
-          %a.icon-time(href='#{project_collection_item_path(project,collection,i)}' data-toggle='modal' data-target='#history-modal')
+          %a.icon-time.item-show(href='#' data-toggle='modal')
+          :javascript
+            //Items#show (Data Row History Icon Link)
+            #{ajax_modal_js(".#{i.id.to_s} a.item-show", project_collection_item_path(project,collection,i), true)}
         - collection.schema.each do |s|
           -if s.controlled_vocabulary_id  
             -if @schema_cv_hash[s.name][i[s.name]]
               %td
-                %a(href='#{project_collection_item_controlled_vocabulary_term_path(@schema_cv_hash[s.id].project_id,@schema_cv_hash[s.id],@schema_cv_hash[s.name][i[s.name]])}' data-toggle='modal' data-target='#cv-modal')= i[s.name]
+                %a.item-cv(href='#' data-toggle='modal' class='#{s.id.to_s}')= i[s.name]
+                :javascript
+                  //Items#Show (Controlled Vocabulary Link)
+                  #{ajax_modal_js(".#{i.id.to_s} a.item-cv.#{s.id.to_s}", project_collection_item_path(@schema_cv_hash[s.id].project_id,@schema_cv_hash[s.id],@schema_cv_hash[s.name][i[s.name]]), true)}
             -else
               %td.danger= i[s.name]
           -elsif s.associated_schema     
             %td
               -json_string = JSON.parse(i[s.name])
-              %a(href='#{project_collection_item_controlled_vocabulary_term_path(json_string['project']['id'],json_string['collection']['id'],json_string['item']['id'])}' data-toggle='modal' data-target='#assoc-modal')= json_string['item']['display']
+              %a.as-show(href='' data-toggle='modal' class='#{s.id.to_s}')= json_string['item']['display']
+              :javascript
+                //Items#show (Association Item Show Link)
+                #{ajax_modal_js(".#{i.id.to_s} a.as-show.#{s.id.to_s}", project_collection_item_path(json_string['project']['id'],json_string['collection']['id'],json_string['item']['id']), true)}
           -else
             %td
               - if i[s.name].to_s.length > 42
