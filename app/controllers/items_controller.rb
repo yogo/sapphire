@@ -1,6 +1,6 @@
 class ItemsController < ApplicationController
 
-  before_filter :get_dependencies, :except => :controlled_vocabulary_term
+  before_filter :get_dependencies
   after_filter :update_project_stats, :only => [:create, :delete]
 
   def index
@@ -9,13 +9,6 @@ class ItemsController < ApplicationController
     else
       @item =@collection.items.new()
     end 
-  end
-  
-  def controlled_vocabulary_term
-    @project = Yogo::Project.get(params[:project_id])
-    @collection = @project.data_collections.get(params[:collection_id])
-    @item = @collection.items.get(params[:item_id])
-    #@item = @collection.items.first(:params[:cv])
   end
   
   #expects the delete_at datetime in params[:deleted_at]
