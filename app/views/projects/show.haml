@@ -1,16 +1,9 @@
 .row
-  / %h1
-  /   - if @project.public?
-  /     %span.label.label-info Public
-  /   - else
-  /     %span.label.label-default Private
-  /   = @project.name
-
   .tabbable
-    %ul.nav.nav-tabs
+    %ul.nav.nav-pills
       %li.active= link_to("Data Collections (#{@collections.count})", "#dc-tab", 'data-toggle' => 'tab')
       %li= link_to("Controlled Vocabularies (#{@cv_collections.count})", "#cv-tab", 'data-toggle' => 'tab')
-    .tab-content
+    .tab-content.content-box
       #dc-tab.tab-pane.active
         - if @collections.count > 0
           = render(:partial => "collections/list", :locals=>{:collections => @collections})
