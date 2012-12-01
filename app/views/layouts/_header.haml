@@ -17,11 +17,11 @@
                   - current_user.memberships.projects.each do |p|
                     - next if p.new?
                     %li= link_to p.name, project_path(p)
-              %li= link_to('New Project', '#new_project_form', 'data-toggle' => 'modal')
+              %li.project-new= link_to('New Project', '#', 'data-toggle' => 'modal')
         - if @project
           %li.divider-vertical
 
-        - if @project
+        - if @project 
           %li.dropdown
             %a.dropdown-toggle(href='#' data-toggle='dropdown') 
               = @project.name
@@ -38,9 +38,9 @@
                     %li= link_to c.name, project_collection_path(@project, c)
               %li.divider
               -if @project && current_user.member_of?(@project)
-                %li= link_to('Project Settings',    '#project_edit_form',   'data-toggle' => 'modal')
+                %li.project-edit= link_to('Project Settings', '#', 'data-toggle' => 'modal')
                 %li= link_to('Project Members',     '#project_users',       'data-toggle' => 'modal')
-                %li= link_to('New Collection',      '#new_collection_form', 'data-toggle' => 'modal')
+                %li.collection-new= link_to('New Collection', '#', 'data-toggle' => 'modal')
                 %li= link_to('Upload Project Data', '#upload_form',         'data-toggle' => 'modal')
                 -#%li
                 -#  -if @project && @project.private?
@@ -59,8 +59,8 @@
                 %li= link_to @collection.name, project_collection_path(@project, @collection)
                 %li.divider
                 -if @project && current_user.member_of?(@project)
-                  %li= link_to('Collection Settings',    '#collection_edit_form',   'data-toggle' => 'modal')
-                  %li= link_to('Add Column',             '#collection_schema_form', 'data-toggle' => 'modal')
+                  %li.collection-edit= link_to('Collection Settings','#','data-toggle' => 'modal')
+                  %li.schema-new= link_to('Add Column', '#', 'data-toggle' => 'modal')
                   %li= link_to('Upload Collection Data', '#upload_form',            'data-toggle' => 'modal')
                   %li= link_to('Filter',                 '#edit-filters',           'data-toggle' => 'modal')
                   - if @filters && !@filters.empty?
