@@ -1,7 +1,10 @@
-.block
-  .content
-    .inner
-      %h1 Edit Project
-
-      = render :partial => 'edit_form', :locals => {:project => @project, 
-        :cancel_link => link_to("Cancel", project_path(@project), :class => "text_button_padding link_button")}
+.content-box
+  .modal-header
+    %h3 Edit #{@project.name} Project Settings
+    %p.muted Project ID: #{@project.id}
+  = form_for(@project, :url => project_path, :html => {:class => 'form-box', :method=> :put}) do |f|
+    .modal-body
+      = render :partial => 'projects/form', :locals => {:f => f}
+    .modal-footer
+      %button.btn.btn-primary Save Changes
+      %a.btn(data-dismiss="modal") Close

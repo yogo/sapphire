@@ -1,5 +1,9 @@
-= form_for(@project, :url => projects_path, :html => {:class => 'form-box'}) do |f|
-  %legend Create Project
-  = render :partial => 'form', :locals => {:f => f}
-  %button.btn.btn-primary{:type => 'submit'} Save
-  = link_to("Cancel", projects_path, :class => 'btn btn-mini')
+.content-box
+  .modal-header
+    %h3 Create New Project
+  = form_for(Yogo::Project.new, :url => projects_path, :html => {:class => 'form-box'}) do |f|
+    .modal-body
+      = render :partial => 'projects/form', :locals => {:f => f}
+    .modal-footer
+      %button.btn.btn-primary Save Changes
+      %a.btn(data-dismiss="modal") Close

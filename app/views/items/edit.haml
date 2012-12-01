@@ -1,8 +1,9 @@
 .content-box
   .modal-header
     %h3 Edit #{@collection.name} Data Row
-    %p.muted Data Row ID:#{@item.id}
-  = form_for("item", @item, :url => project_collection_item_path(@project, @collection, @item), :html=>{:method=>"put", :class => 'form-box', :ajax=>false}) do |f| 
+    %p.muted Data Row ID: #{@item.id}
+  = form_for("item", @item, :url => project_collection_item_path(@project, @collection, @item), 
+            :html=>{:method=>"put", :class => 'form-box', :ajax=>false}) do |f| 
     .modal-body
       = render :partial => 'items/form', :locals => {:f => f, :collection => @collection}
     .modal-footer

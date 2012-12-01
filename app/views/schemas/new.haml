@@ -1,6 +1,10 @@
-= form_for("schema", :url => project_collection_schemas_path(@project, @collection), 
-  :html => {:class => 'form-box'}) do |f|
-  = render :partial => 'schemas/form', :locals => {:f => f}
-  .modal-footer
-    %button.btn.btn-primary Save Changes
-    %a.btn(data-dismiss="modal") Close
+.content-box
+  .modal-header
+    %h3 Add New #{@collection.name} Column
+  = form_for("schema", :url => project_collection_schemas_path(@project, @collection), 
+    :html => {:class => 'form-box'}) do |f|
+    .modal-body
+      = render :partial => 'schemas/form', :locals => {:f => f}
+    .modal-footer
+      %button.btn.btn-primary Save Changes
+      %a.btn(data-dismiss="modal") Close
