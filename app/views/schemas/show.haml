@@ -1,7 +1,8 @@
-.modal-header
-  %h3 #{@collection.name} Column: #{@schema.name}
-  %p.muted Column ID:#{@schema.id}
-.modal-body
-  =render :partial=> "schemas/version_table", :locals =>{:schema=>@schema, :project=>@project, :collection=>@collection}
-.modal-footer
-  %a.btn(data-dismiss="modal") Close
+.content-box
+  .modal-header
+    %h3 #{@collection.name} Column: #{@schema.name}
+    %p.muted Column ID:#{@schema.id}
+  .modal-body
+    =render :partial=> "schemas/version_table", :locals =>{:schema=>@schema, :project=>@project, :collection=>@collection}
+  .modal-footer
+    %a.btn(data-dismiss="modal") Close
