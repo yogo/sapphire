@@ -1,7 +1,7 @@
 %h2 Search Results:
 %h4 #{@search_results.map{|k,v| v.length}.inject(:+)} record(s) match your query.
 
-.search_results
+.search_results.content-box
   -@search_results.keys.each do |coll|
     -if @search_results[coll].length > 0
       -cur_collection=@data_collections.get(coll)
