@@ -61,18 +61,6 @@ class ProjectsController < ApplicationController
       #end
     end
     
-    def manage_controlled_vocabularies
-      project_ids= current_user.memberships(:fields=>[:project_id]).map{|m| m.project_id}.uniq
-      @collections = Yogo::Collection::Data.all(:project_id=> project_ids, :category=>"Controlled Vocabulary")
-      public_project_ids = Yogo::Project.all(:private=>false).map{|p| p.id} - project_ids
-      public_collection_ids = Yogo::Collection::Data.all(:project_id=> public_project_ids, :category=>"Controlled Vocabulary").map{|c| c.id}
-      public_collection_ids = (public_collection_ids + Yogo::Collection::Data.all(:private=>false, :category=>"Controlled Vocabulary").map{|c| c.id}).uniq
-      public_collection_ids = public_collection_ids - @collections.map{|c| c.id}
-      @public_collections = Yogo::Collection::Data.all(:id => public_collection_ids)
-   
-      @nav_controlled_vocabulary = true # light up the "controlled vocabulary nav"
-    end
-    
     def upload
      @project = Yogo::Project.get(params[:project_id])
     end

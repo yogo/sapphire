@@ -11,9 +11,6 @@ Sapphire::Application.routes.draw do
     put :remove_user
     post :associate_user
     post :publish
-    collection do
-      get :manage_controlled_vocabularies
-    end
     resources :collections do
       get :upload
       post :publish
