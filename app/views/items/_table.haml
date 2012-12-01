@@ -49,22 +49,24 @@
           -if s.controlled_vocabulary_id  
             -if @schema_cv_hash[s.name][i[s.name]]
               %td
-                %a.item-cv(href='#' data-toggle='modal' class='#{s.id.to_s}')= i[s.name]
-                :javascript
-                  //Items#Show (Controlled Vocabulary Link)
-                  #{ajax_modal_js(".#{i.id.to_s} a.item-cv.#{s.id.to_s}", project_collection_item_path(@schema_cv_hash[s.id].project_id,@schema_cv_hash[s.id],@schema_cv_hash[s.name][i[s.name]]), true)}
+                - if i[s.name] # if it is nil, don't do it
+                  %a.item-cv(href='#' data-toggle='modal' class='#{s.id.to_s}')= i[s.name]
+                  :javascript
+                    //Items#Show (Controlled Vocabulary Link)
+                    #{ajax_modal_js(".#{i.id.to_s} a.item-cv.#{s.id.to_s}", project_collection_item_path(@schema_cv_hash[s.id].project_id,@schema_cv_hash[s.id],@schema_cv_hash[s.name][i[s.name]]), true)}
             -else
               %td.danger= i[s.name]
           -elsif s.associated_schema     
             %td
-              -json_string = JSON.parse(i[s.name])
-              %a.icon-edit.as-edit(href='' data-toggle='modal' class='#{s.id.to_s}')
-              %a.as-show(href='' data-toggle='modal' class='#{s.id.to_s}')= json_string['item']['display']
-              :javascript
-                //Items#show (Association Item Show Link)
-                #{ajax_modal_js(".#{i.id.to_s} a.as-show.#{s.id.to_s}", project_collection_item_path(json_string['project']['id'],json_string['collection']['id'],json_string['item']['id']), true)}
-                //Items#edit (Association Item Edit Icon Link)
-                #{ajax_modal_js(".#{i.id.to_s} a.as-edit.#{s.id.to_s}", edit_project_collection_item_path(json_string['project']['id'],json_string['collection']['id'],json_string['item']['id']))}
+              - if i[s.name] # if it is nil, don't do it.
+                -json_string = JSON.parse(i[s.name])
+                %a.icon-edit.as-edit(href='' data-toggle='modal' class='#{s.id.to_s}')
+                %a.as-show(href='' data-toggle='modal' class='#{s.id.to_s}')= json_string['item']['display']
+                :javascript
+                  //Items#show (Association Item Show Link)
+                  #{ajax_modal_js(".#{i.id.to_s} a.as-show.#{s.id.to_s}", project_collection_item_path(json_string['project']['id'],json_string['collection']['id'],json_string['item']['id']), true)}
+                  //Items#edit (Association Item Edit Icon Link)
+                  #{ajax_modal_js(".#{i.id.to_s} a.as-edit.#{s.id.to_s}", edit_project_collection_item_path(json_string['project']['id'],json_string['collection']['id'],json_string['item']['id']))}
           -else
             %td
               - if i[s.name].to_s.length > 42
