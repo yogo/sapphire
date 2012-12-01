@@ -1,6 +1,0 @@
-= form_for(@project, :url => project_path, :html => {:class => 'modal-form', :method=> :put}) do |f|
-  .modal-body
-    = render :partial => 'projects/form', :locals => {:f => f}
-  .modal-footer
-    %button.btn.btn-primary Save Changes
-    %a.btn.btn-mini(data-dismiss="modal") Close
