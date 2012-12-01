@@ -1,5 +1,4 @@
-.row
-  .collection_table
+.content-box
   - if @collection.schema.count > 0
     -if current_user.member_of?(@project)
       = render  :partial => 'items/table', 

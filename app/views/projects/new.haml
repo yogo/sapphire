@@ -1,7 +1,5 @@
-.row
-  .container
-    = form_for(@project, :url => projects_path, :html => {:class => 'form-box'}) do |f|
-      %legend Create Project
-      = render :partial => 'form', :locals => {:f => f}
-      %button.btn.btn-primary{:type => 'submit'} Save
-      = link_to("Cancel", projects_path, :class => 'btn btn-mini')
+= form_for(@project, :url => projects_path, :html => {:class => 'form-box'}) do |f|
+  %legend Create Project
+  = render :partial => 'form', :locals => {:f => f}
+  %button.btn.btn-primary{:type => 'submit'} Save
+  = link_to("Cancel", projects_path, :class => 'btn btn-mini')

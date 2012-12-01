@@ -1,22 +1,17 @@
-.row
-  .tabbable
-    %ul.nav.nav-pills
-      %li.active= link_to("My Projects (#{@projects.count})", "#myproj-tab", 'data-toggle' => 'tab')
-      %li= link_to("Public Projects (#{@public_projects.count})", "#pubproj-tab", 'data-toggle' => 'tab')
-    .tab-content.content-box
-      #myproj-tab.tab-pane.active
-        - if @projects.count > 0
-          = render(:partial => 'projects/list', :locals => {:projects => @projects})
-        - else 
-          .span5
-          %a.span2.btn.btn-large.btn-primary(href='#new_project_form' data-toggle='modal') 
-            No Projects...
-            %br/
-            Create a Project!
-          .span5
-      #pubproj-tab.tab-pane
-        = render(:partial => 'projects/list', :locals => {:projects => @public_projects})
-
-
-
-
+.tabbable
+  %ul.nav.nav-pills
+    %li.active= link_to("My Projects (#{@projects.count})", "#myproj-tab", 'data-toggle' => 'tab')
+    %li= link_to("Public Projects (#{@public_projects.count})", "#pubproj-tab", 'data-toggle' => 'tab')
+  .tab-content.content-box
+    #myproj-tab.tab-pane.active
+      - if @projects.count > 0
+        = render(:partial => 'projects/list', :locals => {:projects => @projects})
+      - else 
+        .span5
+        %a.span2.btn.btn-large.btn-primary(href='#new_project_form' data-toggle='modal') 
+          No Projects...
+          %br/
+          Create a Project!
+        .span5
+    #pubproj-tab.tab-pane
+      = render(:partial => 'projects/list', :locals => {:projects => @public_projects})

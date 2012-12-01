@@ -1,29 +1,28 @@
-.row
-  .content-box
-    -if current_user.member_of?(@project) && @collection.schema.count > 0
-      = render(:partial => 'collections/filter', 
-              :locals => {:filter_item => @filter_item, :collection => @collection, 
-                          :project => @project, :filters => @filters})
-      = render(:partial => 'items/inline_form', :locals => {:items =>@items, 
-                :collection => @collection, :project=>@project})
+.content-box
+  -if current_user.member_of?(@project) && @collection.schema.count > 0
+    = render(:partial => 'collections/filter', 
+            :locals => {:filter_item => @filter_item, :collection => @collection, 
+                        :project => @project, :filters => @filters})
+    = render(:partial => 'items/inline_form', :locals => {:items =>@items, 
+              :collection => @collection, :project=>@project})
 
-  .content-box
-    - if @collection.schema.count > 0
-      .header
-        %strong Data Grid
-      - unless @filters.empty?
-        Filtered By: #{@filters.map{|k,v| @collection.schema.by_field_name(k.target.to_s).name + " : #{v}"}.join(' ' + params[:options] + ' ')}
-        %a.btn-small(href='#{project_collection_path(@project, @collection)}') Clear Filters
-      -if current_user.member_of?(@project)
-        = render  :partial => 'items/table', 
-                  :locals => {:items =>@items, :collection => @collection, :project=>@project}
-      -else
-        = render  :partial => 'items/public_table', 
-                  :locals => {:items => @items, :collection => @collection, :project=>@project}
-    - else
-      .span5
-      %a.span2.btn.btn-primary(href='#collection_schema_form' data-toggle='modal') 
-        Empty Data Collection 
-        %br/
-        Add a Column!
-      .span5
+.content-box
+  - if @collection.schema.count > 0
+    .header
+      %strong Data Grid
+    - unless @filters.empty?
+      Filtered By: #{@filters.map{|k,v| @collection.schema.by_field_name(k.target.to_s).name + " : #{v}"}.join(' ' + params[:options] + ' ')}
+      %a.btn-small(href='#{project_collection_path(@project, @collection)}') Clear Filters
+    -if current_user.member_of?(@project)
+      = render  :partial => 'items/table', 
+                :locals => {:items =>@items, :collection => @collection, :project=>@project}
+    -else
+      = render  :partial => 'items/public_table', 
+                :locals => {:items => @items, :collection => @collection, :project=>@project}
+  - else
+    .span5
+    %a.span2.btn.btn-primary(href='#collection_schema_form' data-toggle='modal') 
+      Empty Data Collection 
+      %br/
+      Add a Column!
+    .span5
