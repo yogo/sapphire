@@ -1,11 +1,8 @@
+-# Todo: make modals stack by generating ajax modal divs into the DOM prior to ajax load
 -# Standard width modal
 #ajax-modal.modal.hide.fade
 -# Full width modal
 #ajax-modal-fw.container.modal.hide.fade
--# Project#new form
-:javascript
-  //Projects#new (New Project)
-  #{ajax_modal_js("#header li.project-new a", new_project_path)}
 
 - if @project
   -# Projects#search form
@@ -35,16 +32,4 @@
       %h3 Project Users
     = render :partial => 'projects/project_users'
 
-  :javascript
-    //Projects#edit (Project Settings)
-    #{ajax_modal_js("#header li.project-edit a", edit_project_path(@project))}
-    //Collections#new (New Collection)
-    #{ajax_modal_js("#header li.collection-new a", new_project_collection_path(@project))}
 
-- if @collection
-  -# Collection#edit form
-  :javascript
-    //Collections#edt (Collection Settings)
-    #{ajax_modal_js("#header li.collection-edit a", edit_project_collection_path(@project, @collection))}
-    //Schemas#new (Add Column)
-    #{ajax_modal_js("#header li.schema-new a", new_project_collection_schema_path(@project,@collection))}
