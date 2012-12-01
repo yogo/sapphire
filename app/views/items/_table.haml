@@ -14,12 +14,6 @@
     -s.data_collection.items.each do |i|
       -link_hash = link_hash.merge({i[s.name] => @schema_cv_hash[s.id].items.first("field_#{s.controlled_vocabulary_id.to_s.gsub('-','_')}".to_sym=>i[s.name])})
     -@schema_cv_hash[s.name]=link_hash
-    
-
--# Standard width modal
-#table-item-modal.modal.hide.fade
--# Full width modal
-#table-item-modal-fw.container.modal.hide.fade
 
 %table.data-table.table.table-condensed.table-striped
   %thead
@@ -34,7 +28,7 @@
           %a.icon-edit(href='' data-toggle='modal' class='#{s.id.to_s}')
           = s.name
           :javascript
-            var $modal = $('#table-item-modal');
+            var $modal = $('#ajax-modal');
             // CV Show
             $('th a.#{s.id.to_s}').on('click', function(){
               $('body').modalmanager('loading');
@@ -54,8 +48,8 @@
           = link_to("", project_collection_item_path(project,collection,i), :class => 'icon-remove-circle',:method=>:delete, 
                     "data-confirm"=>"Are you sure you wish to delete this Data Row?")
           :javascript
-            var $modal = $('#table-item-modal');
-            var $fwmodal = $('#table-item-modal-fw');
+            var $modal = $('#ajax-modal');
+            var $fwmodal = $('#ajax-modal-fw');
             // Item Show
             $('.#{i.id.to_s} a.item-show').on('click', function(){
               $('body').modalmanager('loading');
@@ -82,7 +76,7 @@
               %td
                 %a.item-cv(href='#' data-toggle='modal' class='#{s.id.to_s}')= i[s.name]
                 :javascript
-                  var $modal = $('#table-item-modal-fw');
+                  var $modal = $('#ajax-modal-fw');
                   // CV Show
                   $('.#{i.id.to_s} a.cv.#{s.id.to_s}').on('click', function(){
                     $('body').modalmanager('loading');
@@ -100,8 +94,8 @@
               %a.icon-edit.as-edit(href='' data-toggle='modal' class='#{s.id.to_s}')
               %a.as-show(href='' data-toggle='modal' class='#{s.id.to_s}')= json_string['item']['display']
               :javascript
-                var $modal = $('#table-item-modal');
-                var $fwmodal = $('#table-item-modal-fw');
+                var $modal = $('#ajax-modal');
+                var $fwmodal = $('#ajax-modal-fw');
                 // Item Show
                 $('.#{i.id.to_s} a.as-show.#{s.id.to_s}').on('click', function(){
                   $('body').modalmanager('loading');
