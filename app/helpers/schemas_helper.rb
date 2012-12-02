@@ -3,9 +3,9 @@ module SchemasHelper
     types = Yogo::Collection::Property::COMMON_PROPERTIES.map(&:to_s).zip(
       Yogo::Collection::Property::COMMON_PROPERTIES.map{|p| "Yogo::Collection::Property::" + p.to_s}
     ) + [ 
-      ['Prompt', 'controlled_vocabulary'],
-      ['Link', 'association'],
-      ['Link List', 'list_association']
+      ['Association: Prompt', 'controlled_vocabulary'],
+      ['Association: Link', 'association'],
+      ['Association: Link List', 'list_association']
     ]
 
     types.map do |type|
@@ -22,6 +22,14 @@ module SchemasHelper
       [key,type[1]]
     end
 
+  end
+
+  def collection_column_values_json(proj)
+    j = {}
+    proj.collections.each do |c| 
+      j[c.id.to_s] = c.schema.map{|s| [s.id.to_s, s.name]}
+    end
+    j.to_json
   end
   
   def position_opts(coll)

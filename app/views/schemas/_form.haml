@@ -18,43 +18,93 @@
     #String-help.tab-pane.active.help-block
       %dl
         %dt Short Text
-        %dd Short text snippets up to 50 characters in length.  It is the "default" column type for Sapphire Collection Columns.
+        %dd 
+          Short text entry column.
+          %a(href='#' onClick="$('#String-help .more').toggle();") More...
+          .more.hide
+            Short text snippets up to 50 characters in length.  It is the "default" column type for Sapphire Collection Columns.
     #Text-help.tab-pane.help-block
       %dl 
         %dt Long Text
-        %dd Long text is for longer narrative text. It has a very large maximum length and is only limited by the amount of storage you have on the Sapphire server.
+        %dd 
+          Long text entry column.
+          %a(href='#' onClick="$('#Text-help .more').toggle();") More...
+          .more.hide
+            Long text is for longer narrative text. It has a very large maximum length and is only limited by the amount of storage you have on the Sapphire server.
     #Integer-help.tab-pane.help-block 
       %dl
         %dt Whole Number
-        %dd The Whole Number type comprises positive and negative whole (non-fractional) numbers.  A more specific term for this type would be <em>integer</em>.  The Sapphire Integer column is 4 btyes and can hold any value between  -2147483648 to +2147483647. 
+        %dd 
+          A number without decimal places.
+          %a(href='#' onClick="$('#Integer-help .more').toggle();") More...
+          .more.hide
+            The Whole Number type comprises positive and negative whole (non-fractional) numbers.  A more specific term for this type would be <em>integer</em>.  The Sapphire Integer column is 4 btyes and can hold any value between  -2147483648 to +2147483647. 
     #Float-help.tab-pane.help-block
       %dl
         %dt Decimal Number
-        %dd The Decimal Number type comprises positive and negative fractional numbers.  The Sapphire Decimal Number column is 8 bytes and can store 15 digits of decimal precision. 
+        %dd 
+          This is a number with decimal places.
+          %a(href='#' onClick="$('#Float-help .more').toggle();") More...
+          .more.hide
+            The Decimal Number type comprises positive and negative fractional numbers.  The Sapphire Decimal Number column is 8 bytes and can store 15 digits of decimal precision. 
     #Boolean-help.tab-pane.help-block
       %dl
         %dt True/False
-        %dd This type can be either true or false (represented in the user interface as a checkbox). It is also called "Yes/No" or Boolean. 
+        %dd 
+          A True or False value is stored in this column.
+          %a(href='#' onClick="$('#Boolean-help .more').toggle();") More...
+          .more.hide
+            This type can be either true or false (represented in the user interface as a checkbox). It is also called "Yes/No" or Boolean. 
     #Date-help.tab-pane.help-block
       %dl
         %dt Date
-        %dd The Date type can hold a calendar date.  It uses 4 bytes of storage per date and can store any date between 4,713 BCE and 5,874,897 CE with a resolution of 1 Day.   
+        %dd 
+          The Date type holds a calendar date.
+          %a(href='#' onClick="$('#Date-help .more').toggle();") More...
+          .more.hide
+            It uses 4 bytes of storage per date and can store any date between 4,713 BCE and 5,874,897 CE with a resolution of 1 Day.   
     #DateTime-help.tab-pane.help-block
       %dl
         %dt Date & Time
-        %dd The Date & Time type holds a date as well as a time. It uses 8 bytes of storage per value and can store any date and time between 4,713 BCE and 294,276 CE with a resolution of 1 microsecond (14 digits).
+        %dd 
+          The Date & Time type holds a time as well as a date. 
+          %a(href='#' onClick="$('#DateTime-help .more').toggle();") More...
+          .more.hide
+            It uses 8 bytes of storage per value and can store any date and time between 4,713 BCE and 294,276 CE with a resolution of 1 microsecond (14 digits).
     #controlled_vocabulary-help.tab-pane.help-block
       %dl
-        %dt Prompt
-        %dd This is a Collection Association type.  This type will link this column to another column in a different Collection.  When you input a value here, values from that other collection's column will be used to prompt your input. Important: since this is just a prompt, if the value in the target collection changes, the value in this collection will not change!
+        %dt Association: Prompt
+        %dd 
+          This is a column whose values are prompted from another collection.
+          %a(href='#' onClick="$('#controlled_vocabulary-help .more').toggle();") More...
+          .more.hide
+            This is a Collection Association type.  This type will link this column to another column in a different Collection.  When you input a value here, values from that other collection's column will be used to prompt your input. Important: since this is just a prompt, if the value in the target collection changes, the value in this collection will not change!
     #association-help.tab-pane.help-block
       %dl
-        %dt Link
-        %dd This is a Collection Association Type.  This type will link this column to another column in a different Collection.  When you input a value here, you will only be able to choose from values that already exist in the other collection.  Important: if the value in the target collection changes, your local value will update itself to match! This is called a <em>Foreign Key</em> relationship in database terminology and is the "belongs to" side of the relationship.
+        %dt Association: Link
+        %dd 
+          This is a column that is linked to a row in another collection.
+          %a(href='#' onClick="$('#association-help .more').toggle();") More...
+          .more.hide
+            This is a Collection Association Type.  This type will link this column to another column in a different Collection.  When you input a value here, you will only be able to choose from values that already exist in the other collection.  Important: if the value in the target collection changes, your local value will update itself to match! This is called a <em>Foreign Key</em> relationship in database terminology and is the "belongs to" side of the relationship.
     #list_association-help.tab-pane.help-block
       %dl
-        %dt Link List
-        %dd This is a Collection Association Type.  This type will link this column to several rows in a different Collection.  Important: This column will not be editable and is only for reference purposes.  In order to add more items to the list, you must go to the target Collection and link more rows to this Collection.  This is also called a <em>Foreign Key</em> relationship in database terminology, but it is the "has many" side of the relationship.
+        %dt Association: Link List
+        %dd 
+          This is a column that shows a list of linked rows in another collection
+          %a(href='#' onClick="$('#list_association-help .more').toggle();") More...
+          .more.hide
+            This is a Collection Association Type.  This type will link this column to several rows in a different Collection.  Important: This column will not be editable and is only for reference purposes.  In order to add more items to the list, you must go to the target Collection and link more rows to this Collection.  This is also called a <em>Foreign Key</em> relationship in database terminology, but it is the "has many" side of the relationship.
+
+#assoc-collection-select.hide
+  %label Associated Collection
+  = select(:schema, :association_collection, @project.collections.map{|c| [c.name, c.id] })
+
+#assoc-column-select.hide
+  %label Display Column
+  = select(:schema, :association_column, [])
+  .help-block
+    For Prompt type assocations, this determines which column you would like to use for the controlled vocabulary.  For the other types of associations, this is just which column will be displayed.
 
 :javascript
   $('#schema_type').change(function() {
@@ -62,11 +112,35 @@
     tab_str = str_ary[str_ary.length-1]
     tab = "#" + tab_str + '-help'
     $('#type-help .active').toggleClass('active');
-    $(tab).toggleClass('active');
+    $(tab).toggleClass('active', function(){
+      if($('#schema_type option:selected').val().split("::").length < 2){
+        $('#assoc-collection-select').show();
+        $('#assoc-column-select').show();
+        populate_assoc_column_select();
+      } else {
+        $('#assoc-collection-select').hide();      
+        $('#assoc-column-select').hide();
+      }
+    });
+  });
+  
+  $('#assoc-collection-select select').change(function(){
+    populate_assoc_column_select();  
   });
 
-%label Controlled Vocabulary
-= f.select(:controlled_vocabulary_id, controlled_vocabulary_opts.sort, :include_blank => true)
+  function populate_assoc_column_select(){
+    $('#assoc-column-select select option').remove();
+    selectValues = #{collection_column_values_json(@project)};
+    collectionKey = $('#assoc-collection-select select option:selected').val();
+    $.each(selectValues[collectionKey], function(key, value) { 
+       id = value[0];
+       name = value[1]  
+       $('#assoc-column-select select')
+           .append($("<option></option>")
+           .attr("value",id)
+           .text(name)); 
+    });
+  }
 
-%label Association
-= f.select(:associated_schema_id, association_opts.sort, :include_blank => true)
+
+
