@@ -12,22 +12,17 @@
       %th Controlled Vocabulary ID
       %th Associated Schema ID
   %tbody
-    %tr
-      %td &nbsp;
-      %td= schema.updated_at.strftime("%B %d, %Y %I:%M:%S %p")
-      %td Current Version
-      %td= schema.updated_by
-      %td= schema.name
-      %td= schema.position
-      %td= schema.type
-      %td= schema.description
-      %td= schema.controlled_vocabulary_id
-      %td= schema.associated_schema_id 
-    - schema.versions.reverse.each do |v|
+    - (schema.versions << schema).reverse.each do |v|
       %tr
-        %td= link_to "<i class='icon-upload-alt'></i>".html_safe, project_collection_schema_restore_path(project,collection,schema, :deleted_at=>v.deleted_at), :method=>:put,:class=> 'btn btn-mini', "data-confirm"=>"Are you sure you wish to restore this Item?"
+        %td
+          - if schema != v
+            =link_to "<i class='icon-upload-alt'></i>".html_safe, project_collection_schema_restore_path(project,collection,schema, :deleted_at=>v.deleted_at), :method=>:put,:class=> 'btn btn-mini', "data-confirm"=>"Are you sure you wish to restore this Item?"
         %td= v.updated_at.strftime("%B %d, %Y %I:%M:%S %p")
-        %td= v.updated_comment
+        %td
+          - if schema == v
+            Current Version
+          - else
+            = v.updated_comment
         %td= v.updated_by
         %td= v.name
         %td= v.position
