@@ -20,9 +20,10 @@
       = render  :partial => 'items/public_table', 
                 :locals => {:items => @items, :collection => @collection, :project=>@project}
   - else
-    .span5
-    %a.span2.btn.btn-primary(href='#collection_schema_form' data-toggle='modal') 
-      Empty Data Collection 
-      %br/
-      Add a Column!
-    .span5
+    .row
+      .span5
+      %a.span2.btn.btn-primary.schema-new(href='#collection_schema_form' data-toggle='modal') 
+        Empty Data Collection 
+        %br/
+        Add a Column!
+      .span5
