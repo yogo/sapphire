@@ -98,13 +98,13 @@
 
 #assoc-collection-select.hide
   %label Associated Collection
-  = select(:schema, :association_collection, @project.collections.map{|c| [c.name, c.id] })
+  = select(:schema, :association_collection_id, @project.collections.map{|c| [c.name, c.id] }, :include_blank => true)
 
 #assoc-column-select.hide
   %label Display Column
-  = select(:schema, :association_column, [])
+  = select(:schema, :association_column_id, [])
   .help-block
-    For Prompt type assocations, this determines which column you would like to use for the controlled vocabulary.  For the other types of associations, this is just which column will be displayed.
+    This determines which linked column will be displayed. For Prompt type assocations, this determines which column you would like to use for the controlled vocabulary prompting. 
 
 :javascript
   $('#schema_type').change(function() {
@@ -123,7 +123,7 @@
       }
     });
   });
-  
+
   $('#assoc-collection-select select').change(function(){
     populate_assoc_column_select();  
   });

@@ -4,12 +4,12 @@ module SchemasHelper
       Yogo::Collection::Property::COMMON_PROPERTIES.map{|p| "Yogo::Collection::Property::" + p.to_s}
     ) + [ 
       ['Association: Prompt', 'controlled_vocabulary'],
-      ['Association: Link', 'association'],
-      ['Association: Link List', 'list_association']
+      ['Association: Link', 'association'] #,
+   #   ['Association: Link List', 'list_association']
     ]
 
     types.map do |type|
-      key = case type[0]
+      friendly_name = case type[0]
       when 'String'   then 'Short Text'
       when 'Text'     then 'Long Text'
       when 'Boolean'  then 'True/False'
@@ -19,7 +19,7 @@ module SchemasHelper
       else
         type[0]
       end
-      [key,type[1]]
+      [friendly_name,type[1]]
     end
 
   end

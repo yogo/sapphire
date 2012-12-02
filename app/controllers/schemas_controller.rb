@@ -11,28 +11,44 @@ class SchemasController < ApplicationController
 
     def edit
       @schema = @collection.schema.get(params[:id])
-      @versions = Yogo::Collection::Property.with_deleted.all(:original_uid=>@schema.id, :order=>[:deleted_at])
     end
 
     def update
       @schema = @collection.schema.get(params[:id])
-      if params[:schema][:controlled_vocabulary_id].blank?
-        params[:schema][:controlled_vocabulary_id] = nil
-      end
-      if params[:schema][:associated_schema_id].blank?
-        params[:schema].delete(:associated_schema_id)
-      elsif !@schema.associated_schema_id.nil?  && @schema.associated_schema_id !=params[:schema][:associated_schema_id]  
-        if Yogo::Collection::Property.get(params[:schema][:associated_schema_id]).data_collection_id == @schema.associated_schema.data_collection_id
-          #do nothing because the existing UIDs will still work we have just changed the display column
-          flash[:notice] = "Column was Updated with different display column from existing Association."
-        else
-          @schema.deleted_at = Time.now
-          @schema.save
-          @schema = @collection.schema.create(params[:schema])
-          flash[:notice] = "Column was Updated with new Association."
+
+      if params[:schema][:association_column_id]
+        case params[:schema][:type]
+        when 'controlled_vocabulary'
+          params[:schema][:controlled_vocabulary_id] = params[:schema][:association_column_id]
+          # This is a problem. We can't change the type, but the prepop list will be potentially nonsensical (prompting strings for an Int column for example)
+          # params[:schema][:type] = Yogo::Collection::Property.get(params[:schema][:association_column]).type
+        when 'association'
+          params[:schema][:associated_schema_id] = params[:schema][:association_column_id]
+        when 'list_association'
+          params[:schema][:associated_list_schema_id] = params[:schema][:association_column_id]
         end
+        params[:schema].delete(:association_column_id)
       end
-      @schema = @collection.schema.get(params[:id])
+
+      params[:schema].delete(:association_collection_id) if params[:schema][:association_collection_id]
+
+      # Type not allowed to be changed
+      params[:schema].delete(:type) if params[:schema][:type]
+
+      # if params[:schema][:associated_schema_id].blank?
+      #   params[:schema].delete(:associated_schema_id)
+      # elsif @schema.associated_schema_id != params[:schema][:associated_schema_id]  
+      #   if Yogo::Collection::Property.get(params[:schema][:associated_schema_id]).data_collection_id == @schema.associated_schema.data_collection_id
+      #     #do nothing because the existing UIDs will still work we have just changed the display column
+      #     flash[:notice] = "Column was Updated with different display column from existing Association."
+      #   else
+      #     @schema.deleted_at = Time.now
+      #     @schema.save
+      #     @schema = @collection.schema.create(params[:schema])
+      #     flash[:notice] = "Column was Updated with new Association."
+      #   end
+      # end
+
       if @schema.update(params[:schema])
         flash[:notice] = "Column updated!"
         @schema.update_position
@@ -75,22 +91,33 @@ class SchemasController < ApplicationController
     end
     
     def create
-      if params[:schema][:controlled_vocabulary_id].blank?
-        params[:schema].delete(:controlled_vocabulary_id)
+      # Funnily enough, we don't care about the association_collection at all (that comes from the column)
+      if params[:schema][:association_column_id]
+        case params[:schema][:type]
+        when 'controlled_vocabulary'
+          params[:schema][:controlled_vocabulary_id] = params[:schema][:association_column_id]
+          params[:schema][:type] = Yogo::Collection::Property.get(params[:schema][:association_column]).type
+        when 'association'
+          params[:schema][:associated_schema_id] = params[:schema][:association_column_id]
+          params[:schema][:type] = Yogo::Collection::Property::Text
+        when 'list_association'
+          params[:schema][:associated_list_schema_id] = params[:schema][:association_column_id]
+          params[:schema][:type] = Yogo::Collection::Property::Text
+        end
+        params[:schema].delete(:association_column_id)
       end
-      if params[:schema][:associated_schema_id].blank?
-        params[:schema].delete(:associated_schema_id)
-      end
+      # There is only a column if someone selects a collection, but 
+      # a blank association_collection is always sent.
+      # The 'if' is just a defensive programming tic (though it makes sense from an API perspective...).
+      params[:schema].delete(:association_collection_id) if params[:schema][:association_collection_id]
       
+      logger.info '!!!! PARAMS: ' + params.inspect
+
       @schema = @collection.schema.new(params[:schema])
-      @schema.position = @collection.schema.count if @schema.position.blank?
-      if @schema.associated_schema_id  
-        @schema.type = Yogo::Collection::Property::Text #because JSON need to go here and it could get big
-      end
       if @schema.save
         @schema.update_position
-        if @schema.type == Yogo::Collection::Property::String || @schema.type == Yogo::Collection::Property::Text
-          #lets have the table create
+        if @schema.type.to_s =~ /String|Text|JSON/
+          #force table creation
           @collection.items.new
           sql="ALTER TABLE #{'"'+@collection.id.to_s.gsub('-','_')+'s"'} ADD COLUMN field_#{@schema.id.to_s.gsub('-','_')}_search_index tsvector;"
           repository.adapter.execute(sql)
@@ -99,7 +126,7 @@ class SchemasController < ApplicationController
           sql = "CREATE TRIGGER field_#{@schema.id.to_s.gsub('-','_')} BEFORE INSERT OR UPDATE ON #{'"'+@collection.id.to_s.gsub('-','_')+'s"'} FOR EACH ROW EXECUTE PROCEDURE tsvector_update_trigger(field_#{@schema.id.to_s.gsub('-','_')}_search_index, 'pg_catalog.english', field_#{@schema.id.to_s.gsub('-','_')});"
           repository.adapter.execute(sql)
         end
-        flash[:notice] = "Column saved successfully!"
+        flash[:notice] = "Column created successfully!"
       else
         flash[:error] = "Column failed to save! Errors: " + @schema.errors.full_messages.join(', ')
       end
