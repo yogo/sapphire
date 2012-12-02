@@ -45,13 +45,13 @@ class CollectionsController < ApplicationController
   end
   
   def create
-    @collection = @project.data_collections.new(params[:yogo_collection_data])
+    @collection = @project.data_collections.new(params[:collection])
     @collection.type = Yogo::Collection::Asset
     if @collection.save
       flash[:notice] = "Collection \"#{@collection.name}\" created!"
       if @collection.category == "Controlled Vocabulary"
         #create term and description columns
-        @collection.schema.create(:name=>"Term", :type=>Yogo::Collection::Property::Text, :position=>0)
+        @collection.schema.create(:name=>"Term", :type=>Yogo::Collection::Property::String, :position=>0)
         @collection.schema.create(:name=>"Description", :type=>Yogo::Collection::Property::Text, :position=>1)
       end  
       redirect_to project_collection_path(@project, @collection)
