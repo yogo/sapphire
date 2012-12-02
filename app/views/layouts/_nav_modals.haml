@@ -1,8 +1,9 @@
 -# Todo: make modals stack by generating ajax modal divs into the DOM prior to ajax load
 -# Standard width modal
-#ajax-modal.modal.hide.fade
+#ajax-modal.modal.hide.fade(data-focus-on="input:visible:first")
+
 -# Full width modal
-#ajax-modal-fw.container.modal.hide.fade
+#ajax-modal-fw.container.modal.hide.fade(data-focus-on="input:visible:first")
 
 - if @project
   -# Projects#search form
