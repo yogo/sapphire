@@ -61,7 +61,6 @@ class SchemasController < ApplicationController
     end
     
     def new
-      @schema = @collection.schema.new
     end
     
     def destroy
