@@ -51,11 +51,11 @@ class ItemsController < ApplicationController
     else
       respond_to do |format|
         format.html do
-          flash[:error] = ["Item failed to save!", @item.errors.full_messages].flatten.join(' ')
+          flash[:error] = ["Item failed to save! Errors:", @item.errors.full_messages].flatten.join(' ')
           render :edit
         end
         format.json { render json: @item.to_json, status: :error}
-        format.js { render :js => '$("#message").html("<h2>Item failed updated.</h2>").attr("class","message error").scrollTop(0); $("html, body").animate({scrollTop: "0px"})' }
+        format.js { render :js => '$("#message").html("<h2>Item failed update.</h2>").attr("class","message error").scrollTop(0); $("html, body").animate({scrollTop: "0px"})' }
       end
     end
   end
