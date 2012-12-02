@@ -3,7 +3,7 @@
     %h3 Edit #{@collection.name} Column: #{@schema.name} 
     %p.muted Column ID: #{@schema.id}
 
-  = form_for("schema", @schema, 
+  = form_for(@schema, @schema, 
     :url => project_collection_schema_path(@project, @collection, @schema), 
     :html => {:class => 'form-box', :method=>"put"}) do |f| 
     .modal-body
