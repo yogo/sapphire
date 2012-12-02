@@ -41,13 +41,13 @@
         -if s.controlled_vocabulary_id  
           -if @schema_cv_hash[s.name][item[s.name]]
             %td
-              %a(href='#{project_collection_item_controlled_vocabulary_term_path(@schema_cv_hash[s.id].project_id,@schema_cv_hash[s.id],@schema_cv_hash[s.name][item[s.name]])}' data-toggle='modal' data-target='#cv-modal')= item[s.name]
+              %a(href='#{project_collection_item_path(@schema_cv_hash[s.id].project_id,@schema_cv_hash[s.id],@schema_cv_hash[s.name][item[s.name]])}' data-toggle='modal' data-target='#cv-modal')= item[s.name]
           -else
             %td.danger= item[s.name]
         -elsif s.associated_schema     
           %td
             -json_string = JSON.parse(item[s.name])
-            %a(href='#{project_collection_item_controlled_vocabulary_term_path(json_string['project']['id'],json_string['collection']['id'],json_string['item']['id'])}' data-toggle='modal' data-target='#assoc-modal')= json_string['item']['display']
+            %a(href='#{project_collection_item_path(json_string['project']['id'],json_string['collection']['id'],json_string['item']['id'])}' data-toggle='modal' data-target='#assoc-modal')= json_string['item']['display']
         -else
           %td= item[s.name]
       %td
@@ -66,13 +66,13 @@
           -if s.controlled_vocabulary_id  
             -if @schema_cv_hash[s.name][i[s.name]]
               %td
-                %a(href='#{project_collection_item_controlled_vocabulary_term_path(@schema_cv_hash[s.id].project_id,@schema_cv_hash[s.id],@schema_cv_hash[s.name][i[s.name]])}' data-toggle='modal' data-target='#cv-modal')= i[s.name]
+                %a(href='#{project_collection_item_path(@schema_cv_hash[s.id].project_id,@schema_cv_hash[s.id],@schema_cv_hash[s.name][i[s.name]])}' data-toggle='modal' data-target='#cv-modal')= i[s.name]
             -else
               %td.danger= i[s.name]
           -elsif s.associated_schema     
             %td
               -json_string = JSON.parse(i[s.name])
-              %a(href='#{project_collection_item_controlled_vocabulary_term_path(json_string['project']['id'],json_string['collection']['id'],json_string['item']['id'])}' data-toggle='modal' data-target='#assoc-modal')= json_string['item']['display']
+              %a(href='#{project_collection_item_path(json_string['project']['id'],json_string['collection']['id'],json_string['item']['id'])}' data-toggle='modal' data-target='#assoc-modal')= json_string['item']['display']
           -else
             %td= i[s.name]
         %td
