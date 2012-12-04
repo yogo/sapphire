@@ -9,7 +9,8 @@
     #{ajax_modal_js("#header li.project-edit a", edit_project_path(@project))}
     //Collections#new (New Collection)
     #{ajax_modal_js("#header li.collection-new a", new_project_collection_path(@project))}
-
+    //Collections#new (New Collection Prompt Button)
+    #{ajax_modal_js("a.btn.collection-new", new_project_collection_path(@project))}
 - if @collection
   :javascript
     //Collections#edt (Collection Settings)
