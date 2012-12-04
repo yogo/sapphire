@@ -96,7 +96,7 @@ class SchemasController < ApplicationController
         case params[:schema][:type]
         when 'controlled_vocabulary'
           params[:schema][:controlled_vocabulary_id] = params[:schema][:association_column_id]
-          params[:schema][:type] = Yogo::Collection::Property.get(params[:schema][:association_column]).type
+          params[:schema][:type] = Yogo::Collection::Property.get(params[:schema][:association_column_id]).type
         when 'association'
           params[:schema][:associated_schema_id] = params[:schema][:association_column_id]
           params[:schema][:type] = Yogo::Collection::Property::Text
