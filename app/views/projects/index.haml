@@ -8,7 +8,7 @@
         = render(:partial => 'projects/list', :locals => {:projects => @projects})
       - else 
         .span5
-        %a.span2.btn.btn-large.btn-primary(href='#new_project_form' data-toggle='modal') 
+        %a.span2.btn.btn-large.btn-primary.project-new(href='#new_project_form' data-toggle='modal') 
           No Projects...
           %br/
           Create a Project!
