@@ -46,8 +46,9 @@
             %td.danger= item[s.name]
         -elsif s.associated_schema     
           %td
-            -json_string = JSON.parse(item[s.name])
-            %a(href='#{project_collection_item_path(json_string['project']['id'],json_string['collection']['id'],json_string['item']['id'])}' data-toggle='modal' data-target='#assoc-modal')= json_string['item']['display']
+            - unless item[s.name].nil?
+              -json_string = JSON.parse(item[s.name])
+              %a(href='#{project_collection_item_path(json_string['project']['id'],json_string['collection']['id'],json_string['item']['id'])}' data-toggle='modal' data-target='#assoc-modal')= json_string['item']['display']
         -else
           %td= item[s.name]
       %td
@@ -71,8 +72,9 @@
               %td.danger= i[s.name]
           -elsif s.associated_schema     
             %td
-              -json_string = JSON.parse(i[s.name])
-              %a(href='#{project_collection_item_path(json_string['project']['id'],json_string['collection']['id'],json_string['item']['id'])}' data-toggle='modal' data-target='#assoc-modal')= json_string['item']['display']
+              - unless i[s.name].nil?
+                -json_string = JSON.parse(i[s.name])
+                %a(href='#{project_collection_item_path(json_string['project']['id'],json_string['collection']['id'],json_string['item']['id'])}' data-toggle='modal' data-target='#assoc-modal')= json_string['item']['display']
           -else
             %td= i[s.name]
         %td
