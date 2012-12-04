@@ -7,9 +7,10 @@
       -cur_collection=@data_collections.get(coll)
       -unless cur_collection.nil?
         %hr
-        .row
-          %h4= cur_collection.name
-          -if current_user.member_of?(@project)       
-            = render :partial => '/items/table', :locals => {:items => @search_results[coll], :collection => cur_collection, :project=>@project}
-          -else
-            = render :partial => '/items/public_table', :locals => {:items => @search_results[coll], :collection => cur_collection, :project=>@project}
+        .container
+          .span11
+            %h4= cur_collection.name
+            -if current_user.member_of?(@project)       
+              = render :partial => '/items/table', :locals => {:items => @search_results[coll], :collection => cur_collection, :project=>@project}
+            -else
+              = render :partial => '/items/public_table', :locals => {:items => @search_results[coll], :collection => cur_collection, :project=>@project}
