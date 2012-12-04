@@ -201,7 +201,11 @@ class CollectionsController < ApplicationController
               assoc_item = s.associated_schema.data_collection.items.get(json_string['item']['id'])
               s.associated_schema.collection.data_collection.schema.each do |assoc|
                 if assoc.associated_schema
-                  row_array << JSON.parse(assoc_item[assoc.name])['item']['display']
+                  unless assoc_item[assoc.name].nil?
+                    row_array << JSON.parse(assoc_item[assoc.name])['item']['display']
+                  else
+                    row_array <<""
+                  end
                 else
                   row_array << (assoc.name == "File" ? assoc_item.original_filename : assoc_item[assoc.name].to_s)
                 end
