@@ -107,7 +107,11 @@ class CollectionsController < ApplicationController
     filename ="#{@collection.name}-#{Time.now.to_i}.zip"
     Zip::ZipFile.open("tmp/downloads/"+filename, Zip::ZipFile::CREATE)do |z|
       @collection.items.all(@filters).all(:original_filename.not => nil).each do |item|
+        begin
           z.add(item.original_filename, "public/"+item.file.to_s)
+        rescue
+          z.add(item.original_filename + "_2", "public/"+item.file.to_s)
+        end
       end
       csv_string = create_collection_csv_string(@collection,@filters, true)
       new_file = "tmp/downloads/#{@collection.name}.csv"
@@ -168,16 +172,53 @@ class CollectionsController < ApplicationController
   end
   
   def create_collection_csv_string(collection, conditions, file=false)
-    name_array = collection.schema.map(&:name)
+    name_array = []#collection.schema.map(&:name)
+    collection.schema.each do |schema|
+      if schema.associated_schema 
+        schema.associated_schema.data_collection.schema.each do |s| 
+          name_array << schema.name+"_"+s.name
+        end
+        name_array << schema.name+"_File"
+      else
+        name_array << schema.name
+      end
+    end
+    name_array << "File"
     field_array = collection.schema.map(&:to_s)
+    
     if file == true
       name_array << "File"
       field_array << :original_filename
     end
     csv_string = CSV.generate do |csv|
       csv << name_array
-      collection.items.all(conditions).all(:fields=>field_array).each do |item|
-        csv << name_array.map{|n| n == "File" ? item.original_filename : item[n].to_s}
+      collection.items.all(conditions).each do |item|
+        row_array = []
+        collection.schema.each do |s| 
+          if s.associated_schema
+            unless item[s.name].nil?
+              json_string = JSON.parse(item[s.name])
+              assoc_item = s.associated_schema.data_collection.items.get(json_string['item']['id'])
+              s.associated_schema.collection.data_collection.schema.each do |assoc|
+                if assoc.associated_schema
+                  row_array << JSON.parse(assoc_item[assoc.name])['item']['display']
+                else
+                  row_array << (assoc.name == "File" ? assoc_item.original_filename : assoc_item[assoc.name].to_s)
+                end
+              end
+              row_array << item.original_filename
+            else
+              s.associated_schema.data_collection.schema.each do |s|
+                row_array << ""
+              end
+              row_array << ""
+            end
+          else
+            row_array << (s.name == "File" ? item.original_filename : item[s.name].to_s)
+          end
+        end
+        row_array << item.original_filename
+        csv << row_array
       end
     end
     csv_string
