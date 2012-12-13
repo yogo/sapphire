@@ -34,6 +34,9 @@ class ProjectsController < ApplicationController
       @project = Yogo::Project.new(params[:yogo_project])
       if @project.save
         current_user.memberships.create(:project_id => @project.id)
+        @collection = @project.data_collections.new(:name => "Files", :category=>"")
+        @collection.type = Yogo::Collection::Asset
+        @collection.save
         flash[:notice] = 'New Project created!'
         redirect_to project_path(@project)
       else
