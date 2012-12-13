@@ -46,7 +46,7 @@ class CollectionsController < ApplicationController
   
   def create
     @collection = @project.data_collections.new(params[:collection])
-    @collection.type = Yogo::Collection::Asset
+    @collection.type = Yogo::Collection::Data
     if @collection.save
       flash[:notice] = "Collection \"#{@collection.name}\" created!"
       if @collection.category == "Controlled Vocabulary"
