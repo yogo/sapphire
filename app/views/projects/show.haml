@@ -2,9 +2,11 @@
   %ul.nav.nav-pills
     %li.active= link_to("Data Collections (#{@collections.count})", "#dc-tab", 'data-toggle' => 'tab')
     %li= link_to("Controlled Vocabularies (#{@cv_collections.count})", "#cv-tab", 'data-toggle' => 'tab')
+    %li= link_to("Files", "#file-tab", 'data-toggle' => 'tab')
+    
   .tab-content.content-box
     #dc-tab.tab-pane.active
-      - if @collections.count > 0
+      - if @collections.count > 1
         = render(:partial => "collections/list", :locals=>{:collections => @collections})
       - else 
         .span5
@@ -16,3 +18,5 @@
     #cv-tab.tab-pane
       -unless @cv_collections.empty?
         = render(:partial => "collections/list", :locals=>{:collections => @cv_collections})
+    #file-tab.tab-pane
+      = render(:partial => "collections/list", :locals=>{:collections => @file_collection})

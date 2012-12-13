@@ -19,8 +19,9 @@
   %thead
     %tr
       %th.action-column
-        %a.btn.btn-mini.schema-new(href='#' data-toggle='modal' title='Add Column') 
-          %i.icon-plus
+        -unless collection.category == "Files"
+          %a.btn.btn-mini.schema-new(href='#' data-toggle='modal' title='Add Column') 
+            %i.icon-plus
         %a.btn.btn-mini(href='#edit-filters' data-toggle='modal' title='Filter Data Grid') 
           %i.icon-filter
       - collection.schema.each do |s|
@@ -30,7 +31,8 @@
           :javascript
             //Schemas#edit (Edit Column Icon Link)
             #{ajax_modal_js("th a.#{s.id.to_s}", edit_project_collection_schema_path(project,collection,s))}
-      %th File
+      -if collection.category == "Files"
+        %th File
   %tbody
     - items.each do |i|
       %tr(class='#{i.id.to_s}')
@@ -56,7 +58,7 @@
                     #{ajax_modal_js(".#{i.id.to_s} a.item-cv.#{s.id.to_s}", project_collection_item_path(@schema_cv_hash[s.id].project_id,@schema_cv_hash[s.id],@schema_cv_hash[s.name][i[s.name]]), true)}
             -else
               %td.danger= i[s.name]
-          -elsif s.associated_schema     
+          -elsif s.associated_schema || s.is_file   
             %td
               - unless i[s.name].nil? # if it is nil, don't do it.
                 -json_string = JSON.parse(i[s.name])
@@ -75,7 +77,8 @@
                   = '...'
               - else
                 = i[s.name]
-        %td
-          %a{:href => i.file.to_s}= i.original_filename
+        -if collection.category == "Files"
+          %td
+            %a{:href => i.file.to_s}= i.original_filename
 
 

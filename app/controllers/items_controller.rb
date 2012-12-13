@@ -95,6 +95,11 @@ class ItemsController < ApplicationController
     @collection.schema.each do |field|
       if @item[field.name].blank?
         @item[field.name]=nil
+      elsif field.is_file
+        new_file = @file_collection.items.new()
+        new_file.file =params[:item][field.to_s]
+        new_file.save
+        @item[field.name]='{"project":{"id": "'+@project.id+'"}, "collection":{"id": "'+@file_collection.id+'"},"item":{"id": "'+new_file.id.to_s+'", "display": "'+new_file.original_filename+'"}}'
       end
     end
     if @item.save
@@ -116,6 +121,7 @@ class ItemsController < ApplicationController
     if !current_user.memberships(:project_id => params[:project_id]).empty? || Yogo::Project.get(params[:project_id]).private == false || Yogo::Collection::Data.get(params[:collection_id]).private == false
       @project = Yogo::Project.get(params[:project_id])
       @collection = @project.data_collections.get(params[:collection_id])
+      @file_collection = @project.data_collections.first(:category=>"Files")
     else
       flash[:error] = "You don't have access to that project!"
       redirect_to projects_path()

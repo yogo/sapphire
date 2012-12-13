@@ -104,6 +104,10 @@ class SchemasController < ApplicationController
           params[:schema][:associated_list_schema_id] = params[:schema][:association_column_id]
           params[:schema][:type] = Yogo::Collection::Property::Text
         end
+      elsif params[:schema][:type] =='File'
+        params[:schema][:type] = Yogo::Collection::Property::Text
+        params[:schema][:is_file] = true
+      else
         params[:schema].delete(:association_column_id)
       end
       # There is only a column if someone selects a collection, but 

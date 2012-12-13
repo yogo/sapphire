@@ -7,7 +7,7 @@ module SchemasHelper
       ['Association: Link', 'association'] #,
    #   ['Association: Link List', 'list_association']
     ]
-
+    types << ["File", "File"]
     types.map do |type|
       friendly_name = case type[0]
       when 'String'   then 'Short Text'

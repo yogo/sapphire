@@ -10,6 +10,7 @@ class ProjectsController < ApplicationController
       @project = Yogo::Project.get(params[:id])
       @cv_collections = @project.data_collections(:category => "Controlled Vocabulary")
       @collections = @project.data_collections(:category =>"")
+      @file_collection = @project.data_collections(:category =>"Files")
     end
 
     def edit
@@ -34,7 +35,7 @@ class ProjectsController < ApplicationController
       @project = Yogo::Project.new(params[:yogo_project])
       if @project.save
         current_user.memberships.create(:project_id => @project.id)
-        @collection = @project.data_collections.new(:name => "Files", :category=>"")
+        @collection = @project.data_collections.new(:name => "Files", :category=>"Files")
         @collection.type = Yogo::Collection::Asset
         @collection.save
         flash[:notice] = 'New Project created!'

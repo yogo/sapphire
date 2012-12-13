@@ -1,5 +1,5 @@
 .content-box
-  -if current_user.member_of?(@project) && @collection.schema.count > 0
+  -if (current_user.member_of?(@project) && @collection.schema.count > 0) || @collection.category == "Files"
     = render(:partial => 'collections/filter', 
             :locals => {:filter_item => @filter_item, :collection => @collection, 
                         :project => @project, :filters => @filters})
@@ -7,7 +7,7 @@
               :collection => @collection, :project=>@project})
 
 .content-box
-  - if @collection.schema.count > 0
+  - if @collection.schema.count > 0 || @collection.category == "Files"
     .header
       %strong Data Grid
     - unless @filters.empty?
