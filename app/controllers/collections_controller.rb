@@ -193,18 +193,18 @@ class CollectionsController < ApplicationController
         name_array << schema.name
       end
     end
-    name_array << "File"
+    #name_array << "File"
     field_array = collection.schema.map(&:to_s)
     
-    if file == true
-      name_array << "File"
-      field_array << :original_filename
-    end
+    # if file == true
+    #   name_array << "File"
+    #   field_array << :original_filename
+    # end
     csv_string = CSV.generate do |csv|
       csv << name_array
       collection.items.all(conditions).each do |item|
         row_array = []
-        collection.schema.each do |s| 
+        collection.schema.each do |s|  
           if s.associated_schema
             unless item[s.name].nil?
               json_string = JSON.parse(item[s.name])
