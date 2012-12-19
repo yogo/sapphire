@@ -105,12 +105,21 @@ class CollectionsController < ApplicationController
     require 'zip/zip'
     @collection = @project.data_collections.get(params[:collection_id])
     filename ="#{@collection.name}-#{Time.now.to_i}.zip"
-    Zip::ZipFile.open("tmp/downloads/"+filename, Zip::ZipFile::CREATE)do |z|
-      @collection.items.all(@filters).all(:original_filename.not => nil).each do |item|
+    Zip::ZipFile.open("tmp/downloads/"+filename, Zip::ZipFile::CREATE) do |z|
+      
+      @collection.items.all.each do |item|
+        
         begin
-          z.add(item.original_filename, "public/"+item.file.to_s)
-        rescue
-          z.add(item.original_filename + "_2", "public/"+item.file.to_s)
+          @collection.schema.all(:is_file=>true).each do |field|
+
+           unless item[field.name].nil?
+             z.add(@file_collection.items.get(JSON.parse(item[field.name])['item']['id']).original_filename, "public/"+@file_collection.items.get(JSON.parse(item[field.name])['item']['id']).file.to_s)
+            end
+          end
+        rescue Exception => e 
+          puts e.message  
+          #puts e.backtrace.inspect
+          #z.add(item.original_filename + "_2", "public/"+item.file.to_s)
         end
       end
       csv_string = create_collection_csv_string(@collection,@filters, true)
@@ -158,6 +167,7 @@ class CollectionsController < ApplicationController
     end
     #if we are here the project is public so proceed
     @project = Yogo::Project.get(params[:project_id])
+    @file_collection = @project.data_collections.first(:category=>"Files")
   end
   
   def verify_membership
@@ -210,18 +220,20 @@ class CollectionsController < ApplicationController
                   row_array << (assoc.name == "File" ? assoc_item.original_filename : assoc_item[assoc.name].to_s)
                 end
               end
-              row_array << item.original_filename
+              #row_array << item.original_filename
             else
               s.associated_schema.data_collection.schema.each do |s|
                 row_array << ""
               end
               row_array << ""
             end
+          elsif s.is_file && !item[s.name].nil?
+            row_array << JSON.parse(item[s.name])['item']['display']
           else
             row_array << (s.name == "File" ? item.original_filename : item[s.name].to_s)
           end
         end
-        row_array << item.original_filename
+        #row_array << item.original_filename
         csv << row_array
       end
     end
