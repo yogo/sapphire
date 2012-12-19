@@ -31,14 +31,22 @@ class ItemsController < ApplicationController
   # TODO: move the nullification of the fields into a before :save
   def update
     @item = @collection.items.get(params[:id])
-    params[:item].each {|k, v| params[:item][k] = v.blank? ? nil : v }
-    # @collection.schema.each do |field|
-    #   if params[:item][field.to_s].blank?
-    #     @item[field.name]=nil
-    #     params[:item][field.to_s].delete
-    #   end
-    # end
-    if @item.update(params[:item])
+    @collection.schema.each do |field|
+      if params[:item][field.to_s].blank? && !field.is_file
+        @item[field.name]=nil
+      elsif field.is_file
+        #do nothing
+        unless params[:item][field.to_s].nil?
+          new_file = @file_collection.items.new()
+          new_file.file =params[:item][field.to_s]
+          new_file.save
+          @item[field.name]='{"project":{"id": "'+@project.id+'"}, "collection":{"id": "'+@file_collection.id+'"},"item":{"id": "'+new_file.id.to_s+'", "display": "'+new_file.original_filename+'"}}'
+        end
+      else
+        @item[field.name] = params[:item][field.to_s]
+      end
+    end
+    if @item.save
       update_associated_fields(@item, @collection, @project)
       respond_to do |format|
         format.html do
