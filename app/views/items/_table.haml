@@ -62,7 +62,7 @@
             %td
               - unless i[s.name].nil? # if it is nil, don't do it.
                 -json_string = JSON.parse(i[s.name])
-                %a.icon-edit.as-edit(href='' data-toggle='modal' class='#{s.id.to_s}')
+
                 %a.as-show(href='' data-toggle='modal' class='#{s.id.to_s}')= json_string['item']['display']
                 :javascript
                   //Items#show (Association Item Show Link)
