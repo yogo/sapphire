@@ -207,7 +207,7 @@ class CollectionsController < ApplicationController
         schema.associated_schema.data_collection.schema.each do |s| 
           name_array << schema.name+"_"+s.name
         end
-        name_array << schema.name+"_File"
+        #name_array << schema.name+"_File"
       else
         name_array << schema.name
       end
