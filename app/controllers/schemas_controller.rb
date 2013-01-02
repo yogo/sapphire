@@ -95,13 +95,14 @@ class SchemasController < ApplicationController
       if params[:schema][:association_column_id]
         case params[:schema][:type]
         when 'controlled_vocabulary'
-          params[:schema][:controlled_vocabulary_id] = params[:schema][:association_column_id]
-          params[:schema][:type] = Yogo::Collection::Property.get(params[:schema][:association_column_id]).type
+          params[:schema][:controlled_vocabulary_id] = params[:schema].delete(:association_column_id)
+          params[:schema][:type] = Yogo::Collection::Property.get(params[:schema][:controlled_vocabulary_id]).type
         when 'association'
-          params[:schema][:associated_schema_id] = params[:schema][:association_column_id]
+          params[:schema][:associated_schema_id] = params[:schema].delete(:association_column_id)
+          
           params[:schema][:type] = Yogo::Collection::Property::Text
         when 'list_association'
-          params[:schema][:associated_list_schema_id] = params[:schema][:association_column_id]
+          params[:schema][:associated_list_schema_id] = params[:schema].delete(:association_column_id)
           params[:schema][:type] = Yogo::Collection::Property::Text
         end
       elsif params[:schema][:type] =='File'

@@ -31,7 +31,7 @@
       %th Changelog
       - collection.schema.each do |s|
         %th= s.name
-      %th File
+      -#%th File
   %tbody
     %tr
       %td &nbsp;
@@ -51,8 +51,8 @@
               %a(href='#{project_collection_item_path(json_string['project']['id'],json_string['collection']['id'],json_string['item']['id'])}' data-toggle='modal' data-target='#assoc-modal')= json_string['item']['display']
         -else
           %td= item[s.name]
-      %td
-        %a{:href => item.file.to_s}= item.original_filename
+      -#%td
+      -#%a{:href => item.file.to_s}= item.original_filename
 
     - item.versions.reverse.each do |i|
       %tr
@@ -77,6 +77,6 @@
                 %a(href='#{project_collection_item_path(json_string['project']['id'],json_string['collection']['id'],json_string['item']['id'])}' data-toggle='modal' data-target='#assoc-modal')= json_string['item']['display']
           -else
             %td= i[s.name]
-        %td
-          %a{:href => i.file.to_s}= i.original_filename
+        -#%td
+        -#%a{:href => i.file.to_s}= i.original_filename
 
