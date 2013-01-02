@@ -105,6 +105,8 @@ class CollectionsController < ApplicationController
     require 'zip/zip'
     @collection = @project.data_collections.get(params[:collection_id])
     filename ="#{@collection.name}-#{Time.now.to_i}.zip"
+    filename_array = []
+    file_uid_array = []
     Zip::ZipFile.open("tmp/downloads/"+filename, Zip::ZipFile::CREATE) do |z|
       
       @collection.items.all.each do |item|
@@ -113,8 +115,25 @@ class CollectionsController < ApplicationController
           @collection.schema.all(:is_file=>true).each do |field|
 
            unless item[field.name].nil?
-             z.add(@file_collection.items.get(JSON.parse(item[field.name])['item']['id']).original_filename, "public/"+@file_collection.items.get(JSON.parse(item[field.name])['item']['id']).file.to_s)
-            end
+             if   filename_array.count(@file_collection.items.get(JSON.parse(item[field.name])['item']['id']).original_filename) > 0
+               if file_uid_array.count(@file_collection.items.get(JSON.parse(item[field.name])['item']['id']).file.to_s) == 0
+                 base_filename = @file_collection.items.get(JSON.parse(item[field.name])['item']['id']).original_filename
+                 new_filename = base_filename + "2"
+                 count = 2
+                 while filename_array.count(new_filename) > 0 do
+                    count = count + 1
+                    new_filename = base_filename + count.to_s
+                 end
+                 z.add(new_filename, "public/"+@file_collection.items.get(JSON.parse(item[field.name])['item']['id']).file.to_s)
+                 filename_array << new_filename
+                 file_uid_array << @file_collection.items.get(JSON.parse(item[field.name])['item']['id']).file.to_s
+               end
+             else 
+               z.add(@file_collection.items.get(JSON.parse(item[field.name])['item']['id']).original_filename, "public/"+@file_collection.items.get(JSON.parse(item[field.name])['item']['id']).file.to_s)
+               filename_array << @file_collection.items.get(JSON.parse(item[field.name])['item']['id']).original_filename
+               file_uid_array << @file_collection.items.get(JSON.parse(item[field.name])['item']['id']).file.to_s
+             end
+           end
           end
         rescue Exception => e 
           puts e.message  
@@ -123,9 +142,9 @@ class CollectionsController < ApplicationController
         end
       end
       csv_string = create_collection_csv_string(@collection,@filters, true)
-      new_file = "tmp/downloads/#{@collection.name}.csv"
+      new_file = "tmp/downloads/#{@collection.name}_"+Time.now.to_s+".csv"
       File.open(new_file, "wb"){ |f| f.write(csv_string)}
-      z.add("#{@collection.name}.csv",new_file)
+      z.add("#{@collection.name}_"+Time.now.to_s+".csv",new_file)
       z.close()
     end
     send_file("tmp/downloads/"+filename, :type => 'application/zip')
