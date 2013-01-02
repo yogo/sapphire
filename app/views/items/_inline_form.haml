@@ -12,13 +12,13 @@
       = f.select(field.to_s, associated_field_value_options(field.associated_schema), 
                 {:include_blank => field.name}, {:class => 'input-medium'})
     -elsif field.type.to_s == "Yogo::Collection::Property::Date"
-      = f.text_field(field.to_s, :id=> field.to_s, :placeholder => field.name, :class => 'input-medium') 
+      = f.text_field(field.to_s, :id=> "c_"+field.to_s, :placeholder => field.name, :class => 'input-medium') 
       :javascript
-        $("##{field.to_s}").datepicker({dateFormat:'yy-mm-dd'});
+        $("#c_#{field.to_s}").datepicker({dateFormat:'yy-mm-dd'});
     -elsif field.type.to_s == "Yogo::Collection::Property::DateTime"
-      = f.text_field(field.to_s, :id=> field.to_s, :placeholder => field.name, :class => 'input-medium') 
+      = f.text_field(field.to_s, :id=> "c_"+field.to_s, :placeholder => field.name, :class => 'input-medium') 
       :javascript
-        $("##{field.to_s}").datetimepicker({dateFormat:'yy-mm-dd'});
+        $("#c_#{field.to_s}").datetimepicker({dateFormat:'yy-mm-dd'});
     -elsif field.type.to_s == "Yogo::Collection::Property::Text"
       = f.text_field(field.to_s, :id=> field.to_s, :placeholder => field.name, :class => 'input-large', :rows => 4) 
     -elsif field.type.to_s == "Yogo::Collection::Property::Boolean"
