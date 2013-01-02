@@ -11,7 +11,7 @@ gem 'yogo-operation',   :git => "git://github.com/yogo/yogo-operation.git"
 gem 'yogo-datamapper',  :git => "git://github.com/yogo/yogo-datamapper.git"
 gem 'yogo-framework',   :git => "git://github.com/yogo/yogo-framework.git"
 gem 'yogo-project',     :git => "git://github.com/yogo/yogo-project.git",
-                        :require => 'yogo/project', :ref=>'6f9b130b04d7be0dc4f84b2bab9690df4964dd40'
+                        :require => 'yogo/project', :ref=>'15d18edc6d81e90e060fa745416a3e7a1d2d0312'
 
 # Gems used only for assets and not required
 # in production environments by default.
