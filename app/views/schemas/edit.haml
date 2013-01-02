@@ -8,6 +8,10 @@
     :html => {:class => 'form-box', :method=>"put"}) do |f| 
     .modal-body
       = render :partial => 'schemas/form', :locals => {:f => f, :collection=>@collection, :edit=>true}
+      = link_to("Delete Column", project_collection_schema_path(@project,@collection,@schema), 
+        :class => 'btn btn-danger btn-mini',:method=>:delete, 
+        "data-confirm"=>"Are you sure you wish to delete this Column?")
+
     .modal-footer
       %button.btn.btn-primary Save Changes
       %a.btn(data-dismiss="modal") Close
