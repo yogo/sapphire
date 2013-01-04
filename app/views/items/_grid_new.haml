@@ -1,0 +1,154 @@
+= javascript_include_tag 'slickgrid/jquery.event.drag-2.0.min.js','slickgrid/slick.core.js','slickgrid/slick.grid.js','slickgrid/slick.headerbuttons.js'
+= stylesheet_link_tag 'slickgrid/jquery-ui-1.8.16.custom.css','slickgrid/slick.grid.css','slickgrid/grid_style.css','slickgrid/slick.headerbuttons.css'
+
+%table{:html=>{:width=>"100%"}}
+  %tr
+    %td
+      #myGrid{:style=>"width:1000px;height:350px;"}
+
+
+#term_info
+
+:javascript
+  function load_modal(url){
+    $("body").modalmanager("loading");setTimeout(function(){
+      $("#ajax-modal").load(url, "", function(){
+        $("#ajax-modal").modal();
+      });
+    }, 1000);
+  }
+  var data ="";
+  
+  function buttonFormatter(row, cell, value, columnDef, dataContext) {
+    var base_url ="#{project_collection_path(project,collection)}/items/"+value.toString();
+    
+    var buttons =  '<a id="show_'+value.toString()+'" class="icon-time item-show" data-toggle="modal" href="#" onclick="load_modal(\''+base_url + '\')"></a><a id="edit_'+value.toString()+'" class="icon-edit item-edit" data-toggle="modal" href="#" onclick="load_modal(\''+base_url + '/edit\')"></a><a class="icon-remove-circle" href="'+base_url+'" data-method="delete" data-confirm="Are you sure you wish to delete this Item?" rel="nofollow"></a>';
+
+
+    return buttons;
+  }
+  function editFormatter(row, cell, value, columnDef, dataContext) {
+    return '<a class="icon-time item-edit" data-toggle="modal" href="#"></a>'
+
+  }
+  
+  function historyFormatter(row, cell, value, columnDef, dataContext) {
+    return '<a class="icon-time item-show" data-toggle="modal" href="#"></a>'
+  }
+  
+  function cvFormatter(row, cell, value, columnDef, dataContext) {
+    if (value != null)
+      return value
+    else
+      return ""
+    end
+  }
+  
+  function assocFormatter(row, cell, value, columnDef, dataContext) {
+    if (value != null)
+    {  
+      json_string = JSON.parse(value)
+      
+      var url ="/projects/"+json_string['project']['id']+"/collections/"+json_string['collection']['id']+"/items/"+json_string['item']['id'];
+      var val = '<a id="show_'+value.toString()+'" class="icon-edit item-show" data-toggle="modal" href="#" onclick="load_modal(\''+url + '/edit\')"></a><a id="show_'+value.toString()+'" class="item-show" data-toggle="modal" href="#" onclick="load_modal(\''+url +'\')">' + json_string['item']['display']+'</a>';
+      return val;
+
+    }
+    else
+      return ""
+    end
+
+  }
+  
+  function fileFormatter(row, cell, value, columnDef, dataContext) {
+    if (value != null)
+      return '<a href="#{root_url}asset_collection/#{collection.id.to_s}/' + value + '">Download</a>'
+    else
+      return ""
+    end
+  }
+
+  
+  
+  function showDialog(url){
+     $("#term_info").html('<iframe id="modalIframeId" width="100%" height="100%" marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"/>').dialog("open");
+     $("#modalIframeId").attr("src",url);
+     return false;
+  }
+
+  $(document).ready(function() {
+     $("#term_info").dialog({
+             autoOpen: false,
+             modal: true,
+             height: 500,
+             width: 950
+         });
+        // grid = new Slick.Grid("#myGrid", data, columns, options);
+
+         
+         
+         
+         var grid;
+
+         var columns =[ {id: "button", name: "", field: "id", formatter: buttonFormatter },#{collection.schema.map{|s| '{id: "'+ s.field_name + '", name: "' + s.name + '", field: "' + s.field_name + '", minWidth: 150, header: {buttons: [{cssClass: "icon-edit",tooltip: "Edit Column.",handler: function(e){load_modal(\''+edit_project_collection_schema_path(project,collection,s)+'\')}}]},sortable: true' + "#{s.controlled_vocabulary_id.nil? ? "" : ", formatter: cvFormatter"}" + "#{s.associated_schema_id.nil? ? "" : ", formatter: assocFormatter"}" +  '}'}.join(',')}];
+
+         var options = {
+           enableCellNavigation: true,
+           enableColumnReorder: false,
+           multiColumnSort: true,
+           enableRowReordering: true
+           //forceFitColumns: true
+         };
+
+        
+         columns[0].header = {
+             buttons: [
+               {
+                 cssClass: "icon-plus btn btn-mini schema-new",
+                 tooltip: "Add Column",
+                 handler: function(e) {
+                   load_modal('#{new_project_collection_schema_path(project,collection)}')
+                 }
+               },
+               {
+                  cssClass: "btn btn-mini icon-filter",
+                  tooltip: "Filter",
+                  handler: function(e) {
+                    $('#edit-filters').modal();
+                  }
+                },
+             ]
+           };
+           
+        data= #{items_raw.to_json}
+        // $(function () {
+
+
+           grid = new Slick.Grid("#myGrid", data, columns, options);
+           
+           var headerButtonsPlugin = new Slick.Plugins.HeaderButtons();
+
+           grid.registerPlugin(headerButtonsPlugin);
+           
+           grid.onSort.subscribe(function (e, args) {
+             var cols = args.sortCols;
+           
+             data.sort(function (dataRow1, dataRow2) {
+               for (var i = 0, l = cols.length; i < l; i++) {
+                 var field = cols[i].sortCol.field;
+                 var sign = cols[i].sortAsc ? 1 : -1;
+                 var value1 = dataRow1[field], value2 = dataRow2[field];
+                 var result = (value1 == value2 ? 0 : (value1 > value2 ? 1 : -1)) * sign;
+                 if (result != 0) {
+                   return result;
+                 }
+               }
+               return 0;
+             });
+              grid.invalidate();
+              grid.render();
+              grid.autosizeColumns();
+           });
+         //})
+  });
+  

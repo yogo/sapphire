@@ -9,7 +9,7 @@
       -if field.controlled_vocabulary
         = f.select(field.to_s, field_value_options(field.controlled_vocabulary),  :include_blank => true,:selected=> params[:filters].nil? ? "" : params[:filters][field.to_s].nil? ? "": params[:filters][field.to_s])
       -elsif field.associated_schema
-        = f.select(field.to_s, associated_field_value_options(field.associated_schema),  :include_blank => true,:selected=> params[:filters].nil? ? "" :params[:filters][field.to_s].nil? ? "": params[:filters][field.to_s])
+        = f.select(field.to_s, associated_field_display_options(field.associated_schema),  :include_blank => true,:selected=> params[:filters].nil? ? "" :params[:filters][field.to_s].nil? ? "": params[:filters][field.to_s])
       -else
         = f.text_field(field.to_s, :value=> params[:filters].nil? ? "" :params[:filters][field.to_s].nil? ? "": params[:filters].nil? ? "" : params[:filters][field.to_s]) 
     %p

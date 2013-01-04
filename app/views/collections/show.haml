@@ -14,8 +14,8 @@
       Filtered By: #{@filters.map{|k,v| @collection.schema.by_field_name(k.target.to_s).name + " : #{v}"}.join(' ' + params[:options] + ' ')}
       %a.btn-small(href='#{project_collection_path(@project, @collection)}') Clear Filters
     -if current_user.member_of?(@project)
-      = render  :partial => 'items/table', 
-                :locals => {:items =>@items, :collection => @collection, :project=>@project}
+      = render  :partial => 'items/grid_new', 
+                :locals => {:items_raw =>@items, :collection => @collection, :project=>@project}
     -else
       = render  :partial => 'items/public_table', 
                 :locals => {:items => @items, :collection => @collection, :project=>@project}

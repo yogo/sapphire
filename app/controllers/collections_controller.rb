@@ -20,6 +20,7 @@ class CollectionsController < ApplicationController
         end
       end
     end
+    @items_raw = DataMapper.raw_select(@items)
   end
 
   def edit
