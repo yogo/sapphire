@@ -3,8 +3,7 @@
     = render(:partial => 'collections/filter', 
             :locals => {:filter_item => @filter_item, :collection => @collection, 
                         :project => @project, :filters => @filters})
-    = render(:partial => 'items/inline_form', :locals => {:items =>@items, 
-              :collection => @collection, :project=>@project})
+    = render(:partial => 'items/inline_form', :locals => {:items =>@items, :collection => @collection, :project=>@project})
 
 .content-box
   - if @collection.schema.count > 0 || @collection.category == "Files"

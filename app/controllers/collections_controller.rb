@@ -11,16 +11,17 @@ class CollectionsController < ApplicationController
     @item = @collection.items.new(params[:item])
     @filter_item = @collection.items.new
     if params[:options] == "AND" || params[:options].nil? || @filters.empty?
-      @items =  @collection.items(:order => :created_at.desc).all(@filters)
+      @items =  @collection.items.all(@filters)
     else
       @items = @collection.items(:id=>nil)
       @filters.each do |k,v|
         unless v.nil?
-          @items = @items + @collection.items(:order => :created_at.desc).all(k => v)
+          @items = @items + @collection.items.all(k => v)
         end
       end
     end
-    @items_raw = DataMapper.raw_select(@items)
+    
+    @items_raw = @items
   end
 
   def edit
