@@ -51,7 +51,6 @@ class ItemsController < ApplicationController
       respond_to do |format|
         format.html do
           flash[:notice] = "Item Updated Successfully!"
-          redirect_to project_collection_path(@project, @collection)   
         end
         #format.json { render json: @item.to_json, status: :updated}
         format.js { render :js => '$("#message").html("<h2>Item updated. Close window and refresh your page.</h2>").attr("class","message notice"); $("html, body").animate({scrollTop: "0px"})' }
@@ -60,12 +59,12 @@ class ItemsController < ApplicationController
       respond_to do |format|
         format.html do
           flash[:error] = ["Item failed to save! Errors:", @item.errors.full_messages].flatten.join(' ')
-          render :edit
         end
         format.json { render json: @item.to_json, status: :error}
         format.js { render :js => '$("#message").html("<h2>Item failed update.</h2>").attr("class","message error").scrollTop(0); $("html, body").animate({scrollTop: "0px"})' }
       end
     end
+    redirect_to :back
   end
   
   def show
