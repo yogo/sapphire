@@ -1,5 +1,5 @@
 .content-box
-  -if (current_user.member_of?(@project) && @collection.schema.count > 0) || @collection.category == "Files"
+  -if (current_user.member_of?(@project) && @collection.schema.count > 0) || @collection.category != "Files"
     = render(:partial => 'collections/filter', 
             :locals => {:filter_item => @filter_item, :collection => @collection, 
                         :project => @project, :filters => @filters})
@@ -13,8 +13,12 @@
       Filtered By: #{@filters.map{|k,v| @collection.schema.by_field_name(k.target.to_s).name + " : #{v}"}.join(' ' + params[:options] + ' ')}
       %a.btn-small(href='#{project_collection_path(@project, @collection)}') Clear Filters
     -if current_user.member_of?(@project)
-      = render  :partial => 'items/grid_new', 
-                :locals => {:items_raw =>@items, :collection => @collection, :project=>@project}
+      -if @collection.category == "Files"
+        = render  :partial => 'items/table', 
+                  :locals => {:items =>@items, :collection => @collection, :project=>@project}
+      -else
+        = render  :partial => 'items/grid_new', 
+                  :locals => {:items_raw =>@items, :collection => @collection, :project=>@project}
     -else
       = render  :partial => 'items/public_table', 
                 :locals => {:items => @items, :collection => @collection, :project=>@project}
