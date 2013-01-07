@@ -1,13 +1,7 @@
 = javascript_include_tag 'slickgrid/jquery.event.drag-2.0.min.js','slickgrid/slick.core.js','slickgrid/slick.grid.js','slickgrid/slick.headerbuttons.js'
 = stylesheet_link_tag 'slickgrid/jquery-ui-1.8.16.custom.css','slickgrid/slick.grid.css','slickgrid/grid_style.css','slickgrid/slick.headerbuttons.css'
 
-%table{:html=>{:width=>"100%"}}
-  %tr
-    %td
-      #myGrid{:style=>"width:1000px;height:350px;"}
-
-
-#term_info
+#myGrid.span11{:style=>"height: 330px;"}
 
 :javascript
   function load_modal(url){
@@ -152,3 +146,4 @@
          //})
   });
   
+%br(clear = 'all')

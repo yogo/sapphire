@@ -171,22 +171,12 @@ class ProjectsController < ApplicationController
     
     def insert_nonfile_item_into_collection(file, collection)
       # insert items into data_collection
-      #read header row
-      csv = CSV.read(file)
-      header_row = csv[0]
-      (1..csv.length-1).each do |j|
+      CSV.read(file, :headers => true).each do |row|
         item = collection.items.new
-        i=0
-        header_row.map{|h| item[h]=csv[j][i]; i+=1}
-        collection.schema.each do |field|
-          if item[field.name].blank?
-            item[field.name]=nil
-          end
+        collection.schema.each do |col|
+          item[col.to_s] = row[col.name].blank? ? nil : row[col.name]
         end
         item.save
-        #if item.versions.empty?
-        #  item.make_version
-        #end
       end
     end
     

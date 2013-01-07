@@ -34,7 +34,7 @@ class CollectionsController < ApplicationController
   
   def update
     @collection = @project.data_collections.get(params[:id])
-    if @collection.update(params[:yogo_collection_asset])
+    if @collection.update(params[:collection])
       flash[:notice] = "Collection updated!"
     else
       flash[:error] = "Collection failed to update! Errors: " + @collection.errors.full_messages.join(', ')
