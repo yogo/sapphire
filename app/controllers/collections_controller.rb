@@ -223,12 +223,12 @@ class CollectionsController < ApplicationController
     # end
     csv_string = CSV.generate do |csv|
       csv << name_array
-      collection.items.all(conditions).each do |item|
+      DataMapper.raw_select(collection.items.all(:fields=>collection.schema.map{|s| s.field_name}).all(conditions)).each do |item|
         row_array = []
         collection.schema.each do |s|  
           if s.associated_schema
-            unless item[s.name].nil?
-              json_string = JSON.parse(item[s.name])
+            unless item[s.field_name].nil?
+              json_string = JSON.parse(item[s.field_name])
               assoc_item = s.associated_schema.data_collection.items.get(json_string['item']['id'])
               s.associated_schema.collection.data_collection.schema.each do |assoc|
                 if assoc.associated_schema
@@ -248,10 +248,10 @@ class CollectionsController < ApplicationController
               end
               row_array << ""
             end
-          elsif s.is_file && !item[s.name].nil?
-            row_array << JSON.parse(item[s.name])['item']['display']
+          elsif s.is_file && !item[s.field_name].nil?
+            row_array << JSON.parse(item[s.field_name])['item']['display']
           else
-            row_array << (s.name == "File" ? item.original_filename : item[s.name].to_s)
+            row_array << (s.name == "File" ? item.original_filename : item[s.field_name].to_s)
           end
         end
         #row_array << item.original_filename
