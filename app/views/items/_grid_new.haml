@@ -11,12 +11,19 @@
       });
     }, 1000);
   }
+  function load_widemodal(url){
+    $("body").modalmanager("loading");setTimeout(function(){
+      $("#ajax-modal-fw").load(url, "", function(){
+        $("#ajax-modal-fw").modal();
+      });
+    }, 1000);
+  }
   var data ="";
   
   function buttonFormatter(row, cell, value, columnDef, dataContext) {
     var base_url ="#{project_collection_path(project,collection)}/items/"+value.toString();
     
-    var buttons =  '<a id="show_'+value.toString()+'" class="icon-time item-show" data-toggle="modal" href="#" onclick="load_modal(\''+base_url + '\')"></a><a id="edit_'+value.toString()+'" class="icon-edit item-edit" data-toggle="modal" href="#" onclick="load_modal(\''+base_url + '/edit\')"></a><a class="icon-remove-circle" href="'+base_url+'" data-method="delete" data-confirm="Are you sure you wish to delete this Item?" rel="nofollow"></a>';
+    var buttons =  '<a id="show_'+value.toString()+'" class="icon-time item-show" data-toggle="modal" href="#" onclick="load_widemodal(\''+base_url + '\')"></a><a id="edit_'+value.toString()+'" class="icon-edit item-edit" data-toggle="modal" href="#" onclick="load_modal(\''+base_url + '/edit\')"></a><a class="icon-remove-circle" href="'+base_url+'" data-method="delete" data-confirm="Are you sure you wish to delete this Item?" rel="nofollow"></a>';
 
 
     return buttons;
@@ -44,7 +51,7 @@
       json_string = JSON.parse(value)
       
       var url ="/projects/"+json_string['project']['id']+"/collections/"+json_string['collection']['id']+"/items/"+json_string['item']['id'];
-      var val = '<a id="show_'+value.toString()+'" class="icon-edit item-show" data-toggle="modal" href="#" onclick="load_modal(\''+url + '/edit\')"></a><a id="show_'+value.toString()+'" class="item-show" data-toggle="modal" href="#" onclick="load_modal(\''+url +'\')">' + json_string['item']['display']+'</a>';
+      var val = '<a id="show_'+value.toString()+'" class="icon-edit item-show" data-toggle="modal" href="#" onclick="load_modal(\''+url + '/edit\')"></a><a id="show_'+value.toString()+'" class="item-show" data-toggle="modal" href="#" onclick="load_widemodal(\''+url +'\')">' + json_string['item']['display']+'</a>';
       return val;
 
     }
