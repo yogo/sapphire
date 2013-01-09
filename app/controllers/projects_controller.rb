@@ -171,13 +171,30 @@ class ProjectsController < ApplicationController
     
     def insert_nonfile_item_into_collection(file, collection)
       # insert items into data_collection
-      CSV.read(file, :headers => true).each do |row|
-        item = collection.items.new
-        collection.schema.each do |col|
-          item[col.to_s] = row[col.name].blank? ? nil : row[col.name]
-        end
-        item.save
+      item = collection.items.create()
+      row_values = []
+      version_values=[]
+      schema_cols = []
+      schema_fields= []
+      collection.schema.each do |s| 
+        schema_cols << s.name
+        schema_fields << s.field_name
       end
+      time_now = Time.now
+      CSV.read(file, :headers => true).each do |row|
+        item_id = UUIDTools::UUID.timestamp_create
+        row_values << "('#{item_id}','CREATED','#{time_now}','#{time_now}','#{current_user.id}',#{schema_cols.map{|col| row[col].blank? ? "\'null\'" : "\'#{row[col]}\'"}.join(',')})"
+        ver_id =UUIDTools::UUID.timestamp_create
+        version_values <<"('#{ver_id}','CREATED','#{time_now}','#{time_now}','#{current_user.id}',#{schema_cols.map{|col| row[col].blank? ? "\'null\'" : "\'#{row[col]}\'"}.join(',')}, '#{time_now}','#{item_id}')"
+      end
+      sql = "INSERT INTO \"#{collection.id.to_s.gsub("-","_")+"s"}\" (\"id\",\"updated_comment\",\"created_at\",\"updated_at\",\"updated_by\",#{schema_fields.map{|col| "\"#{col}\""}.join(',')}) VALUES "
+      sql << row_values.join(',')
+      repository.adapter.execute(sql)
+      
+      sql = "INSERT INTO \"#{collection.id.to_s.gsub("-","_")+"s"}\" (\"id\",\"updated_comment\",\"created_at\",\"updated_at\",\"updated_by\",#{schema_fields.map{|col| "\"#{col}\""}.join(',')},\"deleted_at\",\"original_uid\") VALUES "
+      sql << version_values.join(',')
+      repository.adapter.execute(sql)
+      item.destroy
     end
     
     def verify_project
