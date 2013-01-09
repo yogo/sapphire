@@ -12,12 +12,16 @@ module Yogo
       
       #return an array of [item value, item id]
       def items_array(field)
-        self.items.map{|i| [(i[field].nil? ? "" : i[field]), i.id.to_s]}
+        self.items.all(:fields=>["#{field}", :id]).map{|i| [(i[field].nil? ? "" : i[field]), i.id.to_s]}
+        str = self.items.all(:fields=>["#{field}", :id]).to_json
+        JSON.parse(str).map{|i| [(i[field].nil? ? "" : i[field]), i['id']]}
       end
       
       #return an array of [item value, item value]
       def items_value_array(field)
-        self.items.map{|i| [(i[field].nil? ? "" : i[field]), (i[field].nil? ? "" : i[field])]}
+        #self.items.all(:fields=>["#{field}", :id]).map{|i| [(i[field].nil? ? "" : i[field]), (i[field].nil? ? "" : i[field])]}
+        str = self.items.all(:fields=>["#{field}", :id]).to_json
+        JSON.parse(str).map{|i| [(i[field].nil? ? "" : i[field]), (i[field].nil? ? "" : i[field])]}
       end
       
       #return a array of [item value, json_association] for use in 
@@ -29,7 +33,9 @@ module Yogo
         #results = repository.adapter.select(sql)
         #debugger
         #self.items(:fields=>["#{field}", :id])
-        self.items.map{|i| [i[field], '{"project":{"id": "'+project_id+'"}, "collection":{"id": "'+collection_id+'"},"item":{"id": "'+i.id.to_s+'", "display": "'+(i[field].nil? ? "" : i[field])+'"}}'] }
+        #self.items.all(:fields=>["#{field}", :id]).map{|i| [i[field], '{"project":{"id": "'+project_id+'"}, "collection":{"id": "'+collection_id+'"},"item":{"id": "'+i.id.to_s+'", "display": "'+(i[field].nil? ? "" : i[field])+'"}}'] }
+        str = self.items.all(:fields=>["#{field}", :id]).to_json
+        JSON.parse(str).map{|i| [i[field], '{"project":{"id": "'+project_id+'"}, "collection":{"id": "'+collection_id+'"},"item":{"id": "'+i['id']+'", "display": "'+(i[field].nil? ? "" : i[field])+'"}}'] }
       end
       def public?
         !private?
