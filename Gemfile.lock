@@ -150,6 +150,9 @@ GEM
       dm-core (~> 1.1.0)
     dm-migrations (1.1.0)
       dm-core (~> 1.1.0)
+    dm-pager (1.1.0)
+      dm-aggregates (>= 0.10.1)
+      dm-core (>= 0.10.1)
     dm-postgres-adapter (1.1.0)
       dm-do-adapter (~> 1.1.0)
       do_postgres (~> 0.10.2)
@@ -281,6 +284,7 @@ DEPENDENCIES
   devise
   dm-devise
   dm-is-nested_set
+  dm-pager
   dm-rails
   haml
   hpricot

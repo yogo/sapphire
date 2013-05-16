@@ -9,6 +9,10 @@ class ItemsController < ApplicationController
     else
       @item =@collection.items.new()
     end 
+    respond_to do |format|
+      format.html {render :index}
+      format.json {render :json => @collection.items.page(params[:page], :per_page=>50).to_json}
+    end
   end
   
   #expects the delete_at datetime in params[:deleted_at]
