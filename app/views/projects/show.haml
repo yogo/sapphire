@@ -6,7 +6,7 @@
     
   .tab-content.content-box
     #dc-tab.tab-pane.active
-      - if @collections.count > 1
+      - if @collections.count > 0
         = render(:partial => "collections/list", :locals=>{:collections => @collections})
       - else 
         .span5
