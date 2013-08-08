@@ -115,19 +115,60 @@ class ItemsController < ApplicationController
     end
     if @item.save
       flash[:notice] = "Item Saved!"
-      redirect_to :back
+      respond_to do |format|
+        format.html {redirect_to :back}
+        format.json {render :json => @item.to_json}
+      end
       #redirect_to project_collection_items_path(@project, @collection)
     else
       flash[:error] = "Item failed to save: #{@item.errors.to_hash.map{|h| Yogo::Collection::Property.get(h.to_s.split(',')[0].gsub("[:field_",'').gsub('_','-')).name + h.to_s.split(',')[1].gsub(h.to_s.split(',')[0].gsub("field_",'Field ').gsub('_',' '),'')}.join(', ')}"
       
       #+ h.split(',')[1][0].gsub(h.to_s.split(',')[0].gsub("field_",'Field ').gsub('_',' '),'')
-      redirect_to :back
-      #render :back
+      respond_to do |format|
+        format.html {redirect_to :back}
+        format.json {render :json => {:error=>flash[:error]}.to_json}
+      end
     end
   end
   
+  def datatable
+    @objects = current_objects(params)
+    @total_objects = total_objects(params)
+    render :layout => false
+  end
+  
   private
+  
+  def current_objects(params={})
+    current_page = (params[:iDisplayStart].to_i/params[:iDisplayLength].to_i rescue 0)+1
+    @current_objects = Object.paginate :page => current_page, 
+                                       :include => [:item], 
+                                       :order => "#{datatable_columns(params[:iSortCol_0])} #{params[:sSortDir_0] || "DESC"}", 
+                                       :conditions => conditions,
+                                       :per_page => params[:iDisplayLength]
+  end
+  
+  def total_objects(params={})
+    @total_objects = Object.count :include => [:item], :conditions => conditions
+  end
 
+  def datatable_columns(column_id)
+    case column_id.to_i
+    when 1
+      return "objects.description"
+    when 2
+      return "objects.created_at"
+    else
+      return "items.id"
+    end
+  end
+
+  def conditions
+    conditions = []
+    conditions << "(objects.description ILIKE '%#{params[:sSearch]}%' OR items.id ILIKE '%#{params[:sSearch]}%')" if(params[:sSearch])
+    return conditions.join(" AND ")
+  end
+  
   def get_dependencies
     if !current_user.memberships(:project_id => params[:project_id]).empty? || Yogo::Project.get(params[:project_id]).private == false || Yogo::Collection::Data.get(params[:collection_id]).private == false
       @project = Yogo::Project.get(params[:project_id])
