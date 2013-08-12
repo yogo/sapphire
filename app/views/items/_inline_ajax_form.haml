@@ -30,18 +30,41 @@
     -else
       = f.text_field(field.to_s, :placeholder => field.name, :class => 'input-medium') 
   -#= f.file_field(:file, :class => 'input-medium')
-  %button.btn-small.btn-primary Save
-
+%button.btn-small.btn-primary{:id=>'save_button'} Save
+#progress
+  
 :javascript
   function formfocus() {
     $('#QAcreateItemForm input:visible:first').focus();
   }
+  function beforeSendHandler(){
+    $('body').modalmanager('loading');
+  }
+  function completeHandler(){
+    updateGrid(grid);
+    $('#QAcreateItemForm')[0].reset();
+    $('body').modalmanager('loading');
+  }
+  function errorHandler(data){
+    alert("Error: " + data["errors"]);
+  }
+  function progressHandlingFunction(e){
+      if(e.lengthComputable){
+          $('progress').attr({value:e.loaded,max:e.total});
+      }
+  }
   window.onload = formfocus;
-  $('#QAcreateItemForm').submit(function() {  
-      var valuesToSubmit = $(this).serialize();
-      $.post($(this).attr('action'), valuesToSubmit, function(data){
-          //act on result.
-          alert('submitted!')
-      }, "json");
-      return false; // prevents normal behaviour
+  $('#save_button').click(function() {  
+      var valuesToSubmit = new FormData($('#QAcreateItemForm')[0]);//.serialize();
+      $.ajax({
+          url:$('#QAcreateItemForm').attr('action'),
+          type: 'POST',
+          beforeSend: beforeSendHandler,
+          success:  completeHandler,
+          data: valuesToSubmit,
+          cache: false,
+          contentType: false,
+          processData: false,
+          dataType: 'json'
+     }).fail(function(data){alert("Error" + data["errors"]);});
   });

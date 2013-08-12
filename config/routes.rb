@@ -19,6 +19,8 @@ Sapphire::Application.routes.draw do
       get :export_with_files
       get :cv
       get :edit_cv
+      get :datatable
+      get :objects
       resources :items do
         put :restore
       end

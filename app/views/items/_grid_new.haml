@@ -76,8 +76,34 @@
      $("#modalIframeId").attr("src",url);
      return false;
   }
+  function updateGrid(myGrid) {
+       $.getJSON("#{project_collection_objects_path(project, collection, :format=> 'json')}", function(data) {
+           myGrid.data = data;
+           myGrid.setData(myGrid.data);
+           myGrid.invalidate();
+           myGrid.render();
+           myGrid.autosizeColumns();
+           myGrid.onSort.subscribe(function (e, args) {
+              var cols = args.sortCols;
 
+              data.sort(function (dataRow1, dataRow2) {
+                for (var i = 0, l = cols.length; i < l; i++) {
+                  var field = cols[i].sortCol.field;
+                  var sign = cols[i].sortAsc ? 1 : -1;
+                  var value1 = dataRow1[field], value2 = dataRow2[field];
+                  var result = (value1 == value2 ? 0 : (value1 > value2 ? 1 : -1)) * sign;
+                  if (result != 0) {
+                    return result;
+                  }
+                }
+                return 0;
+              });
+          });
+       });
+   }
+   var grid="";
   $(document).ready(function() {
+    
      $("#term_info").dialog({
              autoOpen: false,
              modal: true,
@@ -87,9 +113,7 @@
         // grid = new Slick.Grid("#myGrid", data, columns, options);
 
          
-         
-         
-         var grid;
+
 
          var columns =[ {id: "button", name: "", field: "id", formatter: buttonFormatter, minWidth: 80, },#{collection.schema.map{|s| '{id: "'+ s.field_name + '", name: "' + s.name + '", field: "' + s.field_name + '", minWidth: 150, header: {buttons: [{cssClass: "icon-edit",tooltip: "Edit Column.",handler: function(e){load_modal(\''+edit_project_collection_schema_path(project,collection,s)+'\')}}]},sortable: true' + "#{s.controlled_vocabulary_id.nil? ? "" : ", formatter: cvFormatter"}" + "#{s.associated_schema_id.nil? ? "" : ", formatter: assocFormatter"}" + "#{s.is_file ?  ", formatter: assocFormatter" : ""}" + '}'}.join(',')}];
 
@@ -121,7 +145,7 @@
              ]
            };
            
-        data= #{items_raw.to_json}
+        data=[ ]
         // $(function () {
 
 
@@ -146,11 +170,13 @@
                }
                return 0;
              });
-              grid.invalidate();
-              grid.render();
+              //grid.invalidate();
+              //grid.render();
               grid.autosizeColumns();
-           });
-         //})
+
+         });
+         updateGrid(grid);
+         
   });
   
 %br(clear = 'all')

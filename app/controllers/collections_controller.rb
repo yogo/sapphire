@@ -172,7 +172,20 @@ class CollectionsController < ApplicationController
     end
   end
 
-
+  def datatable
+    collection = project.data_collections.get(params[:id])
+    respond_to do |format|
+      format.json { render json: ItemsDatatable.new(view_context, collection) }
+    end
+  end
+  
+  def objects
+    @collection = @project.data_collections.get(params[:collection_id])
+    @items = @collection.items.all()
+    respond_to do |format|
+      format.json { render json: @items.to_json }
+    end
+  end
   private
   def get_project
     if !Yogo::Collection::Data.get(params[:id]).nil? 
