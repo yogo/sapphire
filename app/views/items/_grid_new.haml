@@ -1,8 +1,25 @@
-= javascript_include_tag 'slickgrid/jquery.event.drag-2.0.min.js','slickgrid/slick.core.js','slickgrid/slick.grid.js','slickgrid/slick.headerbuttons.js'
-= stylesheet_link_tag 'slickgrid/jquery-ui-1.8.16.custom.css','slickgrid/slick.grid.css','slickgrid/grid_style.css','slickgrid/slick.headerbuttons.css'
+= javascript_include_tag 'slickgrid/jquery.event.drag-2.0.min.js','slickgrid/slick.core.js','slickgrid/slick.grid.js','slickgrid/slick.headerbuttons.js','slickgrid/slick.pager.js','slickgrid/slick.dataview.js','slickgrid/slick.autotootips.js'
+= stylesheet_link_tag 'slickgrid/jquery-ui-1.8.16.custom.css','slickgrid/slick.grid.css','slickgrid/grid_style.css','slickgrid/slick.headerbuttons.css','slickgrid/slick.pager.css'
+:plain
+ <style>
+     .slick-headerrow-column {
+       background: #87ceeb;
+       text-overflow: clip;
+       -moz-box-sizing: border-box;
+       box-sizing: border-box;
+     }
 
-#myGrid.span11{:style=>"height: 330px;"}
-
+     .slick-headerrow-column input {
+       margin: 0;
+       padding: 0;
+       width: 100%;
+       height: 100%;
+       -moz-box-sizing: border-box;
+       box-sizing: border-box;
+     }
+   </style>
+#myGrid{:style=>"height: 330px;"}
+#pager.span11{:style=>"height:20px;"}
 :javascript
   function load_modal(url){
     $("body").modalmanager("loading");setTimeout(function(){
@@ -79,7 +96,7 @@
   function updateGrid(myGrid) {
        $.getJSON("#{project_collection_objects_path(project, collection, :format=> 'json')}", function(data) {
            myGrid.data = data;
-           myGrid.setData(myGrid.data);
+           dataView.setItems(myGrid.data);
            myGrid.invalidate();
            myGrid.render();
            myGrid.autosizeColumns();
@@ -97,86 +114,133 @@
                   }
                 }
                 return 0;
-              });
+              }
+              );
           });
        });
    }
-   var grid="";
+   var dataView = new Slick.Data.DataView();
+   var grid =";" 
   $(document).ready(function() {
     
      $("#term_info").dialog({
-             autoOpen: false,
-             modal: true,
-             height: 500,
-             width: 950
+         autoOpen: false,
+         modal: true,
+         height: 500,
+         width: 950
+     });
+
+     var columns =[ {id: "button", name: "", field: "id", formatter: buttonFormatter, minWidth: 80, },#{collection.schema.map{|s| '{id: "'+ s.field_name + '", name: "' + s.name + '", field: "' + s.field_name + '", minWidth: 150, header: {buttons: [{cssClass: "icon-edit",tooltip: "Edit Column.",handler: function(e){load_modal(\''+edit_project_collection_schema_path(project,collection,s)+'\')}}]},sortable: true' + "#{s.controlled_vocabulary_id.nil? ? "" : ", formatter: cvFormatter"}" + "#{s.associated_schema_id.nil? ? "" : ", formatter: assocFormatter"}" + "#{s.is_file ?  ", formatter: assocFormatter" : ""}" + '}'}.join(',')}];
+
+     var options = {
+       enableCellNavigation: true,
+       enableColumnReorder: false,
+       multiColumnSort: true,
+       enableRowReordering: true,
+       showHeaderRow: true,
+       headerRowHeight: 30,
+       explicitInitialization: true
+     };
+
+    
+     columns[0].header = {
+         buttons: [
+           {
+             cssClass: "icon-plus btn btn-mini schema-new",
+             tooltip: "Add Column",
+             handler: function(e) {
+               load_modal('#{new_project_collection_schema_path(project,collection)}')
+             }
+           },
+           {
+              cssClass: "btn btn-mini icon-filter",
+              tooltip: "Filter",
+              handler: function(e) {
+                $('#edit-filters').modal();
+              }
+            },
+         ]
+       };
+       
+    data=[]
+    grid = new Slick.Grid("#myGrid", dataView, columns, options);
+    $.getJSON("#{project_collection_objects_path(project, collection, :format=> 'json')}", function(jsondata) {
+      data = jsondata
+    }).always(function(){
+       
+       var headerButtonsPlugin = new Slick.Plugins.HeaderButtons();
+       grid.registerPlugin(headerButtonsPlugin);
+       grid.registerPlugin(new Slick.AutoTooltips({ enableForHeaderCells: true }) );
+       var pager = new Slick.Controls.Pager(dataView, grid, $("#pager"));
+     
+       grid.onSort.subscribe(function (e, args) {
+         var cols = args.sortCols;
+
+         data.sort(function (dataRow1, dataRow2) {
+           for (var i = 0, l = cols.length; i < l; i++) {
+             var field = cols[i].sortCol.field;
+             var sign = cols[i].sortAsc ? 1 : -1;
+             var value1 = dataRow1[field], value2 = dataRow2[field];
+             var result = (value1 == value2 ? 0 : (value1 > value2 ? 1 : -1)) * sign;
+             if (result != 0) {
+               return result;
+             }
+           }
+           return 0;
          });
-        // grid = new Slick.Grid("#myGrid", data, columns, options);
-
-         
-
-
-         var columns =[ {id: "button", name: "", field: "id", formatter: buttonFormatter, minWidth: 80, },#{collection.schema.map{|s| '{id: "'+ s.field_name + '", name: "' + s.name + '", field: "' + s.field_name + '", minWidth: 150, header: {buttons: [{cssClass: "icon-edit",tooltip: "Edit Column.",handler: function(e){load_modal(\''+edit_project_collection_schema_path(project,collection,s)+'\')}}]},sortable: true' + "#{s.controlled_vocabulary_id.nil? ? "" : ", formatter: cvFormatter"}" + "#{s.associated_schema_id.nil? ? "" : ", formatter: assocFormatter"}" + "#{s.is_file ?  ", formatter: assocFormatter" : ""}" + '}'}.join(',')}];
-
-         var options = {
-           enableCellNavigation: true,
-           enableColumnReorder: false,
-           multiColumnSort: true,
-           enableRowReordering: true
-           //forceFitColumns: true
-         };
-
-        
-         columns[0].header = {
-             buttons: [
-               {
-                 cssClass: "icon-plus btn btn-mini schema-new",
-                 tooltip: "Add Column",
-                 handler: function(e) {
-                   load_modal('#{new_project_collection_schema_path(project,collection)}')
-                 }
-               },
-               {
-                  cssClass: "btn btn-mini icon-filter",
-                  tooltip: "Filter",
-                  handler: function(e) {
-                    $('#edit-filters').modal();
-                  }
-                },
-             ]
-           };
-           
-        data=[ ]
-        // $(function () {
-
-
-           grid = new Slick.Grid("#myGrid", data, columns, options);
-           
-           var headerButtonsPlugin = new Slick.Plugins.HeaderButtons();
-
-           grid.registerPlugin(headerButtonsPlugin);
-           
-           grid.onSort.subscribe(function (e, args) {
-             var cols = args.sortCols;
-           
-             data.sort(function (dataRow1, dataRow2) {
-               for (var i = 0, l = cols.length; i < l; i++) {
-                 var field = cols[i].sortCol.field;
-                 var sign = cols[i].sortAsc ? 1 : -1;
-                 var value1 = dataRow1[field], value2 = dataRow2[field];
-                 var result = (value1 == value2 ? 0 : (value1 > value2 ? 1 : -1)) * sign;
-                 if (result != 0) {
-                   return result;
-                 }
+       });
+       var columnFilters = {};
+       function filter(item) {
+         for (var columnId in columnFilters) {
+           if (columnId !== undefined && columnFilters[columnId] !== "") {
+             var c = grid.getColumns()[grid.getColumnIndex(columnId)];
+             if(item[c.field] != undefined){
+               if (item[c.field].toString().indexOf(columnFilters[columnId]) == -1){
+                 // != columnFilters[columnId]) {
+                 return false;
                }
-               return 0;
-             });
-              //grid.invalidate();
-              //grid.render();
-              grid.autosizeColumns();
+             }
+             else{
+               return false;
+             }
+           }
+         }
+         return true;
+       }
+       
+       dataView.onRowCountChanged.subscribe(function (e, args) {
+             grid.updateRowCount();
+             grid.render();
+           });
 
-         });
-         updateGrid(grid);
-         
+           dataView.onRowsChanged.subscribe(function (e, args) {
+             grid.invalidateRows(args.rows);
+             grid.render();
+           });
+
+           $(grid.getHeaderRow()).delegate(":input", "change keyup", function (e) {
+             var columnId = $(this).data("columnId");
+             if (columnId != null && columnId != "button") {
+               columnFilters[columnId] = $.trim($(this).val());
+               dataView.refresh();
+             }
+           });
+
+           grid.onHeaderRowCellRendered.subscribe(function(e, args) {
+               $(args.node).empty();
+               $("<input type='text'>")
+                  .data("columnId", args.column.id)
+                  .val(columnFilters[args.column.id])
+                  .appendTo(args.node);
+           });
+        grid.init();
+        grid.autosizeColumns();
+        dataView.beginUpdate();
+        dataView.setItems(data);
+        dataView.setFilter(filter);
+        dataView.endUpdate();
+        grid.render();
+    });
   });
   
 %br(clear = 'all')
