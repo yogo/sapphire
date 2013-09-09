@@ -21,6 +21,7 @@ Sapphire::Application.routes.draw do
       get :edit_cv
       get :datatable
       get :objects
+      get :objects_paginated
       resources :items do
         put :restore
       end

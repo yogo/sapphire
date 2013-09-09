@@ -5,6 +5,9 @@ gem 'sqlite3'
 gem 'data_mapper', '1.1.0'
 gem 'dm-is-nested_set'
 gem 'dm-pager'
+gem 'will_paginate'
+gem 'jquery-datatables-rails'
+gem 'ajax-datatables-rails'
 #includes yogo-support, yogo-operation, yogo-datamapper
 gem 'yogo-support',     :git => "git://github.com/yogo/yogo-support.git"
 gem 'yogo-operation',   :git => "git://github.com/yogo/yogo-operation.git"

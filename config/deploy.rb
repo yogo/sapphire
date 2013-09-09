@@ -71,4 +71,4 @@ end
 
 after "deploy:setup",       "sapphire:symlink:setup"
 after "deploy:symlink",     "sapphire:symlink:link"
-after "deploy",             "sapphire:db:autoupgrade"
+#after "deploy",             "sapphire:db:autoupgrade"

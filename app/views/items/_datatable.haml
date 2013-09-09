@@ -1,0 +1,80 @@
+:javascript
+  function load_modal(url){
+    $("body").modalmanager("loading");setTimeout(function(){
+      $("#ajax-modal").load(url, "", function(){
+        $("#ajax-modal").modal();
+      });
+    }, 1000);
+  }
+  function load_widemodal(url){
+    $("body").modalmanager("loading");setTimeout(function(){
+      $("#ajax-modal-fw").load(url, "", function(){
+        $("#ajax-modal-fw").modal();
+      });
+    }, 1000);
+  }
+
+:javascript
+  $(document).ready(function() {
+    $('#ajax-item-table').dataTable({
+       bProcessing: true,
+       sAjaxSource: "#{project_collection_items_url(project, collection, :format=>"json")}",
+       "sScrollY": "300px",
+   		 "sDom": "frtiS",
+   		"bDeferRender": true,
+   		"aoColumnDefs":[{
+   		  "mRender": function(data, type, row){
+          var base_url ="#{project_collection_path(project,collection)}/items/"+data.toString();
+
+          return '<a id="show_'+data.toString()+'" class="icon-time item-show" data-toggle="modal" href="#" onclick="load_widemodal(\''+base_url + '\')"></a><a id="edit_'+data.toString()+'" class="icon-edit item-edit" data-toggle="modal" href="#" onclick="load_modal(\''+base_url + '/edit\')"></a><a class="icon-remove-circle" href="'+base_url+'" data-method="delete" data-confirm="Are you sure you wish to delete this Item?" rel="nofollow"></a>';
+          
+   		   },
+   		  "aTargets":[0]
+       },
+       #{
+         '{
+           "mRender": function(data, type, row){
+               if (data ){
+                 if (data.toString().indexOf("{") != -1){
+               var json_string="";
+               json_string = JSON.parse(data);
+               if (json_string != null  && json_string[\'project\'] != null && json_string[\'collection\'] != null && json_string[\'item\'] != null){
+               var url ="/projects/"+json_string[\'project\'][\'id\']+"/collections/"+json_string[\'collection\'][\'id\']+"/items/"+json_string[\'item\'][\'id\'];
+               return \'<a id="show_\'+data.toString()+\'" class="icon-edit item-show" data-toggle="modal" href="#" onclick="load_modal(\\\'\'+url + \'/edit\\\')"></a><a id="show_\'+data.toString()+\'" class="item-show" data-toggle="modal" href="#" onclick="load_widemodal(\\\'\'+url +\'\\\')">\' + json_string[\'item\'][\'display\']+\'</a>\';
+                
+              }
+            }
+              else{
+                return "";
+              }
+            }
+    		   },
+    		  "aTargets":['+ collection.schema.map {|s| s.is_file? || s.associated_schema_id ? s.position : nil}.compact.join(',')+']
+          }'
+        }
+     ]}
+    );
+  } );
+  
+  
+
+
+%table.data-table.table.table-condensed.table-striped{:id=>'ajax-item-table'}
+  %thead
+    %tr
+      %th.action-column
+        -unless collection.category == "Files"
+          %a.btn.btn-mini.schema-new(href='#' data-toggle='modal' title='Add Column') 
+            %i.icon-plus
+        %a.btn.btn-mini(href='#edit-filters' data-toggle='modal' title='Filter Data Grid') 
+          %i.icon-filter
+      - collection.schema.each do |s|
+        %th.column
+          %a.icon-edit(href='' data-toggle='modal' class='#{s.id.to_s}')
+          = s.name
+          :javascript
+            //Schemas#edit (Edit Column Icon Link)
+            #{ajax_modal_js("th a.#{s.id.to_s}", edit_project_collection_schema_path(project,collection,s))}
+      -if collection.category == "Files"
+        %th File
+  %tbody

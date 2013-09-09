@@ -1,4 +1,4 @@
-= javascript_include_tag 'slickgrid/jquery.event.drag-2.0.min.js','slickgrid/slick.core.js','slickgrid/slick.grid.js','slickgrid/slick.headerbuttons.js','slickgrid/slick.pager.js','slickgrid/slick.dataview.js','slickgrid/slick.autotootips.js'
+= javascript_include_tag 'slickgrid/jquery.event.drag-2.0.min.js','slickgrid/slick.core.js','slickgrid/slick.grid.js','slickgrid/slick.headerbuttons.js','slickgrid/slick.pager.js','slickgrid/slick.dataview.js','slickgrid/slick.autotootips.js','slickgrid/slick.remotemodel.js'
 = stylesheet_link_tag 'slickgrid/jquery-ui-1.8.16.custom.css','slickgrid/slick.grid.css','slickgrid/grid_style.css','slickgrid/slick.headerbuttons.css','slickgrid/slick.pager.css'
 :plain
  <style>
@@ -17,6 +17,7 @@
        -moz-box-sizing: border-box;
        box-sizing: border-box;
      }
+
    </style>
 #myGrid{:style=>"height: 330px;"}
 #pager.span11{:style=>"height:20px;"}
@@ -66,10 +67,14 @@
     if (value != null)
     {  
       json_string = JSON.parse(value)
-      
+      if (json_string != null){
       var url ="/projects/"+json_string['project']['id']+"/collections/"+json_string['collection']['id']+"/items/"+json_string['item']['id'];
       var val = '<a id="show_'+value.toString()+'" class="icon-edit item-show" data-toggle="modal" href="#" onclick="load_modal(\''+url + '/edit\')"></a><a id="show_'+value.toString()+'" class="item-show" data-toggle="modal" href="#" onclick="load_widemodal(\''+url +'\')">' + json_string['item']['display']+'</a>';
       return val;
+     }
+     else{
+       return value;
+     }
 
     }
     else
@@ -119,6 +124,8 @@
           });
        });
    }
+   var loader = new Slick.Data.RemoteModel("#{project_collection_items_url(@project, @collection)}");
+   var loadingIndicator = null;
    var dataView = new Slick.Data.DataView();
    var grid =";" 
   $(document).ready(function() {
@@ -163,32 +170,23 @@
        };
        
     data=[]
-    grid = new Slick.Grid("#myGrid", dataView, columns, options);
-    $.getJSON("#{project_collection_objects_path(project, collection, :format=> 'json')}", function(jsondata) {
-      data = jsondata
-    }).always(function(){
+    //grid = new Slick.Grid("#myGrid", dataView, columns, options);
+    grid = new Slick.Grid("#myGrid", loader.data, columns, options);
+    //$.getJSON("#{project_collection_objects_path(project, collection, :format=> 'json')}", function(jsondata) {
+    //  data = jsondata
+    //}).always(function(){
        
        var headerButtonsPlugin = new Slick.Plugins.HeaderButtons();
        grid.registerPlugin(headerButtonsPlugin);
        grid.registerPlugin(new Slick.AutoTooltips({ enableForHeaderCells: true }) );
        var pager = new Slick.Controls.Pager(dataView, grid, $("#pager"));
-     
+       
        grid.onSort.subscribe(function (e, args) {
-         var cols = args.sortCols;
-
-         data.sort(function (dataRow1, dataRow2) {
-           for (var i = 0, l = cols.length; i < l; i++) {
-             var field = cols[i].sortCol.field;
-             var sign = cols[i].sortAsc ? 1 : -1;
-             var value1 = dataRow1[field], value2 = dataRow2[field];
-             var result = (value1 == value2 ? 0 : (value1 > value2 ? 1 : -1)) * sign;
-             if (result != 0) {
-               return result;
-             }
-           }
-           return 0;
-         });
-       });
+             loader.setSort(args.sortCols[0].sortCol.field, args.sortAsc ? 1 : -1);
+             var vp = grid.getViewport();
+             loader.ensureData(vp.top, vp.bottom);
+             grid.render()
+           });
        var columnFilters = {};
        function filter(item) {
          for (var columnId in columnFilters) {
@@ -233,14 +231,43 @@
                   .val(columnFilters[args.column.id])
                   .appendTo(args.node);
            });
+           grid.onViewportChanged.subscribe(function (e, args) {
+                 var vp = grid.getViewport();
+                 loader.ensureData(vp.top, vp.bottom);
+               });
+           loader.onDataLoading.subscribe(function () {
+                 if (!loadingIndicator) {
+                   loadingIndicator = $("<span class='loading-indicator'><label>Buffering...</label></span>").appendTo(document.body);
+                   var $g = $("#myGrid");
+
+                   loadingIndicator
+                       .css("position", "absolute")
+                       .css("top", $g.position().top + $g.height() / 2 - loadingIndicator.height() / 2)
+                       .css("left", $g.position().left + $g.width() / 2 - loadingIndicator.width() / 2);
+                 }
+
+                 loadingIndicator.show();
+               });
+
+               loader.onDataLoaded.subscribe(function (e, args) {
+                 for (var i = args.from; i <= args.to; i++) {
+                   grid.invalidateRow(i);
+                 }
+
+                 grid.updateRowCount();
+                 grid.render();
+
+                 loadingIndicator.fadeOut();
+               });
         grid.init();
         grid.autosizeColumns();
-        dataView.beginUpdate();
-        dataView.setItems(data);
-        dataView.setFilter(filter);
-        dataView.endUpdate();
-        grid.render();
-    });
+        //dataView.beginUpdate();
+        //dataView.setItems(data);
+        //dataView.setFilter(filter);
+        //dataView.endUpdate();
+        //grid.render();
+        grid.onViewportChanged.notify();
+    //});
   });
   
 %br(clear = 'all')

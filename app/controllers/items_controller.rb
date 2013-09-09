@@ -11,7 +11,24 @@ class ItemsController < ApplicationController
     end 
     respond_to do |format|
       format.html {render :index}
-      format.json {render :json => @collection.items.page(params[:page], :per_page=>50).to_json}
+      format.json {
+        # if params[:sortby]
+        #   if params[:sortby].split()[1] == 'asc'
+        #     items = @collection.items.page(params[:page], :per_page=>100, :order => [params[:sortby].split()[0].to_sym.asc])
+        #   else
+        #     items = @collection.items.page(params[:page], :per_page=>100, :order => [params[:sortby].split()[0].to_sym.desc])
+        #   end
+        # else
+        #   items = @collection.items.page(params[:page], :per_page=>100)
+        # end
+        # render :json => items.to_json, :callback=> params[:callback]
+        render :json =>  DataMapper.raw_select(@collection.items(:fields=>@collection.schema(:order=>[:position]).map{|a| a.field_name}.unshift(:id))).sql_to_datatable_json
+      }
+
+      format.csv {
+        request.env['HTTP_ACCEPT_ENCODING'] = 'gzip'
+        render :text =>  DataMapper.raw_select(@collection.items).sql_to_csv
+      }
     end
   end
   

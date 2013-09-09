@@ -23,6 +23,14 @@ class Array
       header << self.map{|k| k.to_a.to_csv}.join("\n")
     end
   end
+  def sql_to_datatable_json
+    unless self[0].nil?
+      #header = self[0].to_hash.keys.map{|k| k}.join(',') + "\n"
+      data={}
+      data[:aaData] = self.map{|k| k.to_a}
+      data.to_json
+    end
+  end
 end
 
 class String

@@ -4,16 +4,16 @@
    * Right now, it's hooked up to load Hackernews stories, but can
    * easily be extended to support any JSONP-compatible backend that accepts paging parameters.
    */
-  function RemoteModel() {
+  function RemoteModel(myurl) {
     // private
-    var PAGESIZE = 50;
+    var PAGESIZE = 80;
     var data = {length: 0};
     var searchstr = "";
     var sortcol = null;
     var sortdir = 1;
     var h_request = null;
     var req = null; // ajax request
-
+    var base_url = myurl
     // events
     var onDataLoading = new Slick.Event();
     var onDataLoaded = new Slick.Event();
@@ -66,14 +66,15 @@
       while (data[toPage * PAGESIZE] !== undefined && fromPage < toPage)
         toPage--;
 
-      if (fromPage > toPage || ((fromPage == toPage) && data[fromPage * PAGESIZE] !== undefined)) {
+      if (fromPage > toPage || ((fromPage == toPage) && data[toPage * (PAGESIZE +25)] !== undefined)) {
         // TODO:  look-ahead
+        console.log("from:" +fromPage.toString()+"("+from.toString()+") to:"+toPage.toString()+"("+to.toString()+")")
         onDataLoaded.notify({from: from, to: to});
         return;
       }
 
-      var url = "http://api.thriftdb.com/api.hnsearch.com/items/_search?filter[fields][type][]=submission&q=" + searchstr + "&start=" + (fromPage * PAGESIZE) + "&limit=" + (((toPage - fromPage) * PAGESIZE) + PAGESIZE);
-
+      //var url = "http://api.thriftdb.com/api.hnsearch.com/items/_search?filter[fields][type][]=submission&q=" + searchstr + "&start=" + (fromPage * PAGESIZE) + "&limit=" + (((toPage - fromPage) * PAGESIZE) + PAGESIZE);
+      var url = base_url + ".json?page="+ (toPage) 
       if (sortcol != null) {
           url += ("&sortby=" + sortcol + ((sortdir > 0) ? "+asc" : "+desc"));
       }
@@ -83,16 +84,16 @@
       }
 
       h_request = setTimeout(function () {
-        for (var i = fromPage; i <= toPage; i++)
-          data[i * PAGESIZE] = null; // null indicates a 'requested but not available yet'
+        //for (var i = fromPage; i <= toPage; i++)
+        //  data[i * PAGESIZE] = null; // null indicates a 'requested but not available yet'
 
         onDataLoading.notify({from: from, to: to});
 
-        req = $.jsonp({
+        req = $.ajax({
+          type: "GET",
           url: url,
-          callbackParameter: "callback",
           cache: true,
-          success: onSuccess,
+          success: function(data){onSuccess(data,from, to)},
           error: function () {
             onError(fromPage, toPage)
           }
@@ -104,22 +105,24 @@
 
 
     function onError(fromPage, toPage) {
-      alert("error loading pages " + fromPage + " to " + toPage);
+      //alert("error loading pages " + fromPage + " to " + toPage);
     }
 
-    function onSuccess(resp) {
-      var from = resp.request.start, to = from + resp.results.length;
-      data.length = Math.min(parseInt(resp.hits),1000); // limitation of the API
-
-      for (var i = 0; i < resp.results.length; i++) {
-        var item = resp.results[i].item;
+    function onSuccess(resp, from, to) {
+      //var from = resp.request.start, to = from + resp.results.length;
+      dl = data.length
+      data.length = data.length + resp.length;// Math.min(parseInt(resp.hits),1000); // limitation of the API
+      
+      for (var i = 0; i < resp.length; i++) {
+        var item = resp[i];
 
         // Old IE versions can't parse ISO dates, so change to universally-supported format.
-        item.create_ts = item.create_ts.replace(/^(\d+)-(\d+)-(\d+)T(\d+:\d+:\d+)Z$/, "$2/$3/$1 $4 UTC"); 
-        item.create_ts = new Date(item.create_ts);
-
-        data[from + i] = item;
-        data[from + i].index = from + i;
+        //item.create_ts = item.create_ts.replace(/^(\d+)-(\d+)-(\d+)T(\d+:\d+:\d+)Z$/, "$2/$3/$1 $4 UTC"); 
+        //item.create_ts = new Date(item.create_ts);
+        dli = dl + i;
+        console.log(dli.toString() + item.toString())
+        data[dl + i] = item;
+        data[dl + i].index = dl + i;
       }
 
       req = null;
@@ -137,6 +140,7 @@
 
 
     function setSort(column, dir) {
+      alert(column)
       sortcol = column;
       sortdir = dir;
       clear();

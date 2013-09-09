@@ -17,7 +17,7 @@
         = render  :partial => 'items/table', 
                   :locals => {:items =>@items, :collection => @collection, :project=>@project}
       -else
-        = render  :partial => 'items/grid_new', 
+        = render  :partial => 'items/datatable', 
                   :locals => {:items_raw =>@items, :collection => @collection, :project=>@project}
     -else
       = render  :partial => 'items/public_table', 

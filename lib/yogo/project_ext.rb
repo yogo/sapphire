@@ -39,10 +39,11 @@ module Yogo
           }
           if !search_schemas.empty?
             conds = search_schemas.map do |schema| 
-                "field_#{schema.id.to_s.gsub('-','_')} @@ tsquery(?)" 
+                "field_#{schema.id.to_s.gsub('-','_')} @@ plainto_tsquery(?)" 
               end
             conds_array = [conds.join(" OR ")]
             search_schemas.count.times{ conds_array << escape_string(search_str) }
+            debugger
             results[dc.id.to_s] = dc.items.all(:conditions => conds_array)
           end
         end
