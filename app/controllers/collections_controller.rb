@@ -190,11 +190,17 @@ class CollectionsController < ApplicationController
   def associations
     schema = @project.data_collections.get(params[:collection_id]).schema.get(params[:schema_id])
     str = schema.data_collection.items.page(:page=>params[:page], :fields=>["#{schema.field_name}", :id], "#{schema.field_name}".to_sym.like=>"%#{params[:term]}%").to_json
-    
+    proj={}
+    coll={}
+    object={}
+    proj["project"] = {:id=>@project.id.to_s}
+    coll["collection"]={:id=>schema.data_collection.id.to_s}
+    object[:total]=schema.data_collection.items.count
+    object[:items]= JSON.parse(str).map{|i| [proj, coll,{:item=>{:id=> i['id'], :display=>(i[schema.field_name].nil? ? "" : i[schema.field_name])}}] }
     respond_to do |format|
       format.json {
-        render json: JSON.parse(str).map{|i| [i[schema.field_name], '{"project":{"id": "'+@project.id+'"}, "collection":{"id": "'+schema.data_collection.id+'"},"item":{"id": "'+i['id']+'", "display": "'+(i[schema.field_name].nil? ? "" : i[schema.field_name])+'"}}'] }
-      }
+        render json: object.to_json
+        } 
     end
   end
   private
