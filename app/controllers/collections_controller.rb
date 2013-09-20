@@ -196,7 +196,7 @@ class CollectionsController < ApplicationController
     proj["project"] = {:id=>@project.id.to_s}
     coll["collection"]={:id=>schema.data_collection.id.to_s}
     object[:total]=schema.data_collection.items.count
-    object[:items]= JSON.parse(str).map{|i| [proj, coll,{:item=>{:id=> i['id'], :display=>(i[schema.field_name].nil? ? "" : i[schema.field_name])}}] }
+    object[:items]= JSON.parse(str).map{|i| {:id=>{:project=>{:id=>@project.id.to_s, :collection=>{:id=>schema.data_collection.id.to_s,:item=>{:id=> i['id'], :display=>(i[schema.field_name].nil? ? "" : i[schema.field_name])}}}}.to_json.to_s,:text=>(i[schema.field_name].nil? ? "" : i[schema.field_name])} }
     respond_to do |format|
       format.json {
         render json: object.to_json

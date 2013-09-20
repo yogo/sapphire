@@ -12,8 +12,34 @@
     -elsif field.associated_schema
       = f.select(field.to_s, associated_field_value_options(field.associated_schema), 
                 {:include_blank => field.name}, {:class => 'input-medium',:id=>"c_"+field.to_s})
+      :plain
+        <input type="hidden" class="bigdrop" id="c_#{field.to_s}_1" style="width:600px"/>
+      =link_to("associations", project_collection_associations_path(field.associated_schema.data_collection.project,field.associated_schema.data_collection,:schema_id=>field.associated_schema))
       :javascript
-        $(document).ready(function() { $("#c_#{field.to_s}").select2(); });
+        datas=""
+        $(document).ready(function() { $("#c_#{field.to_s}").select2(); 
+        $("#c_#{field.to_s}_1").select2({
+                    placeholder: "Search for a",
+                    minimumInputLength: 1,
+                    ajax: {
+                        url: "#{project_collection_associations_path(field.associated_schema.data_collection.project,field.associated_schema.data_collection,:schema_id=>field.associated_schema, :page=>1)}",
+                        dataType: 'json',
+                        quietMillis: 100,
+                        data: function (term, page) { // page is the one-based page number tracked by Select2
+                            return {
+                                term: term, //search term
+                                page: page, // page number
+                            };
+                        },
+                        results: function (data, page) {
+                          datas=data;
+                            var more = (page * 10) < data.total; // whether or not there are more results available
+                            return {results: data.items, more: more};
+                        }
+                    },
+                    dropdownCssClass: "bigdrop", // apply css that makes the dropdown taller
+                    escapeMarkup: function (m) { return m; } // we do not want to escape markup since we are displaying html in results
+                });})
     -elsif field.type.to_s == "Yogo::Collection::Property::Date"
       = f.text_field(field.to_s, :id=> "c_"+field.to_s, :placeholder => field.name, :class => 'input-medium') 
       :javascript
@@ -70,4 +96,24 @@
           dataType: 'json'
      }).fail(function(data){alert("Error" + data["errors"]);});
   });
+  
+  function itemAssociationResult(assoc) {
+      var markup = "<table class='movie-result'><tr>";
+      if (movie.posters !== undefined && movie.posters.thumbnail !== undefined) {
+          markup += "<td class='movie-image'><img src='" + movie.posters.thumbnail + "'/></td>";
+      }
+      markup += "<td class='movie-info'><div class='movie-title'>" + movie.title + "</div>";
+      if (movie.critics_consensus !== undefined) {
+          markup += "<div class='movie-synopsis'>" + movie.critics_consensus + "</div>";
+      }
+      else if (movie.synopsis !== undefined) {
+          markup += "<div class='movie-synopsis'>" + movie.synopsis + "</div>";
+      }
+      markup += "</td></tr></table>"
+      return markup;
+  }
+
+  function itemFormatSelection(item) {
+      return item.project.collection.item.id;
+  }
   
