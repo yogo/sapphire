@@ -9,7 +9,35 @@
       -if field.controlled_vocabulary
         = f.select(field.to_s, field_value_options(field.controlled_vocabulary),  :include_blank => true,:selected=> params[:filters].nil? ? "" : params[:filters][field.to_s].nil? ? "": params[:filters][field.to_s])
       -elsif field.associated_schema 
-        = f.select(field.to_s, associated_field_display_options(field.associated_schema),  :include_blank => true,:selected=> params[:filters].nil? ? "" :params[:filters][field.to_s].nil? ? "": params[:filters][field.to_s])
+
+        :plain
+          <input type="hidden" name="item[#{field.to_s}]"class="bigdrop" id="c_#{field.to_s}_1" style="width:150px" value="#{}{:selected=> params[:filters].nil? ? "" :params[:filters][field.to_s].nil? ? "": params[:filters][field.to_s])}"/>
+
+        :javascript
+          datas=""
+          $(document).ready(function() { $("#c_#{field.to_s}").select2(); 
+          $("#c_#{field.to_s}_1").select2({
+                      placeholder: "#{field.name}",
+                      minimumInputLength: 0,
+                      ajax: {
+                          url: "#{project_collection_associations_path(field.associated_schema.data_collection.project,field.associated_schema.data_collection,:schema_id=>field.associated_schema, :page=>1)}",
+                          dataType: 'json',
+                          quietMillis: 100,
+                          data: function (term, page) { // page is the one-based page number tracked by Select2
+                              return {
+                                  term: term, //search term
+                                  page: page, // page number
+                              };
+                          },
+                          results: function (data, page) {
+                            datas=data;
+                              var more = (page * 30) < data.total; // whether or not there are more results available
+                              return {results: data.items, more: more};
+                          }
+                      },
+                      dropdownCssClass: "bigdrop", // apply css that makes the dropdown taller
+                      escapeMarkup: function (m) { return m; } // we do not want to escape markup since we are displaying html in results
+                  });})
       -elsif field.is_file == true
         = f.select(field.to_s, associated_file_options(@file_collection),  :include_blank => true,:selected=> params[:filters].nil? ? "" :params[:filters][field.to_s].nil? ? "": params[:filters][field.to_s])
       -else
