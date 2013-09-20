@@ -22,6 +22,7 @@ Sapphire::Application.routes.draw do
       get :datatable
       get :objects
       get :objects_paginated
+      get :associations
       resources :items do
         put :restore
       end

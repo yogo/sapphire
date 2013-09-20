@@ -181,9 +181,20 @@ class CollectionsController < ApplicationController
   
   def objects
     @collection = @project.data_collections.get(params[:collection_id])
-    @items = @collection.items.all()
+    @items = DataMapper.raw_select(@collection.items.all())
     respond_to do |format|
-      format.json { render json: @items.to_json }
+      format.json { render json: @items.sql_to_json }
+    end
+  end
+  
+  def associations
+    schema = @project.data_collections.get(params[:collection_id]).schema.get(params[:schema_id])
+    str = schema.data_collection.items.page(:page=>params[:page], :fields=>["#{schema.field_name}", :id], "#{schema.field_name}".to_sym.like=>"%#{params[:term]}%").to_json
+    
+    respond_to do |format|
+      format.json {
+        render json: JSON.parse(str).map{|i| [i[schema.field_name], '{"project":{"id": "'+@project.id+'"}, "collection":{"id": "'+schema.data_collection.id+'"},"item":{"id": "'+i['id']+'", "display": "'+(i[schema.field_name].nil? ? "" : i[schema.field_name])+'"}}'] }
+      }
     end
   end
   private
