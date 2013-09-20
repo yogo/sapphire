@@ -11,7 +11,9 @@
       = f.file_field(field.to_s, :class => 'input-medium')
     -elsif field.associated_schema
       = f.select(field.to_s, associated_field_value_options(field.associated_schema), 
-                {:include_blank => field.name}, {:class => 'input-medium'})
+                {:include_blank => field.name}, {:class => 'input-medium',:id=>"c_"+field.to_s})
+      :javascript
+        $(document).ready(function() { $("#c_#{field.to_s}").select2(); });
     -elsif field.type.to_s == "Yogo::Collection::Property::Date"
       = f.text_field(field.to_s, :id=> "c_"+field.to_s, :placeholder => field.name, :class => 'input-medium') 
       :javascript
@@ -68,3 +70,4 @@
           dataType: 'json'
      }).fail(function(data){alert("Error" + data["errors"]);});
   });
+  
