@@ -28,6 +28,9 @@ class Array
       #header = self[0].to_hash.keys.map{|k| k}.join(',') + "\n"
       data={}
       data[:aaData] = self.map{|k| k.to_a}
+      data[:sEcho] = 1
+      data[:iTotalRecords] = data[:aaData].count
+      data[:iTotalDisplayRecords] = data[:iTotalRecords]
       data.to_json
     end
   end
