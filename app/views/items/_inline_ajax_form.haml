@@ -11,7 +11,7 @@
       = f.file_field(field.to_s, :class => 'input-medium')
     -elsif field.associated_schema
       :plain
-        <input type="hidden" class="bigdrop" id="c_#{field.to_s}_1" style="width:150px"/>
+        <input type="hidden"  name="item[#{field.to_s}]" class="bigdrop" id="c_#{field.to_s}_1" style="width:150px"/>
       :javascript
         datas=""
         $(document).ready(function() { $("#c_#{field.to_s}").select2(); 
@@ -59,17 +59,26 @@
 #progress
   
 :javascript
+  var base_url = "#{project_collection_path(project,collection)}/items/"
+  var schema_array = #{@collection.schema.map{|s| s.field_name}}
+  var datas=""
   function formfocus() {
     $('#QAcreateItemForm input:visible:first').focus();
   }
   function beforeSendHandler(){
     $('body').modalmanager('loading');
   }
-  function completeHandler(){
-    updateGrid(grid);
-    $('#QAcreateItemForm')[0].reset();
-    $('body').modalmanager('loading');
-  }
+  function completeHandler(data){
+      datas=data
+      data_array= new Array();
+      data_array[0] = data.id.toString();
+      $.each(schema_array, function(index, value){
+        data_array.push(data[value])
+      })
+      $('#ajax-item-table').dataTable().fnAddData( data_array );
+      $('#QAcreateItemForm')[0].reset();
+      $('body').modalmanager('loading');
+    }
   function errorHandler(data){
     alert("Error: " + data["errors"]);
   }
@@ -85,7 +94,7 @@
           url:$('#QAcreateItemForm').attr('action'),
           type: 'POST',
           beforeSend: beforeSendHandler,
-          success:  completeHandler,
+          success:  function(data){completeHandler(data)},
           data: valuesToSubmit,
           cache: false,
           contentType: false,
