@@ -189,7 +189,7 @@ class CollectionsController < ApplicationController
   
   def associations
     schema = @project.data_collections.get(params[:collection_id]).schema.get(params[:schema_id])
-    str = schema.data_collection.items.page(:page=>params[:page], :per_page=>30, :fields=>["#{schema.field_name}", :id], "#{schema.field_name}".to_sym.like=>"%#{params[:term]}%").to_json
+    str = schema.data_collection.items.page(:page=>params[:page], :fields=>["#{schema.field_name}", :id], "#{schema.field_name}".to_sym.like=>"%#{params[:term]}%").to_json
     proj={}
     coll={}
     object={}

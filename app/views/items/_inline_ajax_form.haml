@@ -10,10 +10,8 @@
         = field.name
       = f.file_field(field.to_s, :class => 'input-medium')
     -elsif field.associated_schema
-     
       :plain
-        <input type="hidden" name="item[#{field.to_s}]"class="bigdrop" id="c_#{field.to_s}_1" style="width:150px"/>
-
+        <input type="hidden" class="bigdrop" id="c_#{field.to_s}_1" style="width:150px"/>
       :javascript
         datas=""
         $(document).ready(function() { $("#c_#{field.to_s}").select2(); 
@@ -32,7 +30,7 @@
                         },
                         results: function (data, page) {
                           datas=data;
-                            var more = (page * 30) < data.total; // whether or not there are more results available
+                            var more = (page * 10) < data.total; // whether or not there are more results available
                             return {results: data.items, more: more};
                         }
                     },
@@ -61,23 +59,14 @@
 #progress
   
 :javascript
-  var base_url = "#{project_collection_path(project,collection)}/items/"
-  var schema_array = #{@collection.schema.map{|s| s.field_name}}
-  var datas=""
   function formfocus() {
     $('#QAcreateItemForm input:visible:first').focus();
   }
   function beforeSendHandler(){
     $('body').modalmanager('loading');
   }
-  function completeHandler(data){
-    datas=data
-    data_array= new Array();
-    data_array[0] = data.id.toString();
-    $.each(schema_array, function(index, value){
-      data_array.push(data[value])
-    })
-    $('#ajax-item-table').dataTable().fnAddData( data_array );
+  function completeHandler(){
+    updateGrid(grid);
     $('#QAcreateItemForm')[0].reset();
     $('body').modalmanager('loading');
   }
@@ -96,7 +85,7 @@
           url:$('#QAcreateItemForm').attr('action'),
           type: 'POST',
           beforeSend: beforeSendHandler,
-          success:  function(data){completeHandler(data)},
+          success:  completeHandler,
           data: valuesToSubmit,
           cache: false,
           contentType: false,
@@ -104,5 +93,24 @@
           dataType: 'json'
      }).fail(function(data){alert("Error" + data["errors"]);});
   });
+  
+  function itemAssociationResult(assoc) {
+      var markup = "<table class='movie-result'><tr>";
+      if (movie.posters !== undefined && movie.posters.thumbnail !== undefined) {
+          markup += "<td class='movie-image'><img src='" + movie.posters.thumbnail + "'/></td>";
+      }
+      markup += "<td class='movie-info'><div class='movie-title'>" + movie.title + "</div>";
+      if (movie.critics_consensus !== undefined) {
+          markup += "<div class='movie-synopsis'>" + movie.critics_consensus + "</div>";
+      }
+      else if (movie.synopsis !== undefined) {
+          markup += "<div class='movie-synopsis'>" + movie.synopsis + "</div>";
+      }
+      markup += "</td></tr></table>"
+      return markup;
+  }
 
+  function itemFormatSelection(item) {
+      return item.project.collection.item.id;
+  }
   

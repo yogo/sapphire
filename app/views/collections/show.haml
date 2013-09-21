@@ -1,8 +1,6 @@
 .content-box
   -if (current_user.member_of?(@project) && @collection.schema.count > 0) || @collection.category != "Files"
-    = render(:partial => 'collections/filter', 
-            :locals => {:filter_item => @filter_item, :collection => @collection, 
-                        :project => @project, :filters => @filters})
+   
     = render(:partial => 'items/inline_ajax_form', :locals => {:items =>@items, :collection => @collection, :project=>@project})
 
 .content-box
