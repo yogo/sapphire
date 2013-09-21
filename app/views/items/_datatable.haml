@@ -30,7 +30,7 @@
           
    		   },
    		  "aTargets":[0]
-       },
+       }/*,
        #{
          '{
            "mRender": function(data, type, row){
@@ -51,9 +51,13 @@
     		   },
     		  "aTargets":['+ collection.schema.map {|s| s.is_file? || s.associated_schema_id ? s.position : nil}.compact.join(',')+']
           }'
-        }
+        }*/
      ]}
     );
+    $('#ajax-item-table').dataTable().columnFilter({
+      aoColumns: [null, #{@collection.schema.map{|s| '{type: "text"}'}.join(',')}],
+      bUseColVis: true
+      });
   } );
   
   
@@ -78,3 +82,9 @@
       -if collection.category == "Files"
         %th File
   %tbody
+  %tfoot
+    %tr
+      %th.action-column
+      - collection.schema.each do |s|
+        %th.column
+          = s.name
