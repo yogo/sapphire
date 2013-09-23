@@ -1,0 +1,26 @@
+#search
+  %h3 Search Data
+  %form{:action=> project_collection_items_url(project, collection, :format=>"json"),:remote=>true, :id=>"advanced_search_form"}
+    #searchOption
+      = select_tag("field[]", options_for_select(collection.schema.map{|s| [s.name, s.to_s]}))
+      = select_tag("predicate[]",  options_for_select(predicate_options()), :selected => "=")
+      = text_field_tag("value[]") 
+      %br
+    #moreSearchOptions
+    = link_to("Add Another Constraint", "#", :onclick => "$('#moreSearchOptions').append($('#searchOptionTemplate').html())")
+    %br
+    %br
+  = link_to("Search", "#", :onclick=>"getSearchData();", :class=>"button")
+
+#searchOptionTemplate.hide
+  = select_tag("conjunction[]", options_for_select([["And","and"],["Or", "or"]]), :selected => "and")
+  = select_tag("field[]", options_for_select(collection.schema.map{|s| [s.name, s.to_s]}))
+  = select_tag("predicate[]",  options_for_select(predicate_options()), :selected => "=")
+  = text_field_tag("value[]")
+  %br
+
+:javascript
+  function getSearchData(){
+    data_table = $('#ajax-item-table').dataTable();
+    data_table.fnReloadAjax($('#advanced_search_form').attr("action")+'?'+$('#advanced_search_form').serialize());
+  }

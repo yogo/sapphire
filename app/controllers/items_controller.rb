@@ -1,5 +1,5 @@
 class ItemsController < ApplicationController
-
+  before_filter :get_filters
   before_filter :get_dependencies
   after_filter :update_project_stats, :only => [:create, :delete]
 
@@ -12,17 +12,7 @@ class ItemsController < ApplicationController
     respond_to do |format|
       format.html {render :index}
       format.json {
-        # if params[:sortby]
-        #   if params[:sortby].split()[1] == 'asc'
-        #     items = @collection.items.page(params[:page], :per_page=>100, :order => [params[:sortby].split()[0].to_sym.asc])
-        #   else
-        #     items = @collection.items.page(params[:page], :per_page=>100, :order => [params[:sortby].split()[0].to_sym.desc])
-        #   end
-        # else
-        #   items = @collection.items.page(params[:page], :per_page=>100)
-        # end
-        # render :json => items.to_json, :callback=> params[:callback]
-        render :json =>  DataMapper.raw_select(@collection.items(:fields=>@collection.schema(:order=>[:position]).map{|a| a.field_name}.unshift(:id))).sql_to_datatable_json
+        render :json =>  DataMapper.raw_select(@collection.items.all(@filters).all(:fields=>@collection.schema(:order=>[:position]).map{|a| a.field_name}.unshift(:id))).sql_to_datatable_json
       }
 
       format.csv {
@@ -214,4 +204,29 @@ class ItemsController < ApplicationController
       end
     end
   end
+  
+  def get_filters
+     @filters = {}
+     if params[:field] && !params[:field].empty?
+       params[:field].each_with_index do |val, index|
+         next if val.blank?  #skip blank values
+         unless params[:predicate][index].empty? || params[:value][index].empty?
+          case params[:predicate][index]
+          when "="
+            @filters[val.to_sym] = "#{params[:value][index]}"
+          when "like"
+            @filters[val.to_sym.like] = "%#{params[:value][index]}%"
+          when "gt"
+            @filters[val.to_sym.gt] = "%#{params[:value][index]}%"
+          when "gte"
+            @filters[val.to_sym.gte] = "%#{params[:value][index]}%"
+          when "lt"
+            @filters[val.to_sym.lt] = "%#{params[:value][index]}%"
+          when "lte"
+            @filters[val.to_sym.lte] = "%#{params[:value][index]}%"
+          end
+         end
+       end
+     end
+   end
 end
