@@ -1,10 +1,9 @@
-.content-box
-  -if (current_user.member_of?(@project) && @collection.schema.count > 0) || @collection.category != "Files"
-   
+-if current_user.member_of?(@project) && @collection.schema.count > 0 && @collection.category != "Files"
+  .content-box
     = render(:partial => 'items/inline_ajax_form', :locals => {:items =>@items, :collection => @collection, :project=>@project})
 
-.content-box
-  = render(:partial => 'collections/search', :locals => {:project => @project, :collection => @collection})
+  .content-box
+    = render(:partial => 'collections/search', :locals => {:project => @project, :collection => @collection})
 
 .content-box
   - if @collection.schema.count > 0 || @collection.category == "Files"
