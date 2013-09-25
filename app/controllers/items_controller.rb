@@ -4,6 +4,7 @@ class ItemsController < ApplicationController
   after_filter :update_project_stats, :only => [:create, :delete]
 
   def index
+    @r={}
     if params[:item]
       @item = @collection.items.new(params[:item])
     else
@@ -12,7 +13,16 @@ class ItemsController < ApplicationController
     respond_to do |format|
       format.html {render :index}
       format.json {
-        render :json =>  DataMapper.raw_select(@collection.items.all(@filters).all(:fields=>@collection.schema(:order=>[:position]).map{|a| a.field_name}.unshift(:id))).sql_to_datatable_json
+        if @collection.items.all(:conditions=>@filters).count > 0
+            render :json => DataMapper.raw_select(@collection.items.all(:conditions=>@filters).all(:fields=>@collection.schema(:order=>[:position]).map{|a| a.field_name}.unshift(:id))).sql_to_datatable_json
+        else
+          data={}
+          data[:aaData] = Array.new()
+          data[:sEcho] = 1
+          data[:iTotalRecords] = 0
+          data[:iTotalDisplayRecords] = 0
+          render :json => data.to_json
+        end
       }
 
       format.csv {
@@ -214,19 +224,51 @@ class ItemsController < ApplicationController
           case params[:predicate][index]
           when "="
             @filters[val.to_sym] = "#{params[:value][index]}"
+          when "not"
+            @filters[val.to_sym.not] = "#{params[:value][index]}"
           when "like"
-            @filters[val.to_sym.like] = "%#{params[:value][index]}%"
+            @filters[val.to_sym.like] = "#{params[:value][index]}%"
           when "gt"
-            @filters[val.to_sym.gt] = "%#{params[:value][index]}%"
+            @filters[val.to_sym.gt] = "#{params[:value][index]}"
           when "gte"
-            @filters[val.to_sym.gte] = "%#{params[:value][index]}%"
+            @filters[val.to_sym.gte] = "#{params[:value][index]}"
           when "lt"
-            @filters[val.to_sym.lt] = "%#{params[:value][index]}%"
+            @filters[val.to_sym.lt] = "#{params[:value][index]}"
           when "lte"
-            @filters[val.to_sym.lte] = "%#{params[:value][index]}%"
+            @filters[val.to_sym.lte] = "#{params[:value][index]}"
           end
          end
        end
      end
    end
+   
+   def get_filters2
+      @filter_array = []
+      if params[:field] && !params[:field].empty?
+        params[:field].each_with_index do |val, index|
+          next if val.blank?  #skip blank values
+          unless params[:predicate][index].empty? || params[:value][index].empty?
+           @filters = {}
+           case params[:predicate][index]
+           when "="
+             @filter_array << ['\''+val + ' = ?\'', params[:value][index]]
+             #@filters[val.to_sym] = "#{params[:value][index]}"
+           when "not"
+             @filters[val.to_sym.not] = "#{params[:value][index]}"
+           when "like"
+             @filters[val.to_sym.like] = "#{params[:value][index]}%"
+           when "gt"
+             @filters[val.to_sym.gt] = "#{params[:value][index]}"
+           when "gte"
+             @filters[val.to_sym.gte] = "#{params[:value][index]}"
+           when "lt"
+             @filters[val.to_sym.lt] = "#{params[:value][index]}"
+           when "lte"
+             @filters[val.to_sym.lte] = "#{params[:value][index]}"
+           end
+           #@filter_array << @filters
+          end
+        end
+      end
+    end
 end
