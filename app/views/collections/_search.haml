@@ -13,7 +13,7 @@
   = link_to("Search", "#", :onclick=>"getSearchData();", :class=>"button")
 
 #searchOptionTemplate.hide
-  = select_tag("conjunction[]", options_for_select([["And","and"],["Or", "or"]]), :selected => "and")
+  = "And "#select_tag("conjunction[]", options_for_select([["And","and"],["Or", "or"]]), :selected => "and")
   = select_tag("field[]", options_for_select(collection.schema.map{|s| [s.name, s.to_s]}))
   = select_tag("predicate[]",  options_for_select(predicate_options()), :selected => "=")
   = text_field_tag("value[]")
