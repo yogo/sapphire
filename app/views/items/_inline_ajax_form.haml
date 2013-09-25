@@ -71,12 +71,17 @@
   function completeHandler(data){
       datas=data
       data_array= new Array();
-      data_array[0] = data.id.toString();
-      $.each(schema_array, function(index, value){
-        data_array.push(data[value])
-      })
-      $('#ajax-item-table').dataTable().fnAddData( data_array );
-      $('#QAcreateItemForm')[0].reset();
+      if (data.error){
+        alert("Error" + data["error"]);
+      }
+      else{
+        data_array[0] = data.id.toString();
+        $.each(schema_array, function(index, value){
+          data_array.push(data[value])
+        })
+        $('#ajax-item-table').dataTable().fnAddData( data_array );
+        $('#QAcreateItemForm')[0].reset();
+      }
       $('body').modalmanager('loading');
     }
   function errorHandler(data){
@@ -96,11 +101,12 @@
           beforeSend: beforeSendHandler,
           success:  function(data){completeHandler(data)},
           data: valuesToSubmit,
+          fail:function(data){alert("Error" + data["error"]); $('body').modalmanager('loading');},
           cache: false,
           contentType: false,
           processData: false,
           dataType: 'json'
-     }).fail(function(data){alert("Error" + data["errors"]);});
+     });
   });
   
   function itemAssociationResult(assoc) {
