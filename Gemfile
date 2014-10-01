@@ -13,6 +13,7 @@ gem 'yogo-framework',   :git => "git://github.com/yogo/yogo-framework.git"
 gem 'yogo-project',     :git => "git://github.com/yogo/yogo-project.git",
                         :require => 'yogo/project', :ref=>'15d18edc6d81e90e060fa745416a3e7a1d2d0312'
 
+gem 'faraday'
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
@@ -27,11 +28,13 @@ gem 'haml'
 gem 'sass'
 gem 'tilt'
 gem 'rubyzip'
+gem 'curb'
+gem 'seafile_api', :git => "https://github.com/scleveland/seafile_api.git", :ref=>"e4b88c4617db7e58090ab93920f543458784b6e5"
 
 group :development do
   # Deploy with Capistrano
   #gem 'capistrano'
-  gem 'rvm-capistrano'
+  #gem 'rvm-capistrano'
   # To use debugger
   gem 'ruby-debug19', :require => 'ruby-debug'
 
