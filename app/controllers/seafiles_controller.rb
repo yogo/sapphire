@@ -23,4 +23,16 @@ class SeafilesController < ApplicationController
     # end
   end
 
+  # requires params[:repo_id]
+  def directory_listing
+  	begin
+	  	listing = current_user.seafile_library_directories(params[:repo_id])
+	rescue => e
+		flash[:warning] = e.message
+	end
+  	respond_to do |format|
+      format.json { render :json => listing.as_json }
+    end
+  end
+
 end

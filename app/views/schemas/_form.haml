@@ -138,6 +138,7 @@
             if($('#schema_type option:selected').val() == "seafile"){
               $('#seafile-library-select').show();
               $('#seafile-directory-select').show();
+              populate_seafile_column_select()
             }
             else{
               $('#assoc-collection-select').show();
@@ -169,17 +170,26 @@
         });
       }
 
-      function populate_assoc_column_select(){
-        $('##seafile-directory-select select option').remove();
-        $.get("#{directory_listing_seafile_url}"+"?repo_id="+$('#schema_seafile_library_id').val(), function(data){
-          $.each(data, function(key, value) { 
-           id = value[0];
-           name = value[1]  
-           $('#seafile-directory-select select')
-               .append($("<option></option>")
-               .attr("value",id)
-               .text(name)); 
-          });
+      $('#seafile-library-select select').change(function(){
+        populate_seafile_column_select(); 
+      });
+      var objs="";
+      var datum = "";
+      function populate_seafile_column_select(){
+        $('#seafile-directory-select select option').remove();
+        $.get("#{directory_listing_seafiles_path()}"+"?repo_id="+$('#schema_seafile_library_id').val(), function(data){
+          datum = data
+          //objs = $.parseJSON(data);
+          $.each(data, function(){ 
+           if(this["type"] == "dir"){
+             id = this["id"];
+             name = this["name"]; 
+             $('#seafile-directory-select select')
+                 .append($("<option></option>")
+                 .attr("value",id)
+                 .text(name)); 
+          }
+        });
         });
            
       }
