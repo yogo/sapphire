@@ -1,5 +1,5 @@
 %strong Quick Add
-= form_for("item", @item, :url => project_collection_items_path(@project, collection), :html => {"multipart" => true, "data-ajax"=> false, :class => 'form-inline', :id => 'QAcreateItemForm', 'data-focus-on' => "input:visible:first"}) do |f| 
+= form_for @item, as: "item", :url => project_collection_items_path(@project, collection), :html => {"multipart" => true, "data-ajax"=> false, :class => 'form-inline', :id => 'QAcreateItemForm', 'data-focus-on' => "input:visible:first"} do |f| 
   - collection.schema.each do |field|
     -if field.controlled_vocabulary
       = f.select(field.to_s, field_value_options(field.controlled_vocabulary), 
