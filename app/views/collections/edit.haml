@@ -2,7 +2,7 @@
   .modal-header
     %h3 Edit #{@collection.name} Settings
     %p.muted Collection ID: #{@collection.id}
-  = form_for("collection",@collection, :url => project_collection_path(@project,@collection), 
+  = form_for @collection, as: "collection", :url => project_collection_path(@project,@collection, 
             :html => {:method=>"put", :class => 'form-box', :ajax=>false}) do |f|
     .modal-body
       = render :partial => 'collections/form', :locals => {:f => f}
