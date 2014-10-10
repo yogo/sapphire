@@ -108,6 +108,10 @@ class SchemasController < ApplicationController
       elsif params[:schema][:type] =='File'
         params[:schema][:type] = Yogo::Collection::Property::Text
         params[:schema][:is_file] = true
+      elsif params[:schema][:type] =='seafile'
+        params[:schema][:description] = {:seafile_repo => params[:schema].delete(:seafile_library_id), :seafile_directory => params[:schema].delete(:seafile_directtory_id}
+        params[:schema][:is_seaffile] = true
+        params[:schema][:type] = Yogo::Collection::Property::Text
       else
         params[:schema].delete(:association_column_id)
       end
@@ -117,7 +121,6 @@ class SchemasController < ApplicationController
       params[:schema].delete(:association_collection_id) if params[:schema][:association_collection_id]
       
       logger.info '!!!! PARAMS: ' + params.inspect
-
       @schema = @collection.schema.new(params[:schema])
       if @schema.save
         @schema.update_position

@@ -180,9 +180,14 @@
         $.get("#{directory_listing_seafiles_path()}"+"?repo_id="+$('#schema_seafile_library_id').val(), function(data){
           datum = data
           //objs = $.parseJSON(data);
+          $('#seafile-directory-select select')
+                 .append($("<option></option>")
+                 .attr("value","root_repo")
+                 .text("Library Root Directory")); 
+          
           $.each(data, function(){ 
            if(this["type"] == "dir"){
-             id = this["id"];
+             id = JSON.stringify(this);
              name = this["name"]; 
              $('#seafile-directory-select select')
                  .append($("<option></option>")

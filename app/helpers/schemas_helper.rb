@@ -64,12 +64,5 @@ module SchemasHelper
       current_user.seafile_libraries.map{|l| [l["name"],l["id"]]}
   end
   
-  def seafile_column_values_json(repo_id)
-    current_user.list_library_directory_entries(repo_id)
-    j = {}
-    proj.collections.each do |c| 
-      j[c.id.to_s] = c.schema.map{|s| [s.id.to_s, s.name]}
-    end
-    j.to_json
-  end
+  
 end
