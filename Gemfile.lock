@@ -1,4 +1,36 @@
 GIT
+  remote: git://github.com/yogo/yogo-datamapper.git
+  revision: 5db8c6d4d38e3ecb731c2e3a03921d7e5eed7e29
+  ref: 5db8c6d4d38e3ecb731c2e3a03921d7e5eed7e29
+  specs:
+    yogo-datamapper (0.5.1)
+      datamapper (= 1.2.0)
+      dm-is-remixable
+      yogo-operation
+      yogo-support
+
+GIT
+  remote: git://github.com/yogo/yogo-framework.git
+  revision: 95b9c99e68e2816335b0fd3b122a48e5f8dfa4ef
+  specs:
+    yogo-framework (0.5.3)
+      data_mapper
+      dm-is-list
+      dm-is-versioned
+      dm-rest-adapter
+      yogo-datamapper
+      yogo-operation
+      yogo-project
+
+GIT
+  remote: git://github.com/yogo/yogo-operation.git
+  revision: 7c9b793aa4ee9e8780e44def2aab2b80ac54a45a
+  specs:
+    yogo-operation (0.2.1)
+      dataflow
+      yogo-support
+
+GIT
   remote: git://github.com/yogo/yogo-project.git
   revision: e95fdcf788dc376e47766924843e3cb851d76551
   ref: e95fdcf788dc376e47766924843e3cb851d76551
@@ -15,38 +47,6 @@ GIT
       facets
       rake
       yogo-operation
-
-GIT
-  remote: git://github.com/yogo/yogo-framework.git
-  revision: 95b9c99e68e2816335b0fd3b122a48e5f8dfa4ef
-  specs:
-    yogo-framework (0.5.3)
-      data_mapper
-      dm-is-list
-      dm-is-versioned
-      dm-rest-adapter
-      yogo-datamapper
-      yogo-operation
-      yogo-project
-
-GIT
-  remote: git://github.com/yogo/yogo-datamapper.git
-  revision: 5db8c6d4d38e3ecb731c2e3a03921d7e5eed7e29
-  ref: 5db8c6d4d38e3ecb731c2e3a03921d7e5eed7e29
-  specs:
-    yogo-datamapper (0.5.1)
-      datamapper (= 1.2.0)
-      dm-is-remixable
-      yogo-operation
-      yogo-support
-
-GIT
-  remote: git://github.com/yogo/yogo-operation.git
-  revision: 7c9b793aa4ee9e8780e44def2aab2b80ac54a45a
-  specs:
-    yogo-operation (0.2.1)
-      dataflow
-      yogo-support
 
 GIT
   remote: git://github.com/yogo/yogo-support.git
@@ -76,6 +76,13 @@ GIT
       safe_yaml (~> 0.6.1)
       stringex (~> 1.4)
       uuidtools (~> 2.1)
+
+GIT
+  remote: https://github.com/scleveland/seafile_api.git
+  revision: e4b88c4617db7e58090ab93920f543458784b6e5
+  ref: e4b88c4617db7e58090ab93920f543458784b6e5
+  specs:
+    seafile_api (0.0.1.1)
 
 GEM
   remote: http://rubygems.org/
@@ -120,7 +127,8 @@ GEM
     carrierwave-datamapper (0.2.2)
       carrierwave (~> 0.8.0)
       dm-core (~> 1.1)
-    configatron (4.2.0)
+    configatron (4.5.0)
+    curb (0.8.6)
     data_mapper (1.2.0)
       dm-aggregates (~> 1.2.0)
       dm-constraints (~> 1.2.0)
@@ -213,7 +221,9 @@ GEM
     erubis (2.7.0)
     execjs (1.3.0)
       multi_json (~> 1.0)
-    facets (2.9.3)
+    facets (3.0.0)
+    faraday (0.9.0)
+      multipart-post (>= 1.2, < 3)
     fastercsv (1.5.5)
     haml (4.0.5)
       tilt
@@ -232,6 +242,7 @@ GEM
       treetop (~> 1.4.8)
     mime-types (1.25.1)
     multi_json (1.10.1)
+    multipart-post (2.0.0)
     orm_adapter (0.0.7)
     polyglot (0.3.5)
     rack (1.4.5)
@@ -290,6 +301,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  curb
   data_mapper (= 1.2.0)
   devise (= 2.0)
   dm-core!
@@ -298,6 +310,7 @@ DEPENDENCIES
   dm-pager
   dm-rails
   dm-types!
+  faraday
   haml
   hpricot
   jquery-rails
@@ -305,6 +318,7 @@ DEPENDENCIES
   ruby_parser
   rubyzip
   sass
+  seafile_api!
   sqlite3
   tilt
   turn
