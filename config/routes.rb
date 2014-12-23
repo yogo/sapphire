@@ -27,7 +27,12 @@ Sapphire::Application.routes.draw do
       end
     end
   end
-
+  resources :seafiles do
+    collection do
+      post :set_token
+      get :directory_listing
+    end
+  end
   root :to => 'projects#index'
 
 end

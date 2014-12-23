@@ -1,5 +1,8 @@
 <div class="block">
 <h2>Edit <%= resource_name.to_s.humanize %></h2>
+<table>
+  <tr >
+    <td valign="top">
   <div class='content'>
 <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put, :class => 'form'}) do |f| %>
   <%= devise_error_messages! %>
@@ -12,11 +15,15 @@
   <%= f.text_field :last_name , :label=> "Last Name"%></p>
 </div>
 
+</div>
         <div class='group'>
   <%= f.label "Email" %>
   <%= f.email_field :email %></p>
 </div>
-
+        <div class='group'>
+  <%= f.label "Current Password" %>
+  <%= f.password_field :current_password %></p>
+</div>
         <div class='group'>
   <%= f.label "Password" %>
   <%= f.password_field :password %></p>
@@ -30,14 +37,67 @@
         <div class='group'>
   <p><%= f.submit "Update" %></p>
 </div>
+
+</td>
+<td valign="top" style="padding-left:50px;border:solid,1px;">
+<div class="pull-right">
+        <div class='group'>
+          <%= f.label "Seafile Host" %>
+  <%= f.text_field :seafile_host , :label=> "Seafile Host",:disabled=>true%></p>
+</div>
+        <div class='group'>
+          <%= f.label "Seafile Token" %>
+  <%= f.text_field :seafile_token , :label=> "Seafile Token", :disabled=>true%></p>
+</div>
+<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+  Setup Seafile Link
+</button>
 <% end %>
+</td></tr></table>
+
 <!-- <br clear='all' />
 <div class='inner'>
 <h3>Cancel my account</h3>
 
 <p>Unhappy? <%= link_to "Cancel my account", registration_path(resource_name), :confirm => "Are you sure?", :method => :delete %>.</p>
  -->
- <%= render :partial => "devise/shared/links" %>
+
 
 <%= link_to "Back", :back %>
-</div></div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <%= form_tag(set_token_seafiles_path(), :method => :post, :html => {:id=>"seafile_form", :'data-type' => 'json'}) do %>
+        <h4 class="modal-title" id="myModalLabel">Setup Seafile Link</h4>
+      </div>
+      <div class="modal-body">
+        <%= label_tag "Seafile Host" %>
+        <%= text_field_tag :host%></p>
+        <%= label_tag "Seafile Username" %>
+        <%= text_field_tag :username%></p>
+        <%= label_tag "Seafile Password" %>
+        <%= password_field_tag :password%></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <%=  submit_tag("Setup" ,:class=>"btn btn-primary")%>
+         <%end%>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  jQuery(function($) {
+  $("#seafile_form")
+      .bind('ajax:loading', function() {alert("loading!");})
+      .bind('ajax:success', function(data, status, xhr) {alert("success!");})
+      .bind('ajax:failure', function(xhr, status, error) {alert("failure!");})
+      .bind('ajax:complete', function() {alert("complete!");});
+    });
+</script>

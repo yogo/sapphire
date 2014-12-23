@@ -44,6 +44,8 @@ class User
   property :id, Serial
   property :first_name, String
   property :last_name, String
+  property :seafile_token, String
+  property :seafile_host, String
   
   has n, :memberships
 
@@ -51,4 +53,15 @@ class User
     memberships.projects.include?(proj)
   end
 
+  def seafile_libraries
+    Seafile.new(self.seafile_host, "null", "null", seafile_token).list_libraries
+  end
+
+  def seafile_library_directories(repo_id)
+    Seafile.new(self.seafile_host, "null", "null", seafile_token).list_library_directory_entries(repo_id)
+  end
+
+  def seafile_files(repo_id, dir)
+    Seafile.new(self.seafile_host, "null", "null", seafile_token).list_directory_entries(repo_id, dir)
+  end
 end
