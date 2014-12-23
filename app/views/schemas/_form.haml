@@ -97,6 +97,14 @@
               %a(href='#' onClick="$('#list_association-help .more').toggle();") More...
               .more.hide
                 This is a Collection Association Type.  This type will link this column to several rows in a different Collection.  Important: This column will not be editable and is only for reference purposes.  In order to add more items to the list, you must go to the target Collection and link more rows to this Collection.  This is also called a <em>Foreign Key</em> relationship in database terminology, but it is the "has many" side of the relationship.
+        #seafile-help.tab-pane.help-block
+          %dl
+            %dt Seafile: linked file
+            %dd 
+              This is a column that shows a list of linked files from your Seafile account
+              %a(href='#' onClick="$('#list_association-help .more').toggle();") More...
+              .more.hide
+                This column allows you to link information to files stored within Seafile.  The is great for adding and tracking metadata associated with files.
 
     #assoc-collection-select.hide
       %label Associated Collection
@@ -107,6 +115,16 @@
       = select(:schema, :association_column_id, [])
       .help-block
         This determines which linked column will be displayed. For Prompt type assocations, this determines which column you would like to use for the controlled vocabulary prompting. 
+    #seafile-library-select.hide
+      %label Seafile Library
+      = select(:schema, :seafile_library_id, current_user_seafile_libraies_opts)
+      .help-block
+        This determines which Seafile library to use
+    #seafile-directory-select.hide
+      %label Seafile Directory
+      = select(:schema, :seafile_directtory_id, [])
+      .help-block
+        This determines which Seafile library directory to use  
 
     :javascript
       $('#schema_type').change(function() {
@@ -115,13 +133,21 @@
         tab = "#" + tab_str + '-help'
         $('#type-help .active').toggleClass('active');
         $(tab).toggleClass('active', function(){
+         
           if($('#schema_type option:selected').val().split("::").length < 2){
-            $('#assoc-collection-select').show();
-            $('#assoc-column-select').show();
-            populate_assoc_column_select();
+            if($('#schema_type option:selected').val() == "seafile"){
+              $('#seafile-library-select').show();
+              $('#seafile-directory-select').show();
+              populate_seafile_column_select()
+            }
+            else{
+              $('#assoc-collection-select').show();
+              $('#assoc-column-select').show();
+              populate_assoc_column_select();
+            }
           } else {
             $('#assoc-collection-select').hide();      
-            $('#assoc-column-select').hide();
+            $('#assoc-column-select').hide(); 
           }
         });
       });
@@ -142,6 +168,35 @@
                .attr("value",id)
                .text(name)); 
         });
+      }
+
+      $('#seafile-library-select select').change(function(){
+        populate_seafile_column_select(); 
+      });
+      var objs="";
+      var datum = "";
+      function populate_seafile_column_select(){
+        $('#seafile-directory-select select option').remove();
+        $.get("#{directory_listing_seafiles_path()}"+"?repo_id="+$('#schema_seafile_library_id').val(), function(data){
+          datum = data
+          //objs = $.parseJSON(data);
+          $('#seafile-directory-select select')
+                 .append($("<option></option>")
+                 .attr("value","root_repo")
+                 .text("Library Root Directory")); 
+          
+          $.each(data, function(){ 
+           if(this["type"] == "dir"){
+             id = JSON.stringify(this);
+             name = this["name"]; 
+             $('#seafile-directory-select select')
+                 .append($("<option></option>")
+                 .attr("value",id)
+                 .text(name)); 
+          }
+        });
+        });
+           
       }
 
 

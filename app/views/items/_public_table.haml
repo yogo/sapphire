@@ -45,6 +45,11 @@
                     #{ajax_modal_js(".#{i.id.to_s} a.item-cv.#{s.id.to_s}", project_collection_item_path(@schema_cv_hash[s.id].project_id,@schema_cv_hash[s.id],@schema_cv_hash[s.name][i[s.name]]), true)}
             -else
               %td.danger= i[s.name]
+          -elsif s.is_seafile == true
+            %td
+              -# unless i.empty? # if it is nil, don't do it.
+              -json_string = JSON.parse(i)
+              =json_string["name"]
           -elsif s.associated_schema     
             %td
               - if i[s.name]

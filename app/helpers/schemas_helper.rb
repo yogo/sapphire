@@ -8,6 +8,7 @@ module SchemasHelper
    #   ['Association: Link List', 'list_association']
     ]
     types << ["File", "File"]
+    types << ["Seafile", "seafile"]
     types.map do |type|
       friendly_name = case type[0]
       when 'String'   then 'Short Text'
@@ -58,5 +59,10 @@ module SchemasHelper
     collections = Yogo::Collection::Data.all(:id => all_collection_ids)
     collections.schema.map{|s| [s.data_collection.name + " > " + s.name, s.id] }
   end
+
+  def current_user_seafile_libraies_opts
+      current_user.seafile_libraries.map{|l| [l["name"],l["id"]]}
+  end
+  
   
 end

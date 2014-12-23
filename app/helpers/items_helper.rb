@@ -15,4 +15,19 @@ module ItemsHelper
   def associated_file_options(file_collection)
     file_collection.files_array(file_collection.project_id, file_collection.id)
   end
+
+
+  def seafile_file_options(field)
+    dir  = JSON.parse(field.description)["seafile_directory"]
+    json_files = current_user.seafile_files(JSON.parse(field.description)["seafile_repo"], 
+              dir.include?('root_repo')  ? "/" : JSON.parse(dir)["name"])
+    #file_array = [JSON.parse(field.description)["seafile_repo"], JSON.parse(field.description)["seafile_directory"] ]
+    file_array = []#[JSON.parse(field.description)["seafile_directory"]["name"],JSON.parse(dir)["name"]]
+    json_files.each do |file|
+      if file["type"] == "file"
+      file_array << [file["name"],file.to_json.to_s]
+      end
+    end
+    file_array
+  end
 end

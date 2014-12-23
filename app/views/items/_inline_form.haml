@@ -1,7 +1,10 @@
 %strong Quick Add
 = form_for @item, as: "item", :url => project_collection_items_path(@project, collection), :html => {"multipart" => true, "data-ajax"=> false, :class => 'form-inline', :id => 'QAcreateItemForm', 'data-focus-on' => "input:visible:first"} do |f| 
   - collection.schema.each do |field|
-    -if field.controlled_vocabulary
+    -if field.is_seafile == true
+      = f.select(field.to_s, seafile_file_options(field), 
+                {:include_blank => field.name}, {:class => 'input-medium'}) 
+    -elsif field.controlled_vocabulary
       = f.select(field.to_s, field_value_options(field.controlled_vocabulary), 
                 {:include_blank => field.name}, {:class => 'input-medium'})
     -elsif field.is_file == true
@@ -25,7 +28,6 @@
       %label 
         = f.check_box(field.to_s, :id=> field.to_s, :class => 'input-medium') 
         = field.name
-    
     -else
       = f.text_field(field.to_s, :placeholder => field.name, :class => 'input-medium') 
   -#= f.file_field(:file, :class => 'input-medium')

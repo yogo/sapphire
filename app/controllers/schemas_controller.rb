@@ -108,16 +108,21 @@ class SchemasController < ApplicationController
       elsif params[:schema][:type] =='File'
         params[:schema][:type] = Yogo::Collection::Property::Text
         params[:schema][:is_file] = true
+      elsif params[:schema][:type] =='seafile'
+        params[:schema][:description] = {:seafile_repo => params[:schema].delete(:seafile_library_id), :seafile_directory => params[:schema].delete(:seafile_directtory_id)}.to_json
+        params[:schema][:is_seafile] = true
+        params[:schema][:type] = Yogo::Collection::Property::Text
       else
         params[:schema].delete(:association_column_id)
       end
+      params[:schema].delete(:seafile_library_id)
+      params[:schema].delete(:seafile_directtory_id)
       # There is only a column if someone selects a collection, but 
       # a blank association_collection is always sent.
       # The 'if' is just a defensive programming tic (though it makes sense from an API perspective...).
       params[:schema].delete(:association_collection_id) if params[:schema][:association_collection_id]
       
       logger.info '!!!! PARAMS: ' + params.inspect
-
       @schema = @collection.schema.new(params[:schema])
       if @schema.save
         @schema.update_position

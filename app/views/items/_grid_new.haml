@@ -69,6 +69,16 @@
     end
   }
 
+  function seafileFormatter(row, cell, value, columnDef, dataContext) {
+    if (value != null)
+    {  
+      json_string = JSON.parse(value);
+      return json_string["name"];
+    }
+    else
+      return ""
+    end
+  }
   
   
   function showDialog(url){
@@ -91,7 +101,7 @@
          
          var grid;
 
-         var columns =[ {id: "button", name: "", field: "id", formatter: buttonFormatter, minWidth: 80, },#{collection.schema.map{|s| '{id: "'+ s.field_name + '", name: "' + s.name + '", field: "' + s.field_name + '", minWidth: 150, header: {buttons: [{cssClass: "icon-edit",tooltip: "Edit Column.",handler: function(e){load_modal(\''+edit_project_collection_schema_path(project,collection,s)+'\')}}]},sortable: true' + "#{s.controlled_vocabulary_id.nil? ? "" : ", formatter: cvFormatter"}" + "#{s.associated_schema_id.nil? ? "" : ", formatter: assocFormatter"}" + "#{s.is_file ?  ", formatter: assocFormatter" : ""}" + '}'}.join(',')}];
+         var columns =[ {id: "button", name: "", field: "id", formatter: buttonFormatter, minWidth: 80, },#{collection.schema.map{|s| '{id: "'+ s.field_name + '", name: "' + s.name + '", field: "' + s.field_name + '", minWidth: 150, header: {buttons: [{cssClass: "icon-edit",tooltip: "Edit Column.",handler: function(e){load_modal(\''+edit_project_collection_schema_path(project,collection,s)+'\')}}]},sortable: true' + "#{s.controlled_vocabulary_id.nil? ? "" : ", formatter: cvFormatter"}" + "#{s.associated_schema_id.nil? ? "" : ", formatter: assocFormatter"}"+ "#{s.is_seafile == true ? ", formatter: seafileFormatter" : ""}" + "#{s.is_file ?  ", formatter: assocFormatter" : ""}" + '}'}.join(',')}];
 
          var options = {
            enableCellNavigation: true,
